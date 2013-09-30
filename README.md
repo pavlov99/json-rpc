@@ -1,6 +1,9 @@
 json-rpc
 ========
 
+[![Downloads](https://pypip.in/v/pmll/badge.png)](https://crate.io/packages/json-rpc)
+[![Downloads](https://pypip.in/d/pmll/badge.png)](https://crate.io/packages/json-rpc)
+
 JSON-RPC2.0 transport with python3 support. Implementation follows [JSON-RPC](http://www.jsonrpc.org/specification) specification.
 
 
