@@ -1,7 +1,7 @@
 json-rpc
 ========
 
-jsonrpc transport with python3 support.
+JSON-RPC2.0 transport with python3 support. Implementation follows [JSON-RPC](http://www.jsonrpc.org/specification) specification.
 
 
 Overview
@@ -17,3 +17,16 @@ Tests
 All of the tests requirements are in ``setup.py`` file.
 
     python setup.py test
+    
+Competitors
+-----------
+There are [several libraries](http://en.wikipedia.org/wiki/JSON-RPC#Implementations) implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
+
+| # |package         | version | last modified | doc | source |
+|---|----------------|---------|---------------|-----|--------|
+| 1 |python-jsonrpc  | 0.3.4   | 2013-07-07    |
+| 2 |jsonrpc         | 1.2     | 2012-02-06    |
+| 3 |jsonrpc2        | 0.3.2   | 2011-06-06    |
+| 4 |tinyrpc         | 0.5     | 2013-02-24    |
+| 5 |simple-json-rpc | 0.3.4   | 2012-06-16    |
+| 6 |pjsonrpc        | -       | 2011          |
