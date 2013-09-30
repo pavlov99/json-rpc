@@ -69,6 +69,12 @@ class JSONRPCRequest(object):
         data = cls.deserialize(json_str)
         return JSONRPCRequest(method=data["method"], params=data["params"])
 
+    def respond_error(self, error):
+        raise NotImplemented()
+
+    def respond_success(self, result):
+        raise NotImplemented()
+
     @property
     def is_notification(self):
         """ A Notification is a Request object without an "id" member.
