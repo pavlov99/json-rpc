@@ -1,4 +1,5 @@
-﻿import os
+﻿#!/usr/bin/env python
+import os
 from setuptools import setup, find_packages
 from jsonrpc import version
 
