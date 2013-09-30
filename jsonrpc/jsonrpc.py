@@ -70,10 +70,12 @@ class JSONRPCRequest(object):
         return JSONRPCRequest(method=data["method"], params=data["params"])
 
     def respond_error(self, error):
-        raise NotImplemented()
+        data = JSONRPCResponse(error=error, _id=self.id)._dict
+        return self.serialize(data)
 
     def respond_success(self, result):
-        raise NotImplemented()
+        data = JSONRPCResponse(result=result, _id=self.id)._dict
+        return self.serialize(data)
 
     @property
     def is_notification(self):
@@ -115,37 +117,19 @@ class JSONRPCResponse(object):
 
     """
 
-    pass
+    def __init__(self, result=None, error=None, _id=None):
+        self.result = result
+        self.error = error
+        self.id = _id
 
+    @property
+    def _dict(self):
+        data = dict(jsonrpc=JSONRPCProtocol.JSONRPC_VERSION, id=self.id)
 
-class JSONRPCResponseError(object):
+        if self.result:
+            data["result"] = self.result
 
-    """ JSON-RPC base error class.
-
-    When a rpc call encounters an error, the Response Object MUST contain the
-    error member with a value that is a Object with the following members:
-
-    code: A Number that indicates the error type that occurred. This MUST be an
-        integer.
-
-    message: A String providing a short description of the error. The message
-        SHOULD be limited to a concise single sentence.
-
-    data: A Primitive or Structured value that contains additional information
-        about the error.
-        This may be omitted.
-        The value of this member is defined by the Server (e.g. detailed error
-        information, nested errors etc.).
-
-    The error codes from and including -32768 to -32000 are reserved for
-    pre-defined errors. Any code within this range, but not defined explicitly
-    below is reserved for future use. The error codes are nearly the same as
-    those suggested for XML-RPC at the following
-    url: http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
-
-    """
-
-    pass
+        return data
 
 
 class JSONRPCProtocol(object):
