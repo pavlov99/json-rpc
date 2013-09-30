@@ -1,5 +1,6 @@
 *.py[c|o]
 .env
+.env3
 *.egg-info
 *.egg
 build/
