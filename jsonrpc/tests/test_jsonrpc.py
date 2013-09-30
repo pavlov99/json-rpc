@@ -31,6 +31,17 @@ class TestJSONRPCRequest(unittest.TestCase):
         request = JSONRPCRequest("devide", {"numerator": 1, "denominator": 2})
         self.assertEqual(
             json.loads(request.json),
-            {"method": "add", "params": {"numerator": 1, "denominator": 2},
+            {"method": "devide", "params": {"numerator": 1, "denominator": 2},
              "jsonrpc": "2.0"},
         )
+
+    def test_deserialize(self):
+        str_json = json.dumps({
+            "method": "add",
+            "params": [1, 2],
+            "jsonrpc": "2.0",
+        })
+
+        request = JSONRPCRequest.from_json(str_json)
+        self.assertEqual(request.method, "add")
+        self.assertEqual(request.params, [1, 2])

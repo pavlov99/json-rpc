@@ -66,7 +66,8 @@ class JSONRPCRequest(object):
 
     @classmethod
     def from_json(cls, json_str):
-        return cls(**cls.deserializer(json_str))
+        data = cls.deserialize(json_str)
+        return JSONRPCRequest(method=data["method"], params=data["params"])
 
     @property
     def is_notification(self):
