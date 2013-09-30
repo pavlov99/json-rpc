@@ -1,6 +1,6 @@
 ﻿import os
 from setuptools import setup, find_packages
-from pmll import version
+from jsonrpc import version
 
 # Import multiprocessing to prevent test run problem. In case of nosetests
 # (not nose2) there is probles, for details see:
