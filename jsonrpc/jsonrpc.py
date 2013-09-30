@@ -37,8 +37,8 @@ class JSONRPCRequest(object):
 
     """
 
-    serializer = json.dumps
-    deserializer = json.loads
+    serialize = staticmethod(json.dumps)
+    deserialize = staticmethod(json.loads)
 
     def __init__(self, method=None, params=None, _id=None):
         if not isinstance(method, str):
@@ -51,13 +51,18 @@ class JSONRPCRequest(object):
         self.params = params
         self.id = _id
 
-    def serialize(self):
-        return self.serializer(dict(
+    @property
+    def json(self):
+        data = dict(
             jsonrpc=JSONRPCProtocol.JSONRPC_VERSION,
             method=self.method,
             params=self.params,
-            id=self.id,
-        ))
+        )
+
+        if self.id:
+            data["id"] = self.id
+
+        return self.serialize(data)
 
     @classmethod
     def from_json(cls, json_str):
