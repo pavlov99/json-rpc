@@ -1,7 +1,11 @@
 import json
 import unittest
 
-from ..jsonrpc import JSONRPCRequest, JSONRPCBatchRequest
+from ..jsonrpc import (
+    JSONRPCRequest,
+    JSONRPCBatchRequest,
+    JSONRPCResponse,
+)
 
 
 def isjsonequal(json1, json2):
@@ -377,7 +381,7 @@ class TestJSONRPCRequest(unittest.TestCase):
         #))
 
 
-class TestButchRequest(unittest.TestCase):
+class TestJSONRPCBatchRequest(unittest.TestCase):
     def test_batch_request(self):
         request = JSONRPCBatchRequest(
             JSONRPCRequest("devide", {"num": 1, "denom": 2}, _id=1),
@@ -403,3 +407,39 @@ class TestButchRequest(unittest.TestCase):
             self.assertTrue(r.method in ["add", "mul"])
             self.assertEqual(r.params, [1, 2])
             self.assertEqual(r._id, None)
+
+
+class TestJSONRPCResponse(unittest.TestCase):
+    def setUp(self):
+        self.response_success_params = {
+            "result": "",
+            "_id": 1,
+        }
+        self.response_error_params = {
+            "error": {
+                "code": 1,
+                "message": "error",
+            },
+            "_id": 1,
+        }
+
+    def test_correct_init(self):
+        """ Test object is created."""
+        JSONRPCResponse(**self.response_success_params)
+
+    def test_validation_incorrect_no_parameters(self):
+        with self.assertRaises(ValueError):
+            JSONRPCResponse()
+
+    #def test_method_validation_str(self):
+        #self.request_params.update({"method": "add"})
+        #JSONRPCRequest(**self.request_params)
+
+    #def test_method_validation_not_str(self):
+        #self.request_params.update({"method": []})
+        #with self.assertRaises(ValueError):
+            #JSONRPCRequest(**self.request_params)
+
+        #self.request_params.update({"method": {}})
+        #with self.assertRaises(ValueError):
+            #JSONRPCRequest(**self.request_params)
