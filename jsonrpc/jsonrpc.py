@@ -1,5 +1,6 @@
 ﻿import json
 import six
+from .exceptions import JSONRPCError
 
 
 class JSONRPCProtocol(object):
@@ -236,6 +237,7 @@ class JSONRPCResponse(object):
             if self.result is not None:
                 raise ValueError("Either result or error should be used")
 
+            JSONRPCError(**value)
             self._dict["error"] = value
 
     error = property(__get_error, __set_error)

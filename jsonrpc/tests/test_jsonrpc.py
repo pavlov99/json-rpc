@@ -504,15 +504,25 @@ class TestJSONRPCResponse(unittest.TestCase):
         with self.assertRaises(ValueError):
             JSONRPCResponse(result="", error={"code": 1, "message": ""})
 
-    #def test_method_validation_str(self):
-        #self.request_params.update({"method": "add"})
-        #JSONRPCRequest(**self.request_params)
+    def test_validation_error_correct(self):
+        JSONRPCResponse(**self.response_error_params)
 
-    #def test_method_validation_not_str(self):
-        #self.request_params.update({"method": []})
-        #with self.assertRaises(ValueError):
-            #JSONRPCRequest(**self.request_params)
+    def test_validation_error_incorrect(self):
+        self.response_error_params["error"].update({"code": "str"})
+        with self.assertRaises(ValueError):
+            JSONRPCResponse(**self.response_error_params)
 
-        #self.request_params.update({"method": {}})
-        #with self.assertRaises(ValueError):
-            #JSONRPCRequest(**self.request_params)
+    def test_validation_error_incorrect_no_code(self):
+        del self.response_error_params["error"]["code"]
+        with self.assertRaises(ValueError):
+            JSONRPCResponse(**self.response_error_params)
+
+    def test_validation_error_incorrect_no_message(self):
+        del self.response_error_params["error"]["message"]
+        with self.assertRaises(ValueError):
+            JSONRPCResponse(**self.response_error_params)
+
+    def test_validation_error_incorrect_message_not_str(self):
+        self.response_error_params["error"].update({"message": 0})
+        with self.assertRaises(ValueError):
+            JSONRPCResponse(**self.response_error_params)
