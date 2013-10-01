@@ -1,3 +1,5 @@
+import six
+
 class JSONRPCError(object):
 
     """ Error for JSON-RPC communication.
@@ -26,23 +28,21 @@ class JSONRPCError(object):
     """
 
     def __init__(self, code=None, message=None, data=None):
-        self.code = code or self.code
-        self.message = message or self.message
-        self.data = data
+        self._dict = dict()
+        self.code = code
+        #self.message = message or self.message
+        #self.data = data
 
-    @property
-    def _dict(self):
-        """ Return object dict representation.
+    def __get_code(self):
+        return self._dict["code"]
 
-        :return dict:
+    def __set_code(self, value):
+        if not isinstance(value, six.integer_types):
+            raise ValueError("Error code should be integer")
 
-        """
-        data = dict(code=self.code, message=self.message)
+        self._dict["code"] = value
 
-        if self.data:
-            data["data"] = self.data
-
-        return data
+    code = property(__get_code, __set_code)
 
 
 class JSONRPCParseError(JSONRPCError):
