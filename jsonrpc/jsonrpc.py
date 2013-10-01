@@ -157,9 +157,12 @@ class JSONRPCRequest(object):
         if not all(isinstance(d, dict) for d in data):
             raise ValueError("Each request should be an object (dict)")
 
-        result = [JSONRPCRequest(
-            method=d["method"], params=d.get("params"), _id=d.get("id")
-        ) for d in data]
+        try:
+            result = [JSONRPCRequest(
+                method=d["method"], params=d.get("params"), _id=d.get("id")
+            ) for d in data]
+        except KeyError:
+            raise ValueError("Incorrect Request")
 
         return result if len(result) > 1 or is_batch else result[0]
 
