@@ -134,19 +134,19 @@ class JSONRPCRequest(object):
     def json(self):
         return self.serialize(self._dict)
 
-
-
-
     @classmethod
     def from_json(cls, json_str):
         data = cls.deserialize(json_str)
         data = [data] if not isinstance(data, list) else data
 
         result = [JSONRPCRequest(
-            method=d["method"], params=d["params"], _id=d.get("id"))
-            for d in data]
+            method=d["method"], params=d.get("params"), _id=d.get("id")
+        ) for d in data]
 
         return result if len(result) > 1 else result[0]
+
+
+
 
     def respond_error(self, error):
         data = JSONRPCResponse(error=error, _id=self.id)._dict
@@ -157,14 +157,17 @@ class JSONRPCRequest(object):
         return self.serialize(data)
 
 
-
 class JSONRPCBatchRequest(object):
     def __init__(self, *requests):
         self.requests = requests
 
+    @classmethod
+    def from_json(cls, json_str):
+        return JSONRPCRequest.from_json(json_str)
+
     @property
     def json(self):
-        return json.dumps([r.dict for r in self.requests])
+        return json.dumps([r._dict for r in self.requests])
 
 
 class JSONRPCResponse(object):

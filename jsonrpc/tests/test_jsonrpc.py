@@ -323,53 +323,44 @@ class TestJSONRPCRequest(unittest.TestCase):
             "id": 0,
         }))
 
-    #def test_serialize_args_no_id(self):
-        #request = JSONRPCRequest("add", [1, 2])
-        #self.assertEqual(
-            #json.loads(request.json),
-            #{"method": "add", "params": [1, 2], "jsonrpc": "2.0"},
-        #)
+    def test_from_json_request_no_id(self):
+        str_json = json.dumps({
+            "method": "add",
+            "params": [1, 2],
+            "jsonrpc": "2.0",
+        })
 
-    #def test_serialize_kwargs_no_id(self):
-        #request = JSONRPCRequest("devide", {"numerator": 1, "denominator": 2})
-        #self.assertEqual(
-            #json.loads(request.json),
-            #{"method": "devide", "params": {"numerator": 1, "denominator": 2},
-             #"jsonrpc": "2.0"},
-        #)
+        request = JSONRPCRequest.from_json(str_json)
+        self.assertTrue(isinstance(request, JSONRPCRequest))
+        self.assertEqual(request.method, "add")
+        self.assertEqual(request.params, [1, 2])
+        self.assertEqual(request._id, None)
 
+    def test_from_json_request_no_params(self):
+        str_json = json.dumps({
+            "method": "add",
+            "jsonrpc": "2.0",
+        })
 
-    #def test_batch_request(self):
-        #request = JSONRPCBatchRequest(
-            #JSONRPCRequest("devide", {"num": 1, "denom": 2}, _id=1),
-            #JSONRPCRequest("devide", {"num": 3, "denom": 2}, _id=2),
-        #)
-        #self.assertEqual(json.loads(request.json), [
-            #{"method": "devide", "params": {"num": 1, "denom": 2}, "id": 1,
-             #"jsonrpc": "2.0"},
-            #{"method": "devide", "params": {"num": 3, "denom": 2}, "id": 2,
-             #"jsonrpc": "2.0"},
-        #])
+        request = JSONRPCRequest.from_json(str_json)
+        self.assertTrue(isinstance(request, JSONRPCRequest))
+        self.assertEqual(request.method, "add")
+        self.assertEqual(request.params, None)
+        self.assertEqual(request._id, None)
 
-    #def test_deserialize(self):
-        #str_json = json.dumps({
-            #"method": "add",
-            #"params": [1, 2],
-            #"jsonrpc": "2.0",
-        #})
+    def test_from_json_request(self):
+        str_json = json.dumps({
+            "method": "add",
+            "params": [0, 1],
+            "jsonrpc": "2.0",
+            "id": "id",
+        })
 
-        #request = JSONRPCRequest.from_json(str_json)
-        #self.assertEqual(request.method, "add")
-        #self.assertEqual(request.params, [1, 2])
-
-    #def test_batch_deserialize(self):
-        #str_json = json.dumps([
-            #{"method": "add", "params": [1, 2], "jsonrpc": "2.0"},
-            #{"method": "mul", "params": [1, 2], "jsonrpc": "2.0"},
-        #])
-
-        #request = JSONRPCRequest.from_json(str_json)
-        #self.assertTrue(isinstance(request, list))
+        request = JSONRPCRequest.from_json(str_json)
+        self.assertTrue(isinstance(request, JSONRPCRequest))
+        self.assertEqual(request.method, "add")
+        self.assertEqual(request.params, [0, 1])
+        self.assertEqual(request._id, "id")
 
     #def test_respond_success(self):
         #request = JSONRPCRequest("add", [1, 2])
@@ -384,3 +375,31 @@ class TestJSONRPCRequest(unittest.TestCase):
             #request.respond_success(3),
             #'{"jsonrpc": "2.0", "result": 3, "id": "0"}',
         #))
+
+
+class TestButchRequest(unittest.TestCase):
+    def test_batch_request(self):
+        request = JSONRPCBatchRequest(
+            JSONRPCRequest("devide", {"num": 1, "denom": 2}, _id=1),
+            JSONRPCRequest("devide", {"num": 3, "denom": 2}, _id=2),
+        )
+        self.assertEqual(json.loads(request.json), [
+            {"method": "devide", "params": {"num": 1, "denom": 2}, "id": 1,
+             "jsonrpc": "2.0"},
+            {"method": "devide", "params": {"num": 3, "denom": 2}, "id": 2,
+             "jsonrpc": "2.0"},
+        ])
+
+    def test_from_json_batch(self):
+        str_json = json.dumps([
+            {"method": "add", "params": [1, 2], "jsonrpc": "2.0"},
+            {"method": "mul", "params": [1, 2], "jsonrpc": "2.0"},
+        ])
+
+        requests = JSONRPCRequest.from_json(str_json)
+        self.assertTrue(isinstance(requests, list))
+        for r in requests:
+            self.assertTrue(isinstance(r, JSONRPCRequest))
+            self.assertTrue(r.method in ["add", "mul"])
+            self.assertEqual(r.params, [1, 2])
+            self.assertEqual(r._id, None)
