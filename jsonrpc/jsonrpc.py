@@ -6,16 +6,14 @@ class JSONRPCProtocol(object):
     """ JSON-RPC protocol implementation."""
 
     JSONRPC_VERSION = "2.0"
-    serialize = staticmethod(json.dumps)
-    deserialize = staticmethod(json.loads)
 
     @classmethod
     def create_request(cls, method, params, _id=None):
         return JSONRPCRequest(method, params, _id=_id)
 
     @classmethod
-    def parse_request(cls, request):
-        return JSONRPCRequest.from_json(request)
+    def parse_request(cls, json_str):
+        return JSONRPCRequest.from_json(json_str)
 
 
 class JSONRPCRequest(object):
