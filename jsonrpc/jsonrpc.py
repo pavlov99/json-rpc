@@ -307,7 +307,12 @@ class JSONRPCResponseManager(object):
             return JSONRPCResponse(error=JSONRPCInvalidRequest()._dict)
 
         rs = [request] if isinstance(request, JSONRPCRequest) else request
-        responses = list(cls._get_responses(rs, dispatcher))
+        responses = [r for r in cls._get_responses(rs, dispatcher)
+                     if r is not None]
+
+        # notifications
+        if not responses:
+            return
 
         if isinstance(request, JSONRPCRequest):
             return responses[0]
@@ -325,8 +330,8 @@ class JSONRPCResponseManager(object):
             response = lambda **kwargs: JSONRPCResponse(
                 _id=request._id, **kwargs)
 
+            # notification
             if request._id is None:
-                # notification
                 yield
                 continue
 

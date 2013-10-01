@@ -130,3 +130,14 @@ class TestJSONRPCExamples(unittest.TestCase):
                 "message": "Invalid Request"}, "id": null}
             ]""")
         )
+
+    def test_rpc_call_batch(self):
+        raise NotImplemented()
+
+    def test_rpc_call_batch_all_notifications(self):
+        req = """[
+            {"jsonrpc": "2.0", "method": "notify_sum", "params": [1,2,4]},
+            {"jsonrpc": "2.0", "method": "notify_hello", "params": [7]}
+        ]"""
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertEqual(response, None)
