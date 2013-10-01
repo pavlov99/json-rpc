@@ -31,8 +31,8 @@ class JSONRPCError(object):
     def __init__(self, code=None, message=None, data=None):
         self._dict = dict()
         self.code = code
-        #self.message = message or self.message
-        #self.data = data
+        self.message = message
+        self.data = data
 
     def __get_code(self):
         return self._dict["code"]
@@ -45,6 +45,16 @@ class JSONRPCError(object):
 
     code = property(__get_code, __set_code)
 
+    def __get_message(self):
+        return self._dict["message"]
+
+    def __set_message(self, value):
+        if not isinstance(value, six.string_types):
+            raise ValueError("Error message should be string")
+
+        self._dict["message"] = value
+
+    message = property(__get_message, __set_message)
 
 class JSONRPCParseError(JSONRPCError):
 
