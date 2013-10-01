@@ -6,6 +6,7 @@ from ..jsonrpc import (
     JSONRPCBatchRequest,
     JSONRPCResponse,
 )
+from ..exceptions import JSONRPCError
 
 
 def isjsonequal(json1, json2):
@@ -407,6 +408,36 @@ class TestJSONRPCBatchRequest(unittest.TestCase):
             self.assertTrue(r.method in ["add", "mul"])
             self.assertEqual(r.params, [1, 2])
             self.assertEqual(r._id, None)
+
+
+class TestJSONRPCError(unittest.TestCase):
+    def setUp(self):
+        self.error_params = {
+            "code": 0,
+            "message": "",
+        }
+
+    def test_correct_init(self):
+        """ Test object is created."""
+        JSONRPCError(**self.error_params)
+
+    def test_validation_incorrect_no_parameters(self):
+        with self.assertRaises(ValueError):
+            JSONRPCError()
+
+    def test_code_validation_int(self):
+        self.error_params.update({"code": 32000})
+        JSONRPCError(**self.error_params)
+
+    def test_code_validation_no_code(self):
+        del self.error_params["code"]
+        with self.assertRaises(ValueError):
+            JSONRPCError(**self.error_params)
+
+    def test_code_validation_str(self):
+        self.error_params.update({"code": "0"})
+        with self.assertRaises(ValueError):
+            JSONRPCError(**self.error_params)
 
 
 class TestJSONRPCResponse(unittest.TestCase):
