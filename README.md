@@ -14,6 +14,11 @@ JSON-RPC is a stateless, light-weight remote procedure call (RPC) protocol. Prim
 
 It is designed to be simple!
 
+Install
+-------
+
+    pip install json-rpc
+
 Tests
 -----
 
