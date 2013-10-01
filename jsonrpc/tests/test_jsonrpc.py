@@ -464,6 +464,19 @@ class TestJSONRPCError(unittest.TestCase):
         self.error_params.update({"data": ""})
         JSONRPCError(**self.error_params)
 
+    def test_from_json(self):
+        str_json = json.dumps({
+            "code": 0,
+            "message": "",
+            "data": {},
+        })
+
+        request = JSONRPCError.from_json(str_json)
+        self.assertTrue(isinstance(request, JSONRPCError))
+        self.assertEqual(request.code, 0)
+        self.assertEqual(request.message, "")
+        self.assertEqual(request.data, {})
+
 
 class TestJSONRPCResponse(unittest.TestCase):
     def setUp(self):

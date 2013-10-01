@@ -1,3 +1,4 @@
+import json
 import six
 
 
@@ -27,6 +28,9 @@ class JSONRPCError(object):
     url: http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
 
     """
+
+    serialize = staticmethod(json.dumps)
+    deserialize = staticmethod(json.loads)
 
     def __init__(self, code=None, message=None, data=None):
         self._dict = dict()
@@ -63,6 +67,16 @@ class JSONRPCError(object):
         self._dict["data"] = value
 
     data = property(__get_data, __set_data)
+
+    @classmethod
+    def from_json(cls, json_str):
+        data = cls.deserialize(json_str)
+        return cls(
+            code=data["code"], message=data["message"], data=data.get("data"))
+
+    @property
+    def json(self):
+        return self.serialize(self._dict)
 
 
 class JSONRPCParseError(JSONRPCError):
