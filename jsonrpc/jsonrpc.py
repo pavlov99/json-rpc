@@ -1,6 +1,12 @@
 ﻿import json
 import six
-from .exceptions import JSONRPCError
+from .exceptions import (
+    JSONRPCError,
+    JSONRPCInvalidParams,
+    JSONRPCInvalidRequest,
+    JSONRPCMethodNotFound,
+    JSONRPCParseError,
+)
 
 
 class JSONRPCProtocol(object):
@@ -292,7 +298,16 @@ class JSONRPCResponseManager(object):
 
     @classmethod
     def handle(cls, request_str, dispatcher):
-        request = JSONRPCProtocol.parse_request(request_str)
+        try:
+            json.loads(request_str)
+        except (TypeError, ValueError):
+            return JSONRPCResponse(error=JSONRPCParseError()._dict)
+
+        try:
+            request = JSONRPCProtocol.parse_request(request_str)
+        except ValueError:
+            return JSONRPCResponse(error=JSONRPCInvalidRequest()._dict)
+
         rs = [request] if isinstance(request, JSONRPCRequest) else request
         responses = list(cls._get_responses(rs, dispatcher))
 
@@ -309,6 +324,18 @@ class JSONRPCResponseManager(object):
 
         """
         for r in requests:
-            method = dispatcher[r.method]
-            result = method(*r.args, **r.kwargs)
+            try:
+                method = dispatcher[r.method]
+            except KeyError:
+                yield JSONRPCResponse(
+                    error=JSONRPCMethodNotFound(data=r.method)._dict)
+                continue
+
+            try:
+                result = method(*r.args, **r.kwargs)
+            except TypeError:
+                yield JSONRPCResponse(
+                    error=JSONRPCInvalidParams(data=r._dict)._dict)
+                continue
+
             yield JSONRPCResponse(result=result, _id=r._id)
