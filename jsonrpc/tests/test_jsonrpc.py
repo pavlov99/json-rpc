@@ -58,6 +58,15 @@ class TestJSONRPCRequest(unittest.TestCase):
         self.assertEqual(request.method, "add")
         self.assertEqual(request.params, [1, 2])
 
+    def test_batch_deserialize(self):
+        str_json = json.dumps([
+            {"method": "add", "params": [1, 2], "jsonrpc": "2.0"},
+            {"method": "mul", "params": [1, 2], "jsonrpc": "2.0"},
+        ])
+
+        request = JSONRPCRequest.from_json(str_json)
+        self.assertTrue(isinstance(request, list))
+
     def test_respond_success(self):
         request = JSONRPCRequest("add", [1, 2])
         self.assertTrue(isjsonequal(
