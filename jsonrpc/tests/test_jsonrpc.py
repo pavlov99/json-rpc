@@ -6,7 +6,10 @@ from ..jsonrpc import (
     JSONRPCBatchRequest,
     JSONRPCResponse,
 )
-from ..exceptions import JSONRPCError
+from ..exceptions import (
+    JSONRPCError,
+    JSONRPCParseError,
+)
 
 
 def isjsonequal(json1, json2):
@@ -526,3 +529,11 @@ class TestJSONRPCResponse(unittest.TestCase):
         self.response_error_params["error"].update({"message": 0})
         with self.assertRaises(ValueError):
             JSONRPCResponse(**self.response_error_params)
+
+
+class TestJSONRPCParseError(unittest.TestCase):
+    def test_code_message(self):
+        error = JSONRPCParseError()
+        self.assertEqual(error.code, -32700)
+        self.assertEqual(error.message, "Parse error")
+        self.assertEqual(error.data, None)

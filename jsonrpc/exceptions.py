@@ -34,8 +34,8 @@ class JSONRPCError(object):
 
     def __init__(self, code=None, message=None, data=None):
         self._dict = dict()
-        self.code = code
-        self.message = message
+        self.code = getattr(self.__class__, "CODE", code)
+        self.message = getattr(self.__class__, "MESSAGE", message)
         self.data = data
 
     def __get_code(self):
@@ -88,8 +88,8 @@ class JSONRPCParseError(JSONRPCError):
 
     """
 
-    code = -32700
-    message = "Parse error"
+    CODE = -32700
+    MESSAGE = "Parse error"
 
 
 class JSONRPCInvalidRequest(JSONRPCError):
@@ -100,8 +100,8 @@ class JSONRPCInvalidRequest(JSONRPCError):
 
     """
 
-    code = -32600
-    message = "Invalid Request"
+    CODE = -32600
+    MESSAGE = "Invalid Request"
 
 
 class JSONRPCMethodNotFound(JSONRPCError):
@@ -112,8 +112,8 @@ class JSONRPCMethodNotFound(JSONRPCError):
 
     """
 
-    code = -32601
-    message = "Method not found"
+    CODE = -32601
+    MESSAGE = "Method not found"
 
 
 class JSONRPCInvalidParams(JSONRPCError):
@@ -124,8 +124,8 @@ class JSONRPCInvalidParams(JSONRPCError):
 
     """
 
-    code = -32602
-    message = "Invalid params"
+    CODE = -32602
+    MESSAGE = "Invalid params"
 
 
 class JSONRPCInternalError(JSONRPCError):
@@ -136,8 +136,8 @@ class JSONRPCInternalError(JSONRPCError):
 
     """
 
-    code = -32603
-    message = "Internal error"
+    CODE = -32603
+    MESSAGE = "Internal error"
 
 
 class JSONRPCServerError(JSONRPCError):
@@ -148,5 +148,5 @@ class JSONRPCServerError(JSONRPCError):
 
     """
 
-    code = -32000
-    message = "Server error"
+    CODE = -32000
+    MESSAGE = "Server error"
