@@ -55,3 +55,12 @@ class TestJSONRPCExamples(unittest.TestCase):
             response.json,
             '{"jsonrpc": "2.0", "result": 19, "id": 4}',
         )
+
+    def test_notification(self):
+        req = '{"jsonrpc": "2.0", "method": "update", "params": [1,2,3,4,5]}'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertEqual(response, None)
+
+        req = '{"jsonrpc": "2.0", "method": "foobar"}'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertEqual(response, None)

@@ -316,6 +316,11 @@ class JSONRPCResponseManager(object):
 
         """
         for r in requests:
+            if r._id is None:
+                # notification
+                yield
+                continue
+
             try:
                 method = dispatcher[r.method]
             except KeyError:
