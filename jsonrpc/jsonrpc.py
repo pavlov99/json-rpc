@@ -146,15 +146,12 @@ class JSONRPCRequest(object):
 
         return result if len(result) > 1 else result[0]
 
-
-
-
     def respond_error(self, error):
-        data = JSONRPCResponse(error=error, _id=self.id)._dict
+        data = JSONRPCResponse(error=error, _id=self._id)._dict
         return self.serialize(data)
 
     def respond_success(self, result):
-        data = JSONRPCResponse(result=result, _id=self.id)._dict
+        data = JSONRPCResponse(result=result, _id=self._id)._dict
         return self.serialize(data)
 
 
@@ -246,10 +243,8 @@ class JSONRPCResponse(object):
         return self._dict["_id"]
 
     def __set_id(self, value):
-        if value is None:
-            value = "null"
-
-        if not isinstance(value, six.string_types + six.integer_types):
+        if value is not None and \
+           not isinstance(value, six.string_types + six.integer_types):
             raise ValueError("id should be string or integer")
 
         self._dict["id"] = value

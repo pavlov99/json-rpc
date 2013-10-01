@@ -375,19 +375,19 @@ class TestJSONRPCRequest(unittest.TestCase):
         self.assertEqual(request.params, [0, 1])
         self.assertEqual(request._id, "id")
 
-    #def test_respond_success(self):
-        #request = JSONRPCRequest("add", [1, 2])
-        #self.assertTrue(isjsonequal(
-            #request.respond_success(3),
-            #'{"jsonrpc": "2.0", "result": 3, "id": null}',
-        #))
+    def test_respond_success(self):
+        request = JSONRPCRequest("add", [1, 2])
+        self.assertTrue(isjsonequal(
+            request.respond_success(3),
+            '{"jsonrpc": "2.0", "result": 3, "id": null}',
+        ))
 
-    #def test_respond_success_with_id(self):
-        #request = JSONRPCRequest("add", [1, 2], "0")
-        #self.assertTrue(isjsonequal(
-            #request.respond_success(3),
-            #'{"jsonrpc": "2.0", "result": 3, "id": "0"}',
-        #))
+    def test_respond_success_with_id(self):
+        request = JSONRPCRequest("add", [1, 2], "0")
+        self.assertTrue(isjsonequal(
+            request.respond_success(3),
+            '{"jsonrpc": "2.0", "result": 3, "id": "0"}',
+        ))
 
 
 class TestJSONRPCBatchRequest(unittest.TestCase):
