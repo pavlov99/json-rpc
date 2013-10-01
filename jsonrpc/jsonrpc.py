@@ -217,18 +217,26 @@ class JSONRPCResponse(object):
         return JSONRPCProtocol.JSONRPC_VERSION
 
     def __get_result(self):
-        return self._dict["result"]
+        return self._dict.get("result")
 
     def __set_result(self, value):
-        pass
+        if value is not None:
+            if self.error is not None:
+                raise ValueError("Either result or error should be used")
+
+            self._dict["result"] = value
 
     result = property(__get_result, __set_result)
 
     def __get_error(self):
-        return self._dict["error"]
+        return self._dict.get("error")
 
     def __set_error(self, value):
-        pass
+        if value is not None:
+            if self.result is not None:
+                raise ValueError("Either result or error should be used")
+
+            self._dict["error"] = value
 
     error = property(__get_error, __set_error)
 
