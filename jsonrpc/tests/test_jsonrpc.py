@@ -8,7 +8,12 @@ from ..jsonrpc import (
 )
 from ..exceptions import (
     JSONRPCError,
+    JSONRPCInternalError,
+    JSONRPCInvalidParams,
+    JSONRPCInvalidRequest,
+    JSONRPCMethodNotFound,
     JSONRPCParseError,
+    JSONRPCServerError,
 )
 
 
@@ -536,4 +541,44 @@ class TestJSONRPCParseError(unittest.TestCase):
         error = JSONRPCParseError()
         self.assertEqual(error.code, -32700)
         self.assertEqual(error.message, "Parse error")
+        self.assertEqual(error.data, None)
+
+
+class TestJSONRPCServerError(unittest.TestCase):
+    def test_code_message(self):
+        error = JSONRPCServerError()
+        self.assertEqual(error.code, -32000)
+        self.assertEqual(error.message, "Server error")
+        self.assertEqual(error.data, None)
+
+
+class TestJSONRPCInternalError(unittest.TestCase):
+    def test_code_message(self):
+        error = JSONRPCInternalError()
+        self.assertEqual(error.code, -32603)
+        self.assertEqual(error.message, "Internal error")
+        self.assertEqual(error.data, None)
+
+
+class TestJSONRPCInvalidParams(unittest.TestCase):
+    def test_code_message(self):
+        error = JSONRPCInvalidParams()
+        self.assertEqual(error.code, -32602)
+        self.assertEqual(error.message, "Invalid params")
+        self.assertEqual(error.data, None)
+
+
+class TestJSONRPCInvalidRequest(unittest.TestCase):
+    def test_code_message(self):
+        error = JSONRPCInvalidRequest()
+        self.assertEqual(error.code, -32600)
+        self.assertEqual(error.message, "Invalid request")
+        self.assertEqual(error.data, None)
+
+
+class TestJSONRPCMethodNotFound(unittest.TestCase):
+    def test_code_message(self):
+        error = JSONRPCMethodNotFound()
+        self.assertEqual(error.code, -32601)
+        self.assertEqual(error.message, "Method not found")
         self.assertEqual(error.data, None)

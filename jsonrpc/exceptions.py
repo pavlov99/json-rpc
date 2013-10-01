@@ -101,7 +101,7 @@ class JSONRPCInvalidRequest(JSONRPCError):
     """
 
     CODE = -32600
-    MESSAGE = "Invalid Request"
+    MESSAGE = "Invalid request"
 
 
 class JSONRPCMethodNotFound(JSONRPCError):
