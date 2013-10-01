@@ -154,6 +154,9 @@ class JSONRPCRequest(object):
         if not data:
             raise ValueError("[] value is not accepted")
 
+        if not all(isinstance(d, dict) for d in data):
+            raise ValueError("Each request should be an object (dict)")
+
         result = [JSONRPCRequest(
             method=d["method"], params=d.get("params"), _id=d.get("id")
         ) for d in data]
