@@ -167,6 +167,9 @@ class JSONRPCBatchRequest(object):
     def json(self):
         return json.dumps([r._dict for r in self.requests])
 
+    def __iter__(self):
+        return iter(self.requests)
+
 
 class JSONRPCResponse(object):
 
