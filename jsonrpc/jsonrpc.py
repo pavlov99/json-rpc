@@ -157,14 +157,6 @@ class JSONRPCRequest(object):
 
         return result if len(result) > 1 or is_batch else result[0]
 
-    def respond_error(self, error):
-        data = JSONRPCResponse(error=error, _id=self._id)._dict
-        return self.serialize(data)
-
-    def respond_success(self, result):
-        data = JSONRPCResponse(result=result, _id=self._id)._dict
-        return self.serialize(data)
-
 
 class JSONRPCBatchRequest(object):
     def __init__(self, *requests):

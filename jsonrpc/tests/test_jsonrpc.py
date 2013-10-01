@@ -19,10 +19,6 @@ from ..exceptions import (
 )
 
 
-def isjsonequal(json1, json2):
-    return json.loads(json1) == json.loads(json2)
-
-
 class TestJSONRPCRequest(unittest.TestCase):
 
     """ Test JSONRPCRequest class."""
@@ -376,20 +372,6 @@ class TestJSONRPCRequest(unittest.TestCase):
         self.assertEqual(request.method, "add")
         self.assertEqual(request.params, [0, 1])
         self.assertEqual(request._id, "id")
-
-    def test_respond_success(self):
-        request = JSONRPCRequest("add", [1, 2])
-        self.assertTrue(isjsonequal(
-            request.respond_success(3),
-            '{"jsonrpc": "2.0", "result": 3, "id": null}',
-        ))
-
-    def test_respond_success_with_id(self):
-        request = JSONRPCRequest("add", [1, 2], "0")
-        self.assertTrue(isjsonequal(
-            request.respond_success(3),
-            '{"jsonrpc": "2.0", "result": 3, "id": "0"}',
-        ))
 
 
 class TestJSONRPCBatchRequest(unittest.TestCase):
