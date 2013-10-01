@@ -115,3 +115,18 @@ class TestJSONRPCExamples(unittest.TestCase):
             response.json,
             '{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}'  # noqa
         ))
+
+    def test_rpc_call_with_invalid_batch(self):
+        req = '[1,2,3]'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(
+            response,
+            json.loads("""[
+                {"jsonrpc": "2.0", "error": {"code": -32600,
+                "message": "Invalid Request"}, "id": null},
+                {"jsonrpc": "2.0", "error": {"code": -32600,
+                "message": "Invalid Request"}, "id": null},
+                {"jsonrpc": "2.0", "error": {"code": -32600,
+                "message": "Invalid Request"}, "id": null}
+            ]""")
+        )
