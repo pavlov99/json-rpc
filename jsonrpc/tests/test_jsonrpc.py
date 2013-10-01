@@ -98,6 +98,35 @@ class TestJSONRPCRequest(unittest.TestCase):
         self.assertEqual(JSONRPCRequest("add", {}).kwargs, {})
         self.assertEqual(JSONRPCRequest("add", {"a": 1}).kwargs, {"a": 1})
 
+    def test_id_validation_string(self):
+        self.request_params.update({"_id": "id"})
+        JSONRPCRequest(**self.request_params)
+
+    def test_id_validation_int(self):
+        self.request_params.update({"_id": 0})
+        JSONRPCRequest(**self.request_params)
+
+    def test_id_validation_null(self):
+        self.request_params.update({"_id": "null"})
+        JSONRPCRequest(**self.request_params)
+
+    def test_id_validation_none(self):
+        self.request_params.update({"_id": None})
+        JSONRPCRequest(**self.request_params)
+
+    def test_id_validation_float(self):
+        self.request_params.update({"_id": 0.1})
+        with self.assertRaises(ValueError):
+            JSONRPCRequest(**self.request_params)
+
+    def test_id_validation_incorrect(self):
+        self.request_params.update({"_id": []})
+        with self.assertRaises(ValueError):
+            JSONRPCRequest(**self.request_params)
+
+        self.request_params.update({"_id": ()})
+        with self.assertRaises(ValueError):
+            JSONRPCRequest(**self.request_params)
 
     #def test_serialize_args_no_id(self):
         #request = JSONRPCRequest("add", [1, 2])
