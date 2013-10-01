@@ -1,6 +1,23 @@
 ﻿import json
 
 
+class JSONRPCProtocol(object):
+
+    """ JSON-RPC protocol implementation."""
+
+    JSONRPC_VERSION = "2.0"
+    serialize = staticmethod(json.dumps)
+    deserialize = staticmethod(json.loads)
+
+    @classmethod
+    def create_request(cls, method, params, _id=None):
+        return JSONRPCRequest(method, params, _id=_id)
+
+    @classmethod
+    def parse_request(cls, request):
+        return JSONRPCRequest.from_json(request)
+
+
 class JSONRPCRequest(object):
 
     """ A rpc call is represented by sending a Request object to a Server.
@@ -41,13 +58,13 @@ class JSONRPCRequest(object):
     deserialize = staticmethod(json.loads)
 
     def __init__(self, method=None, params=None, _id=None):
-        if not isinstance(method, str):
-            raise ValueError("method should be string")
+        #if not isinstance(method, str):
+            #raise ValueError("method should be string")
 
         assert isinstance(params, (list, dict))
         assert _id is None or isinstance(_id, (int, str))
 
-        self.method = method
+        self.method = str(method)
         self.params = params
         self.id = _id
 
@@ -84,7 +101,7 @@ class JSONRPCRequest(object):
         :return bool:
 
         """
-        return self._id is None
+        return self.id is None
 
 
 class JSONRPCResponse(object):
@@ -117,6 +134,8 @@ class JSONRPCResponse(object):
 
     """
 
+    serialize = staticmethod(json.dumps)
+
     def __init__(self, result=None, error=None, _id=None):
         self.result = result
         self.error = error
@@ -131,17 +150,6 @@ class JSONRPCResponse(object):
 
         return data
 
-
-class JSONRPCProtocol(object):
-
-    """ JSON-RPC protocol implementation."""
-
-    JSONRPC_VERSION = "2.0"
-
-    @classmethod
-    def create_request(cls, method, params, _id=None):
-        return JSONRPCRequest(method, params, _id=_id)
-
-    @classmethod
-    def parse_request(cls, request):
-        return JSONRPCRequest.from_json(request)
+    @property
+    def json(self):
+        return self.serialize(self._dict)
