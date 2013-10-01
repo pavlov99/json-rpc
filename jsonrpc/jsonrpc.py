@@ -257,3 +257,32 @@ class JSONRPCResponse(object):
     @property
     def json(self):
         return self.serialize(self._dict)
+
+
+class JSONRPCBatchResponse(object):
+    def __init__(self, *responses):
+        self.responses = responses
+
+    @property
+    def json(self):
+        return json.dumps([r._dict for r in self.responses])
+
+    def __iter__(self):
+        return iter(self.responses)
+
+
+class JSONRPCResponseManager(object):
+
+    """ JSON-RPC response manager.
+
+    Method brings syntactic shugar into library. Given dispatcher it handles
+    request (both single and batch) and handles errors.
+
+    request: [JSONRPCRequest|JSONRPCBatchRequest]
+    dispather: dict<function_name:function>
+
+    """
+
+    @classmethod
+    def handle(cls, request, dispatcher):
+        pass
