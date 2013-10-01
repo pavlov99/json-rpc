@@ -431,6 +431,10 @@ class TestJSONRPCResponse(unittest.TestCase):
         with self.assertRaises(ValueError):
             JSONRPCResponse()
 
+    def test_validation_incorrect_result_and_error(self):
+        with self.assertRaises(ValueError):
+            JSONRPCResponse(result="", error={"code": 1, "message": ""})
+
     #def test_method_validation_str(self):
         #self.request_params.update({"method": "add"})
         #JSONRPCRequest(**self.request_params)
