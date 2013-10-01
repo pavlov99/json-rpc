@@ -5,6 +5,8 @@ from ..jsonrpc import (
     JSONRPCRequest,
     JSONRPCBatchRequest,
     JSONRPCResponse,
+    JSONRPCBatchResponse,
+    JSONRPCResponseManager,
 )
 from ..exceptions import (
     JSONRPCError,
@@ -425,6 +427,47 @@ class TestJSONRPCBatchRequest(unittest.TestCase):
         for request in requests:
             self.assertTrue(isinstance(request, JSONRPCRequest))
             self.assertEqual(request.method, "devide")
+
+
+class TestJSONRPCBatchResponse(unittest.TestCase):
+    def test_batch_response(self):
+        response = JSONRPCBatchResponse(
+            JSONRPCResponse(result="result", _id=1),
+            JSONRPCResponse(error={"code": 0, "message": ""}, _id=2),
+        )
+        self.assertEqual(json.loads(response.json), [
+            {"result": "result", "id": 1, "jsonrpc": "2.0"},
+            {"error": {"code": 0, "message": ""}, "id": 2, "jsonrpc": "2.0"},
+        ])
+
+    def test_response_iterator(self):
+        responses = JSONRPCBatchResponse(
+            JSONRPCResponse(result="result", _id=1),
+            JSONRPCResponse(result="result", _id=2),
+        )
+        for response in responses:
+            self.assertTrue(isinstance(response, JSONRPCResponse))
+            self.assertEqual(response.result, "result")
+
+
+class TestJSONRPCResponseManager(unittest.TestCase):
+    def setUp(self):
+        self.dispatcher = {
+            "add": sum,
+            "list_len": len,
+            "101_base": lambda **kwargs: int("101", **kwargs),
+        }
+
+    def test_returned_type_response(self):
+        request = JSONRPCRequest("add", [[]], _id=0)
+        response = JSONRPCResponseManager.handle(request, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPCResponse))
+
+    def test_returned_type_butch_response(self):
+        request = JSONRPCBatchRequest(
+            JSONRPCRequest("add", [[]], _id=0))
+        response = JSONRPCResponseManager.handle(request, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPCBatchResponse))
 
 
 class TestJSONRPCError(unittest.TestCase):
