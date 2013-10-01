@@ -453,6 +453,17 @@ class TestJSONRPCError(unittest.TestCase):
         with self.assertRaises(ValueError):
             JSONRPCError(**self.error_params)
 
+    def test_data_validation_none(self):
+        self.error_params.update({"data": None})
+        JSONRPCError(**self.error_params)
+
+    def test_data_validation(self):
+        self.error_params.update({"data": {}})
+        JSONRPCError(**self.error_params)
+
+        self.error_params.update({"data": ""})
+        JSONRPCError(**self.error_params)
+
 
 class TestJSONRPCResponse(unittest.TestCase):
     def setUp(self):
