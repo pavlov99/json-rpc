@@ -439,6 +439,20 @@ class TestJSONRPCError(unittest.TestCase):
         with self.assertRaises(ValueError):
             JSONRPCError(**self.error_params)
 
+    def test_message_validation_str(self):
+        self.error_params.update({"message": ""})
+        JSONRPCError(**self.error_params)
+
+    def test_message_validation_none(self):
+        del self.error_params["message"]
+        with self.assertRaises(ValueError):
+            JSONRPCError(**self.error_params)
+
+    def test_message_validation_int(self):
+        self.error_params.update({"message": 0})
+        with self.assertRaises(ValueError):
+            JSONRPCError(**self.error_params)
+
 
 class TestJSONRPCResponse(unittest.TestCase):
     def setUp(self):

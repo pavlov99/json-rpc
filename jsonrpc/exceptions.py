@@ -1,5 +1,6 @@
 import six
 
+
 class JSONRPCError(object):
 
     """ Error for JSON-RPC communication.
