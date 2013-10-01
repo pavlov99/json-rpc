@@ -483,6 +483,34 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
         self.assertTrue(isinstance(response, JSONRPCBatchResponse))
 
+    def test_parse_error(self):
+        req = '{"jsonrpc": "2.0", "method": "foobar, "params": "bar", "baz]'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPCResponse))
+        self.assertEqual(response.error["message"], "Parse error")
+        self.assertEqual(response.error["code"], -32700)
+
+    def test_invalid_request(self):
+        req = '{"jsonrpc": "2.0", "method": 1, "params": "bar"}'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPCResponse))
+        self.assertEqual(response.error["message"], "Invalid Request")
+        self.assertEqual(response.error["code"], -32600)
+
+    def test_method_not_found(self):
+        request = JSONRPCRequest("does_not_exist", [[]], _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPCResponse))
+        self.assertEqual(response.error["message"], "Method not found")
+        self.assertEqual(response.error["code"], -32601)
+
+    def test_invalid_params(self):
+        request = JSONRPCRequest("add", {"a": 0}, _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPCResponse))
+        self.assertEqual(response.error["message"], "Invalid params")
+        self.assertEqual(response.error["code"], -32602)
+
 
 class TestJSONRPCError(unittest.TestCase):
     def setUp(self):
@@ -638,7 +666,7 @@ class TestJSONRPCInvalidRequest(unittest.TestCase):
     def test_code_message(self):
         error = JSONRPCInvalidRequest()
         self.assertEqual(error.code, -32600)
-        self.assertEqual(error.message, "Invalid request")
+        self.assertEqual(error.message, "Invalid Request")
         self.assertEqual(error.data, None)
 
 
