@@ -56,6 +56,15 @@ class JSONRPCError(object):
 
     message = property(__get_message, __set_message)
 
+    def __get_data(self):
+        return self._dict.get("data")
+
+    def __set_data(self, value):
+        self._dict["data"] = value
+
+    data = property(__get_data, __set_data)
+
+
 class JSONRPCParseError(JSONRPCError):
 
     """ Parse Error.
