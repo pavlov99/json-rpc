@@ -151,6 +151,9 @@ class JSONRPCRequest(object):
             data = [data]
             is_batch = False
 
+        if not data:
+            raise ValueError("[] value is not accepted")
+
         result = [JSONRPCRequest(
             method=d["method"], params=d.get("params"), _id=d.get("id")
         ) for d in data]
