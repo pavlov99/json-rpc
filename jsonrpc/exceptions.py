@@ -64,7 +64,8 @@ class JSONRPCError(object):
         return self._dict.get("data")
 
     def __set_data(self, value):
-        self._dict["data"] = value
+        if value is not None:
+            self._dict["data"] = value
 
     data = property(__get_data, __set_data)
 

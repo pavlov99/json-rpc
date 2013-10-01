@@ -315,24 +315,25 @@ class JSONRPCResponseManager(object):
         :return iterator(JSONRPCResponse):
 
         """
-        for r in requests:
-            if r._id is None:
+        for request in requests:
+            response = lambda **kwargs: JSONRPCResponse(
+                _id=request._id, **kwargs)
+
+            if request._id is None:
                 # notification
                 yield
                 continue
 
             try:
-                method = dispatcher[r.method]
+                method = dispatcher[request.method]
             except KeyError:
-                yield JSONRPCResponse(
-                    error=JSONRPCMethodNotFound(data=r.method)._dict)
+                yield response(error=JSONRPCMethodNotFound()._dict)
                 continue
 
             try:
-                result = method(*r.args, **r.kwargs)
+                result = method(*request.args, **request.kwargs)
             except TypeError:
-                yield JSONRPCResponse(
-                    error=JSONRPCInvalidParams(data=r._dict)._dict)
+                yield response(error=JSONRPCInvalidParams()._dict)
                 continue
 
-            yield JSONRPCResponse(result=result, _id=r._id)
+            yield response(result=result)

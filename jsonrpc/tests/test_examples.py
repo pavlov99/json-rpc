@@ -64,3 +64,11 @@ class TestJSONRPCExamples(unittest.TestCase):
         req = '{"jsonrpc": "2.0", "method": "foobar"}'
         response = JSONRPCResponseManager.handle(req, self.dispatcher)
         self.assertEqual(response, None)
+
+    def test_rpc_call_of_non_existent_method(self):
+        req = '{"jsonrpc": "2.0", "method": "foobar", "id": "1"}'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isjsonequal(
+            response.json,
+            '{"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found"}, "id": "1"}'  # noqa
+        ))
