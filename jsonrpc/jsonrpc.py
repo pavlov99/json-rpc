@@ -92,6 +92,9 @@ class JSONRPCRequest(object):
         if value is not None and not isinstance(value, (list, tuple, dict)):
             raise ValueError("Incorrect params {}".format(value))
 
+        if isinstance(value, tuple):
+            value = list(value)
+
         if value is not None:
             self._dict["params"] = value
 
@@ -111,6 +114,15 @@ class JSONRPCRequest(object):
     _id = property(__get_id, __set_id)
 
     @property
+    def is_notification(self):
+        """ A Notification is a Request object without an "id" member.
+
+        :return bool:
+
+        """
+        return self._id is None
+
+    @property
     def args(self):
         return tuple(self.params) if isinstance(self.params, list) else ()
 
@@ -121,10 +133,6 @@ class JSONRPCRequest(object):
     @property
     def json(self):
         return self.serialize(self._dict)
-
-
-
-
 
 
 
@@ -148,14 +156,6 @@ class JSONRPCRequest(object):
         data = JSONRPCResponse(result=result, _id=self.id)._dict
         return self.serialize(data)
 
-    @property
-    def is_notification(self):
-        """ A Notification is a Request object without an "id" member.
-
-        :return bool:
-
-        """
-        return self.id is None
 
 
 class JSONRPCBatchRequest(object):
