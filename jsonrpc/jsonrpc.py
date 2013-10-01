@@ -79,6 +79,14 @@ class JSONRPCRequest(object):
         return data
 
     @property
+    def args(self):
+        return tuple(self.params) if isinstance(self.params, list) else ()
+
+    @property
+    def kwargs(self):
+        return self.params if isinstance(self.params, dict) else {}
+
+    @property
     def json(self):
         return self.serialize(self.dict)
 
