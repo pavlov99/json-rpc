@@ -417,6 +417,15 @@ class TestJSONRPCBatchRequest(unittest.TestCase):
             self.assertEqual(r.params, [1, 2])
             self.assertEqual(r._id, None)
 
+    def test_response_iterator(self):
+        requests = JSONRPCBatchRequest(
+            JSONRPCRequest("devide", {"num": 1, "denom": 2}, _id=1),
+            JSONRPCRequest("devide", {"num": 3, "denom": 2}, _id=2),
+        )
+        for request in requests:
+            self.assertTrue(isinstance(request, JSONRPCRequest))
+            self.assertEqual(request.method, "devide")
+
 
 class TestJSONRPCError(unittest.TestCase):
     def setUp(self):
