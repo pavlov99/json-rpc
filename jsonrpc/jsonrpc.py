@@ -91,12 +91,13 @@ class JSONRPCRequest(object):
     @classmethod
     def from_json(cls, json_str):
         data = cls.deserialize(json_str)
-        if not isinstance(data, list):
-            return JSONRPCRequest(method=data["method"], params=data["params"])
-        else:
-            return [
-                JSONRPCRequest(method=d["method"], params=d["params"])
-                for d in data]
+        data = [data] if not isinstance(data, list) else data
+
+        result = [JSONRPCRequest(
+            method=d["method"], params=d["params"], _id=d.get("id"))
+            for d in data]
+
+        return result if len(result) > 1 else result[0]
 
     def respond_error(self, error):
         data = JSONRPCResponse(error=error, _id=self.id)._dict
