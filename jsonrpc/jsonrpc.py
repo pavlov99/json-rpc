@@ -320,7 +320,7 @@ class JSONRPCResponseManager(object):
         if isinstance(request, JSONRPCRequest):
             return responses[0]
         else:
-            return JSONRPCBatchResponse(responses)
+            return JSONRPCBatchResponse(*responses)
 
     @classmethod
     def _get_responses(cls, requests, dispatcher):
