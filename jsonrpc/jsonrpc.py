@@ -203,18 +203,48 @@ class JSONRPCResponse(object):
     serialize = staticmethod(json.dumps)
 
     def __init__(self, result=None, error=None, _id=None):
+        self._dict = dict(jsonrpc=self.jsonrpc)
+
+        if result is None and error is None:
+            raise ValueError("Either result or error should be used")
+
         self.result = result
         self.error = error
-        self.id = _id
+        self._id = _id
 
     @property
-    def _dict(self):
-        data = dict(jsonrpc=JSONRPCProtocol.JSONRPC_VERSION, id=self.id)
+    def jsonrpc(self):
+        return JSONRPCProtocol.JSONRPC_VERSION
 
-        if self.result:
-            data["result"] = self.result
+    def __get_result(self):
+        return self._dict["result"]
 
-        return data
+    def __set_result(self, value):
+        pass
+
+    result = property(__get_result, __set_result)
+
+    def __get_error(self):
+        return self._dict["error"]
+
+    def __set_error(self, value):
+        pass
+
+    error = property(__get_error, __set_error)
+
+    def __get_id(self):
+        return self._dict["_id"]
+
+    def __set_id(self, value):
+        if value is None:
+            value = "null"
+
+        if not isinstance(value, six.string_types + six.integer_types):
+            raise ValueError("id should be string or integer")
+
+        self._dict["id"] = value
+
+    _id = property(__get_id, __set_id)
 
     @property
     def json(self):
