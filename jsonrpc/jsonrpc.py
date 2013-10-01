@@ -138,13 +138,18 @@ class JSONRPCRequest(object):
     @classmethod
     def from_json(cls, json_str):
         data = cls.deserialize(json_str)
-        data = [data] if not isinstance(data, list) else data
+
+        if isinstance(data, list):
+            is_batch = True
+        else:
+            data = [data]
+            is_batch = False
 
         result = [JSONRPCRequest(
             method=d["method"], params=d.get("params"), _id=d.get("id")
         ) for d in data]
 
-        return result if len(result) > 1 else result[0]
+        return result if len(result) > 1 or is_batch else result[0]
 
     def respond_error(self, error):
         data = JSONRPCResponse(error=error, _id=self._id)._dict
@@ -277,12 +282,33 @@ class JSONRPCResponseManager(object):
 
     Method brings syntactic shugar into library. Given dispatcher it handles
     request (both single and batch) and handles errors.
+    Request could be handled in parallel, it is server responsibility.
 
-    request: [JSONRPCRequest|JSONRPCBatchRequest]
+    request: json string. Will be converted into JSONRPCRequest or
+        JSONRPCBatchRequest
     dispather: dict<function_name:function>
 
     """
 
     @classmethod
-    def handle(cls, request, dispatcher):
-        pass
+    def handle(cls, request_str, dispatcher):
+        request = JSONRPCProtocol.parse_request(request_str)
+        rs = [request] if isinstance(request, JSONRPCRequest) else request
+        responses = list(cls._get_responses(rs, dispatcher))
+
+        if isinstance(request, JSONRPCRequest):
+            return responses[0]
+        else:
+            return JSONRPCBatchResponse(responses)
+
+    @classmethod
+    def _get_responses(cls, requests, dispatcher):
+        """ Response to each single JSON-RPC Request.
+
+        :return iterator(JSONRPCResponse):
+
+        """
+        for r in requests:
+            method = dispatcher[r.method]
+            result = method(*r.args, **r.kwargs)
+            yield JSONRPCResponse(result=result, _id=r._id)

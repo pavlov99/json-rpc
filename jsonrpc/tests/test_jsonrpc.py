@@ -419,6 +419,20 @@ class TestJSONRPCBatchRequest(unittest.TestCase):
             self.assertEqual(r.params, [1, 2])
             self.assertEqual(r._id, None)
 
+    def test_from_json_batch_one(self):
+        str_json = json.dumps([
+            {"method": "add", "params": [1, 2], "jsonrpc": "2.0"},
+        ])
+
+        requests = JSONRPCRequest.from_json(str_json)
+        self.assertTrue(isinstance(requests, list))
+        self.assertEqual(len(requests), 1)
+        r = requests[0]
+        self.assertTrue(isinstance(r, JSONRPCRequest))
+        self.assertEqual(r.method, "add")
+        self.assertEqual(r.params, [1, 2])
+        self.assertEqual(r._id, None)
+
     def test_response_iterator(self):
         requests = JSONRPCBatchRequest(
             JSONRPCRequest("devide", {"num": 1, "denom": 2}, _id=1),
@@ -460,13 +474,13 @@ class TestJSONRPCResponseManager(unittest.TestCase):
 
     def test_returned_type_response(self):
         request = JSONRPCRequest("add", [[]], _id=0)
-        response = JSONRPCResponseManager.handle(request, self.dispatcher)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
         self.assertTrue(isinstance(response, JSONRPCResponse))
 
     def test_returned_type_butch_response(self):
         request = JSONRPCBatchRequest(
             JSONRPCRequest("add", [[]], _id=0))
-        response = JSONRPCResponseManager.handle(request, self.dispatcher)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
         self.assertTrue(isinstance(response, JSONRPCBatchResponse))
 
 
