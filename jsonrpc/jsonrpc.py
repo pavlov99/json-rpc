@@ -1,4 +1,5 @@
 ﻿import json
+import six
 
 
 class JSONRPCProtocol(object):
@@ -56,25 +57,53 @@ class JSONRPCRequest(object):
     deserialize = staticmethod(json.loads)
 
     def __init__(self, method=None, params=None, _id=None):
-        assert isinstance(params, (list, dict))
-        assert _id is None or isinstance(_id, (int, str))
+        self._dict = dict(jsonrpc=self.jsonrpc)
 
-        self.method = str(method)
-        self.params = params
-        self.id = _id
+        #assert isinstance(params, (list, dict))
+        #assert _id is None or isinstance(_id, (int, str))
+
+        self.method = method
+        #self.params = params
+        #self.id = _id
+
+    #@property
+    #def dict(self):
+        #return self._dict
+
+        #data = dict(
+            #jsonrpc=self.jsonrpc,
+            #method=self.method,
+            #params=self.params,
+        #)
+
+        #if self.id:
+            #data["id"] = self.id
+
+        #return data
 
     @property
-    def dict(self):
-        data = dict(
-            jsonrpc=JSONRPCProtocol.JSONRPC_VERSION,
-            method=self.method,
-            params=self.params,
-        )
+    def jsonrpc(self):
+        return JSONRPCProtocol.JSONRPC_VERSION
 
-        if self.id:
-            data["id"] = self.id
+    def __get_method(self):
+        return self._method
 
-        return data
+    def __set_method(self, value):
+        #import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
+
+        if not isinstance(value, six.string_types):
+            raise ValueError("Method should be string")
+
+        if value.startswith("rpc."):
+            raise ValueError(
+                "Method names that begin with the word rpc followed by a " +
+                "period character (U+002E or ASCII 46) are reserved for " +
+                "rpc-internal methods and extensions and MUST NOT be used " +
+                "for anything else.")
+
+        self._method = str(value)
+
+    method = property(__get_method, __set_method)
 
     @property
     def args(self):
