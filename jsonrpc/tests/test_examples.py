@@ -72,3 +72,19 @@ class TestJSONRPCExamples(unittest.TestCase):
             response.json,
             '{"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found"}, "id": "1"}'  # noqa
         ))
+
+    def test_rpc_call_with_invalid_json(self):
+        req = '{"jsonrpc": "2.0", "method": "foobar, "params": "bar", "baz]'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isjsonequal(
+            response.json,
+            '{"jsonrpc": "2.0", "error": {"code": -32700, "message": "Parse error"}, "id": null}'  # noqa
+        ))
+
+    def test_rpc_call_with_invalid_request_object(self):
+        req = '{"jsonrpc": "2.0", "method": 1, "params": "bar"}'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isjsonequal(
+            response.json,
+            '{"jsonrpc": "2.0", "error": {"code": -32600, "message": "Invalid Request"}, "id": null}'  # noqa
+        ))
