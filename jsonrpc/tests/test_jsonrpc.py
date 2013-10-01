@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from ..jsonrpc import JSONRPCRequest
+from ..jsonrpc import JSONRPCRequest, JSONRPCBatchRequest
 
 
 def isjsonequal(json1, json2):
@@ -34,6 +34,18 @@ class TestJSONRPCRequest(unittest.TestCase):
             {"method": "devide", "params": {"numerator": 1, "denominator": 2},
              "jsonrpc": "2.0"},
         )
+
+    def test_batch_request(self):
+        request = JSONRPCBatchRequest(
+            JSONRPCRequest("devide", {"num": 1, "denom": 2}, _id=1),
+            JSONRPCRequest("devide", {"num": 3, "denom": 2}, _id=2),
+        )
+        self.assertEqual(json.loads(request.json), [
+            {"method": "devide", "params": {"num": 1, "denom": 2}, "id": 1,
+             "jsonrpc": "2.0"},
+            {"method": "devide", "params": {"num": 3, "denom": 2}, "id": 2,
+             "jsonrpc": "2.0"},
+        ])
 
     def test_deserialize(self):
         str_json = json.dumps({

@@ -58,9 +58,6 @@ class JSONRPCRequest(object):
     deserialize = staticmethod(json.loads)
 
     def __init__(self, method=None, params=None, _id=None):
-        #if not isinstance(method, str):
-            #raise ValueError("method should be string")
-
         assert isinstance(params, (list, dict))
         assert _id is None or isinstance(_id, (int, str))
 
@@ -69,7 +66,7 @@ class JSONRPCRequest(object):
         self.id = _id
 
     @property
-    def json(self):
+    def dict(self):
         data = dict(
             jsonrpc=JSONRPCProtocol.JSONRPC_VERSION,
             method=self.method,
@@ -79,7 +76,11 @@ class JSONRPCRequest(object):
         if self.id:
             data["id"] = self.id
 
-        return self.serialize(data)
+        return data
+
+    @property
+    def json(self):
+        return self.serialize(self.dict)
 
     @classmethod
     def from_json(cls, json_str):
@@ -102,6 +103,15 @@ class JSONRPCRequest(object):
 
         """
         return self.id is None
+
+
+class JSONRPCBatchRequest(object):
+    def __init__(self, *requests):
+        self.requests = requests
+
+    @property
+    def json(self):
+        return json.dumps([r.dict for r in self.requests])
 
 
 class JSONRPCResponse(object):
