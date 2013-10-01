@@ -58,35 +58,16 @@ class JSONRPCRequest(object):
 
     def __init__(self, method=None, params=None, _id=None):
         self._dict = dict(jsonrpc=self.jsonrpc)
-
-        #assert isinstance(params, (list, dict))
-        #assert _id is None or isinstance(_id, (int, str))
-
         self.method = method
         self.params = params
-        #self.id = _id
-
-    #@property
-    #def dict(self):
-        #return self._dict
-
-        #data = dict(
-            #jsonrpc=self.jsonrpc,
-            #method=self.method,
-            #params=self.params,
-        #)
-
-        #if self.id:
-            #data["id"] = self.id
-
-        #return data
+        self._id = _id
 
     @property
     def jsonrpc(self):
         return JSONRPCProtocol.JSONRPC_VERSION
 
     def __get_method(self):
-        return self._method
+        return self._dict["method"]
 
     def __set_method(self, value):
 
@@ -100,20 +81,34 @@ class JSONRPCRequest(object):
                 "rpc-internal methods and extensions and MUST NOT be used " +
                 "for anything else.")
 
-        self._method = str(value)
+        self._dict["method"] = str(value)
 
     method = property(__get_method, __set_method)
 
     def __get_params(self):
-        return self._params
+        return self._dict.get("params")
 
     def __set_params(self, value):
         if value is not None and not isinstance(value, (list, tuple, dict)):
             raise ValueError("Incorrect params {}".format(value))
 
-        self._params = value
+        if value is not None:
+            self._dict["params"] = value
 
     params = property(__get_params, __set_params)
+
+    def __get_id(self):
+        return self._dict.get("id")
+
+    def __set_id(self, value):
+        if value is not None and \
+           not isinstance(value, six.string_types + six.integer_types):
+            raise ValueError("id should be string or integer")
+
+        if value is not None:
+            self._dict["id"] = value
+
+    _id = property(__get_id, __set_id)
 
     @property
     def args(self):
@@ -125,7 +120,14 @@ class JSONRPCRequest(object):
 
     @property
     def json(self):
-        return self.serialize(self.dict)
+        return self.serialize(self._dict)
+
+
+
+
+
+
+
 
     @classmethod
     def from_json(cls, json_str):
