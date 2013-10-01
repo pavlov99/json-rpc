@@ -85,7 +85,12 @@ class JSONRPCRequest(object):
     @classmethod
     def from_json(cls, json_str):
         data = cls.deserialize(json_str)
-        return JSONRPCRequest(method=data["method"], params=data["params"])
+        if not isinstance(data, list):
+            return JSONRPCRequest(method=data["method"], params=data["params"])
+        else:
+            return [
+                JSONRPCRequest(method=d["method"], params=d["params"])
+                for d in data]
 
     def respond_error(self, error):
         data = JSONRPCResponse(error=error, _id=self.id)._dict
