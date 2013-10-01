@@ -63,7 +63,7 @@ class JSONRPCRequest(object):
         #assert _id is None or isinstance(_id, (int, str))
 
         self.method = method
-        #self.params = params
+        self.params = params
         #self.id = _id
 
     #@property
@@ -89,7 +89,6 @@ class JSONRPCRequest(object):
         return self._method
 
     def __set_method(self, value):
-        #import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
 
         if not isinstance(value, six.string_types):
             raise ValueError("Method should be string")
@@ -104,6 +103,17 @@ class JSONRPCRequest(object):
         self._method = str(value)
 
     method = property(__get_method, __set_method)
+
+    def __get_params(self):
+        return self._params
+
+    def __set_params(self, value):
+        if value is not None and not isinstance(value, (list, tuple, dict)):
+            raise ValueError("Incorrect params {}".format(value))
+
+        self._params = value
+
+    params = property(__get_params, __set_params)
 
     @property
     def args(self):
