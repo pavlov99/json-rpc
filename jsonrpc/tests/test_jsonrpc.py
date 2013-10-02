@@ -465,7 +465,7 @@ class TestJSONRPCResponseManager(unittest.TestCase):
             "add": sum,
             "list_len": len,
             "101_base": lambda **kwargs: int("101", **kwargs),
-            "error": lambda: raise_(ValueError("error_explanation"))
+            "error": lambda: raise_(KeyError("error_explanation"))
         }
 
     def test_returned_type_response(self):
@@ -513,7 +513,10 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertTrue(isinstance(response, JSONRPCResponse))
         self.assertEqual(response.error["message"], "Server error")
         self.assertEqual(response.error["code"], -32000)
-        self.assertEqual(response.error["data"], "error_explanation")
+        self.assertEqual(
+            response.error["data"],
+            {"type": "KeyError", "message": "error_explanation"}
+        )
 
 
 class TestJSONRPCError(unittest.TestCase):
