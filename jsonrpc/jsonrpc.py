@@ -6,6 +6,7 @@ from .exceptions import (
     JSONRPCInvalidRequest,
     JSONRPCMethodNotFound,
     JSONRPCParseError,
+    JSONRPCServerError,
 )
 
 
@@ -348,6 +349,9 @@ class JSONRPCResponseManager(object):
                 result = method(*request.args, **request.kwargs)
             except TypeError:
                 yield response(error=JSONRPCInvalidParams()._dict)
+                continue
+            except Exception:
+                yield response(error=JSONRPCServerError()._dict)
                 continue
 
             yield response(result=result)
