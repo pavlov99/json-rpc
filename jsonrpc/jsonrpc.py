@@ -338,8 +338,7 @@ class JSONRPCResponseManager(object):
             response = lambda **kwargs: JSONRPCResponse(
                 _id=request._id, **kwargs)
 
-            # notification
-            if request._id is None:
+            if request.is_notification:
                 yield
                 continue
 
