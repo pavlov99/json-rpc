@@ -513,10 +513,11 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertTrue(isinstance(response, JSONRPCResponse))
         self.assertEqual(response.error["message"], "Server error")
         self.assertEqual(response.error["code"], -32000)
-        self.assertEqual(
-            response.error["data"],
-            {"type": "KeyError", "message": "error_explanation"}
-        )
+        self.assertEqual(response.error["data"], {
+            "type": "KeyError",
+            "args": ('error_explanation',),
+            "message": "'error_explanation'",
+        })
 
 
 class TestJSONRPCError(unittest.TestCase):
