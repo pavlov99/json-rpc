@@ -277,8 +277,12 @@ class JSONRPCBatchResponse(object):
         self.responses = responses
 
     @property
+    def _dict(self):
+        return [r._dict for r in self.responses]
+
+    @property
     def json(self):
-        return json.dumps([r._dict for r in self.responses])
+        return json.dumps(self._dict)
 
     def __iter__(self):
         return iter(self.responses)
