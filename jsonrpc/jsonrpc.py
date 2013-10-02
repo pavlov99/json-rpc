@@ -354,8 +354,9 @@ class JSONRPCResponseManager(object):
             except TypeError:
                 yield response(error=JSONRPCInvalidParams()._dict)
                 continue
-            except Exception:
-                yield response(error=JSONRPCServerError()._dict)
+            except Exception as e:
+                data = {"type": e.__class__.__name__, "message": e.message}
+                yield response(error=JSONRPCServerError(data=data)._dict)
                 continue
 
             yield response(result=result)

@@ -458,10 +458,14 @@ class TestJSONRPCBatchResponse(unittest.TestCase):
 
 class TestJSONRPCResponseManager(unittest.TestCase):
     def setUp(self):
+        def raise_(e):
+            raise e
+
         self.dispatcher = {
             "add": sum,
             "list_len": len,
             "101_base": lambda **kwargs: int("101", **kwargs),
+            "error": lambda: raise_(KeyError("error_explanation"))
         }
 
     def test_returned_type_response(self):
@@ -502,6 +506,17 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertTrue(isinstance(response, JSONRPCResponse))
         self.assertEqual(response.error["message"], "Invalid params")
         self.assertEqual(response.error["code"], -32602)
+
+    def test_server_error(self):
+        request = JSONRPCRequest("error", _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPCResponse))
+        self.assertEqual(response.error["message"], "Server error")
+        self.assertEqual(response.error["code"], -32000)
+        self.assertEqual(
+            response.error["data"],
+            {"type": "KeyError", "message": "error_explanation"}
+        )
 
 
 class TestJSONRPCError(unittest.TestCase):
