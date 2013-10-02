@@ -445,6 +445,16 @@ class TestJSONRPCBatchResponse(unittest.TestCase):
             self.assertTrue(isinstance(response, JSONRPCResponse))
             self.assertEqual(response.result, "result")
 
+    def test_batch_response_dict(self):
+        response = JSONRPCBatchResponse(
+            JSONRPCResponse(result="result", _id=1),
+            JSONRPCResponse(result="result", _id=2),
+        )
+        self.assertEqual(response._dict, [
+            {"id": 1, "jsonrpc": "2.0", "result": "result"},
+            {"id": 2, "jsonrpc": "2.0", "result": "result"},
+        ])
+
 
 class TestJSONRPCResponseManager(unittest.TestCase):
     def setUp(self):
