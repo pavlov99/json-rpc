@@ -1,6 +1,8 @@
 json-rpc
 ========
 
+[![Build Status](https://travis-ci.org/pavlov99/json-rpc.png?branch=master)](https://travis-ci.org/pavlov99/json-rpc)
+[![Coverage Status](https://coveralls.io/repos/pavlov99/json-rpc/badge.png)](https://coveralls.io/r/pavlov99/json-rpc)
 [![Downloads](https://pypip.in/v/json-rpc/badge.png)](https://crate.io/packages/json-rpc)
 [![Downloads](https://pypip.in/d/json-rpc/badge.png)](https://crate.io/packages/json-rpc)
 
