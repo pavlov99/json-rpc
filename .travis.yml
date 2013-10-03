@@ -1,20 +1,27 @@
 language: python
-python:
-    - "2.5"
-    - "2.6"
-    - "2.7"
-    - "3.0"
-    - "3.1"
-    - "3.2"
-    - "3.3"
-    - "pypi"
+
+python: "2.7"
+
+env:
+    - TOXENV=py26
+    - TOXENV=py27
+    - TOXENV=py30
+    - TOXENV=py31
+    - TOXENV=py32
+    - TOXENV=py33
+    - TOXENV=cov
 
 branches:
     only:
         - master
         - develop
 
-install:
-    - "pip install -r requirements.txt --use-mirrors"
+install: pip install --quiet --use-mirrors tox
 
-script: nosetests
+script: tox
+
+after_script:
+    - if [ $TOXENV == "cov" ]; then
+        pip install --quiet --use-mirrors coveralls;
+        coveralls;
+      fi
