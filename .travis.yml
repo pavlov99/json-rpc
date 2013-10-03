@@ -4,6 +4,11 @@ python:
     - "2.7"
     - "3.2"
 
+branches:
+    only:
+        - master
+        - develop
+
 install:
     - "pip install -r requirements.txt --use-mirrors"
 
