@@ -1,9 +1,10 @@
+*.egg
+*.egg-info
 *.py[c|o]
-.env
 .coverage
+.env
 .env3
 .tox
-*.egg-info
-*.egg
 build/
 dist/
+docs/_build/
