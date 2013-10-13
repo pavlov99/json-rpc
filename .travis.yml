@@ -1,0 +1,17 @@
+language: python
+
+python: "2.7"
+
+env:
+    - TOXENV=py27
+    - TOXENV=py32
+    - TOXENV=py33
+
+branches:
+    only:
+        - master
+        - develop
+
+install: pip install --quiet --use-mirrors tox
+
+script: tox
