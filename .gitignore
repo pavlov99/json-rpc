@@ -1,5 +1,6 @@
 *.py[c|o]
 .env
+.coverage
 .env3
 .tox
 *.egg-info
