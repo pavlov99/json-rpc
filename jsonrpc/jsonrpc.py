@@ -31,21 +31,23 @@ class JSONRPCRequest(object):
 
     The Request object has the following members:
 
-    jsonrpc: A String specifying the version of the JSON-RPC protocol. MUST be
-        exactly "2.0".
+    :param str jsonrpc: A String specifying the version of the JSON-RPC
+        protocol. MUST be exactly "2.0".
 
-    method: A String containing the name of the method to be invoked. Method
-        names that begin with the word rpc followed by a period character
-        (U+002E or ASCII 46) are reserved for rpc-internal methods and
-        extensions and MUST NOT be used for anything else.
+    :param str method: A String containing the name of the method to be
+        invoked. Method names that begin with the word rpc followed by a
+        period character (U+002E or ASCII 46) are reserved for rpc-internal
+        methods and extensions and MUST NOT be used for anything else.
 
-    params: A Structured value that holds the parameter values to be used
-        during the invocation of the method. This member MAY be omitted.
+    :param params: A Structured value that holds the parameter values to be
+        used during the invocation of the method. This member MAY be omitted.
+    :type params: list or dict
 
-    id: An identifier established by the Client that MUST contain a String,
-        Number, or NULL value if included. If it is not included it is assumed
-        to be a notification. The value SHOULD normally not be Null [1] and
-        Numbers SHOULD NOT contain fractional parts [2].
+    :param id: An identifier established by the Client that MUST contain a
+        String, Number, or NULL value if included. If it is not included it is
+        assumed to be a notification. The value SHOULD normally not be Null
+        [1] and Numbers SHOULD NOT contain fractional parts [2].
+    :type id: str or int or None
 
     The Server MUST reply with the same value in the Response object if
     included. This member is used to correlate the context between the two
@@ -92,6 +94,7 @@ class JSONRPCRequest(object):
         self._dict["method"] = str(value)
 
     method = property(__get_method, __set_method)
+    """ JSON-RPC method name."""
 
     def __get_params(self):
         return self._dict.get("params")
@@ -169,6 +172,13 @@ class JSONRPCRequest(object):
 
 
 class JSONRPCBatchRequest(object):
+
+    """ Batch JSON-RPC Request.
+
+    :param JSONRPCRequest *requests: requests
+
+    """
+
     def __init__(self, *requests):
         self.requests = requests
 
@@ -192,22 +202,23 @@ class JSONRPCResponse(object):
     in the case of Notifications. The Response is expressed as a single JSON
     Object, with the following members:
 
-    jsonrpc: A String specifying the version of the JSON-RPC protocol. MUST be
-        exactly "2.0".
+    :param str jsonrpc: A String specifying the version of the JSON-RPC
+        protocol. MUST be exactly "2.0".
 
-    result: This member is REQUIRED on success.
+    :param result: This member is REQUIRED on success.
         This member MUST NOT exist if there was an error invoking the method.
         The value of this member is determined by the method invoked on the
         Server.
 
-    error: This member is REQUIRED on error.
+    :param dict error: This member is REQUIRED on error.
         This member MUST NOT exist if there was no error triggered during
         invocation. The value for this member MUST be an Object.
 
-    id: This member is REQUIRED.
+    :param id: This member is REQUIRED.
         It MUST be the same as the value of the id member in the Request
         Object. If there was an error in detecting the id in the Request
         object (e.g. Parse error/Invalid Request), it MUST be Null.
+    :type id: str or int or None
 
     Either the result member or error member MUST be included, but both
     members MUST NOT be included.
@@ -296,9 +307,10 @@ class JSONRPCResponseManager(object):
     request (both single and batch) and handles errors.
     Request could be handled in parallel, it is server responsibility.
 
-    request: json string. Will be converted into JSONRPCRequest or
+    :param str request: json string. Will be converted into JSONRPCRequest or
         JSONRPCBatchRequest
-    dispather: dict<function_name:function>
+
+    :param dict dispather: dict<function_name:function>.
 
     """
 
