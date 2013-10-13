@@ -1,6 +1,7 @@
 *.egg
 *.egg-info
 *.py[c|o]
+.DS_Store
 .coverage
 .env
 .env3
