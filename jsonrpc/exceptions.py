@@ -1,5 +1,5 @@
 import json
-import six
+from . import six
 
 
 class JSONRPCError(object):

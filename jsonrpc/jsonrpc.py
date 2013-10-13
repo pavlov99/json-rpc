@@ -1,5 +1,5 @@
 ﻿import json
-import six
+from . import six
 from .exceptions import (
     JSONRPCError,
     JSONRPCInvalidParams,
