@@ -8,6 +8,8 @@ json-rpc
 
 JSON-RPC2.0 transport with python3 support. Implementation follows [JSON-RPC](http://www.jsonrpc.org/specification) specification.
 
+Documentation: http://json-rpc.readthedocs.org
+
 
 Overview
 --------
