@@ -26,7 +26,61 @@ Tests
 
     tox
 
-    
+Quickstart
+----------
+Server (uses Werkzeug)
+
+    from werkzeug.wrappers import Request, Response
+    from werkzeug.serving import run_simple
+    from jsonrpc.jsonrpc import JSONRPCResponseManager
+
+
+    @Request.application
+    def application(request):
+        # Dispatcher is a dictionary {<method_name>: callable function}
+        dispatcher = {
+            "echo": lambda s: s,
+            "add": lambda a, b: a + b,
+            "foobar": lambda **kwargs: kwargs["foo"] + kwargs["bar"],
+        }
+
+        response = JSONRPCResponseManager.handle(
+            request.data, dispatcher)
+        return Response(response.json, mimetype='application/json')
+
+
+    if __name__ == '__main__':
+        run_simple('localhost', 4000, application)
+
+Client (uses requests)
+
+    import requests
+    import json
+
+
+    def main():
+        url = "http://localhost:4000/jsonrpc"
+        headers = {'content-type': 'application/json'}
+
+        # Example echo method
+        payload = {
+            "method": "echo",
+            "params": ["echome!"],
+            "jsonrpc": "2.0",
+            "id": 0,
+        }
+        response = requests.post(
+            url, data=json.dumps(payload), headers=headers).json()
+
+        assert response["result"] == "echome!"
+        assert response["jsonrpc"]
+        assert response["id"] == 0
+
+    if __name__ == "__main__":
+        main()
+
+For examples see examples folder as well.
+
 Competitors
 -----------
 There are [several libraries](http://en.wikipedia.org/wiki/JSON-RPC#Implementations) implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
