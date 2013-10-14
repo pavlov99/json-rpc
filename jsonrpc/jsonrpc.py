@@ -303,7 +303,7 @@ class JSONRPCResponseManager(object):
 
     """ JSON-RPC response manager.
 
-    Method brings syntactic shugar into library. Given dispatcher it handles
+    Method brings syntactic sugar into library. Given dispatcher it handles
     request (both single and batch) and handles errors.
     Request could be handled in parallel, it is server responsibility.
 
