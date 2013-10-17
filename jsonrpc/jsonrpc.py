@@ -67,7 +67,7 @@ class JSONRPCRequest(object):
     deserialize = staticmethod(json.loads)
 
     def __init__(self, method=None, params=None, _id=None):
-        self._dict = dict(jsonrpc=self.jsonrpc)
+        self._data = dict(jsonrpc=self.jsonrpc)
         self.method = method
         self.params = params
         self._id = _id
@@ -77,7 +77,7 @@ class JSONRPCRequest(object):
         return JSONRPCProtocol.JSONRPC_VERSION
 
     def __get_method(self):
-        return self._dict["method"]
+        return self._data["method"]
 
     def __set_method(self, value):
 
@@ -91,13 +91,13 @@ class JSONRPCRequest(object):
                 "rpc-internal methods and extensions and MUST NOT be used " +
                 "for anything else.")
 
-        self._dict["method"] = str(value)
+        self._data["method"] = str(value)
 
     method = property(__get_method, __set_method)
     """ JSON-RPC method name."""
 
     def __get_params(self):
-        return self._dict.get("params")
+        return self._data.get("params")
 
     def __set_params(self, value):
         if value is not None and not isinstance(value, (list, tuple, dict)):
@@ -107,12 +107,12 @@ class JSONRPCRequest(object):
             value = list(value)
 
         if value is not None:
-            self._dict["params"] = value
+            self._data["params"] = value
 
     params = property(__get_params, __set_params)
 
     def __get_id(self):
-        return self._dict.get("id")
+        return self._data.get("id")
 
     def __set_id(self, value):
         if value is not None and \
@@ -120,7 +120,7 @@ class JSONRPCRequest(object):
             raise ValueError("id should be string or integer")
 
         if value is not None:
-            self._dict["id"] = value
+            self._data["id"] = value
 
     _id = property(__get_id, __set_id)
 
@@ -143,7 +143,7 @@ class JSONRPCRequest(object):
 
     @property
     def json(self):
-        return self.serialize(self._dict)
+        return self.serialize(self._data)
 
     @classmethod
     def from_json(cls, json_str):
@@ -188,7 +188,7 @@ class JSONRPCBatchRequest(object):
 
     @property
     def json(self):
-        return json.dumps([r._dict for r in self.requests])
+        return json.dumps([r._data for r in self.requests])
 
     def __iter__(self):
         return iter(self.requests)
@@ -228,7 +228,7 @@ class JSONRPCResponse(object):
     serialize = staticmethod(json.dumps)
 
     def __init__(self, result=None, error=None, _id=None):
-        self._dict = dict(jsonrpc=self.jsonrpc)
+        self._data = dict(jsonrpc=self.jsonrpc)
 
         if result is None and error is None:
             raise ValueError("Either result or error should be used")
@@ -242,19 +242,19 @@ class JSONRPCResponse(object):
         return JSONRPCProtocol.JSONRPC_VERSION
 
     def __get_result(self):
-        return self._dict.get("result")
+        return self._data.get("result")
 
     def __set_result(self, value):
         if value is not None:
             if self.error is not None:
                 raise ValueError("Either result or error should be used")
 
-            self._dict["result"] = value
+            self._data["result"] = value
 
     result = property(__get_result, __set_result)
 
     def __get_error(self):
-        return self._dict.get("error")
+        return self._data.get("error")
 
     def __set_error(self, value):
         if value is not None:
@@ -262,25 +262,25 @@ class JSONRPCResponse(object):
                 raise ValueError("Either result or error should be used")
 
             JSONRPCError(**value)
-            self._dict["error"] = value
+            self._data["error"] = value
 
     error = property(__get_error, __set_error)
 
     def __get_id(self):
-        return self._dict["_id"]
+        return self._data["_id"]
 
     def __set_id(self, value):
         if value is not None and \
            not isinstance(value, six.string_types + six.integer_types):
             raise ValueError("id should be string or integer")
 
-        self._dict["id"] = value
+        self._data["id"] = value
 
     _id = property(__get_id, __set_id)
 
     @property
     def json(self):
-        return self.serialize(self._dict)
+        return self.serialize(self._data)
 
 
 class JSONRPCBatchResponse(object):
@@ -288,12 +288,12 @@ class JSONRPCBatchResponse(object):
         self.responses = responses
 
     @property
-    def _dict(self):
-        return [r._dict for r in self.responses]
+    def _data(self):
+        return [r._data for r in self.responses]
 
     @property
     def json(self):
-        return json.dumps(self._dict)
+        return json.dumps(self._data)
 
     def __iter__(self):
         return iter(self.responses)
@@ -319,12 +319,12 @@ class JSONRPCResponseManager(object):
         try:
             json.loads(request_str)
         except (TypeError, ValueError):
-            return JSONRPCResponse(error=JSONRPCParseError()._dict)
+            return JSONRPCResponse(error=JSONRPCParseError()._data)
 
         try:
             request = JSONRPCProtocol.parse_request(request_str)
         except ValueError:
-            return JSONRPCResponse(error=JSONRPCInvalidRequest()._dict)
+            return JSONRPCResponse(error=JSONRPCInvalidRequest()._data)
 
         rs = [request] if isinstance(request, JSONRPCRequest) else request
         responses = [r for r in cls._get_responses(rs, dispatcher)
@@ -357,13 +357,13 @@ class JSONRPCResponseManager(object):
             try:
                 method = dispatcher[request.method]
             except KeyError:
-                yield response(error=JSONRPCMethodNotFound()._dict)
+                yield response(error=JSONRPCMethodNotFound()._data)
                 continue
 
             try:
                 result = method(*request.args, **request.kwargs)
             except TypeError:
-                yield response(error=JSONRPCInvalidParams()._dict)
+                yield response(error=JSONRPCInvalidParams()._data)
                 continue
             except Exception as e:
                 data = {
@@ -371,7 +371,7 @@ class JSONRPCResponseManager(object):
                     "args": e.args,
                     "message": str(e),
                 }
-                yield response(error=JSONRPCServerError(data=data)._dict)
+                yield response(error=JSONRPCServerError(data=data)._data)
                 continue
 
             yield response(result=result)
