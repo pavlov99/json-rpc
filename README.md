@@ -100,9 +100,10 @@ TODO
 ----
 version 1.1:
 
-* add method dispatcher
-* update documentation (api, fix params and return docstrings)
+* add method dispatcher.
+* update documentation (api, fix params and return docstrings).
 * add notification support. JSONRPCRequest(_id=None) would not be notification, add flag to force notification creation. It allows to use {id: null} as in specification.
+* add json serializer to process datetime.date datetime.datetime and decimal.Decimal objects.
 
 Changelog
 ---------
