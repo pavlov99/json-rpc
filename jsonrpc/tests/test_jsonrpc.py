@@ -141,35 +141,35 @@ class TestJSONRPCRequest(unittest.TestCase):
 
     def test_dict_method_1(self):
         r = JSONRPCRequest("add")
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
         })
 
     def test_dict_method_2(self):
         r = JSONRPCRequest(method="add")
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
         })
 
     def test_dict_method_3(self):
         r = JSONRPCRequest("add", None)
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
         })
 
     def test_dict_params_1(self):
         r = JSONRPCRequest("add", params=None, _id=None)
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
         })
 
     def test_dict_params_2(self):
         r = JSONRPCRequest("add", [])
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
             "params": [],
@@ -177,7 +177,7 @@ class TestJSONRPCRequest(unittest.TestCase):
 
     def test_dict_params_3(self):
         r = JSONRPCRequest("add", ())
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
             "params": [],
@@ -185,7 +185,7 @@ class TestJSONRPCRequest(unittest.TestCase):
 
     def test_dict_params_4(self):
         r = JSONRPCRequest("add", (1, 2))
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
             "params": [1, 2],
@@ -193,7 +193,7 @@ class TestJSONRPCRequest(unittest.TestCase):
 
     def test_dict_params_5(self):
         r = JSONRPCRequest("add", {"a": 0})
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
             "params": {"a": 0},
@@ -201,7 +201,7 @@ class TestJSONRPCRequest(unittest.TestCase):
 
     def test_dict_id_1(self):
         r = JSONRPCRequest("add", _id="null")
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
             "id": "null",
@@ -209,14 +209,14 @@ class TestJSONRPCRequest(unittest.TestCase):
 
     def test_dict_id_2(self):
         r = JSONRPCRequest("add", _id=None)
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
         })
 
     def test_dict_id_3(self):
         r = JSONRPCRequest("add", _id="id")
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
             "id": "id",
@@ -224,7 +224,7 @@ class TestJSONRPCRequest(unittest.TestCase):
 
     def test_dict_id_4(self):
         r = JSONRPCRequest("add", _id=0)
-        self.assertEqual(r._dict, {
+        self.assertEqual(r._data, {
             "jsonrpc": "2.0",
             "method": "add",
             "id": 0,
@@ -450,7 +450,7 @@ class TestJSONRPCBatchResponse(unittest.TestCase):
             JSONRPCResponse(result="result", _id=1),
             JSONRPCResponse(result="result", _id=2),
         )
-        self.assertEqual(response._dict, [
+        self.assertEqual(response._data, [
             {"id": 1, "jsonrpc": "2.0", "result": "result"},
             {"id": 2, "jsonrpc": "2.0", "result": "result"},
         ])

@@ -33,39 +33,39 @@ class JSONRPCError(object):
     deserialize = staticmethod(json.loads)
 
     def __init__(self, code=None, message=None, data=None):
-        self._dict = dict()
+        self._data = dict()
         self.code = getattr(self.__class__, "CODE", code)
         self.message = getattr(self.__class__, "MESSAGE", message)
         self.data = data
 
     def __get_code(self):
-        return self._dict["code"]
+        return self._data["code"]
 
     def __set_code(self, value):
         if not isinstance(value, six.integer_types):
             raise ValueError("Error code should be integer")
 
-        self._dict["code"] = value
+        self._data["code"] = value
 
     code = property(__get_code, __set_code)
 
     def __get_message(self):
-        return self._dict["message"]
+        return self._data["message"]
 
     def __set_message(self, value):
         if not isinstance(value, six.string_types):
             raise ValueError("Error message should be string")
 
-        self._dict["message"] = value
+        self._data["message"] = value
 
     message = property(__get_message, __set_message)
 
     def __get_data(self):
-        return self._dict.get("data")
+        return self._data.get("data")
 
     def __set_data(self, value):
         if value is not None:
-            self._dict["data"] = value
+            self._data["data"] = value
 
     data = property(__get_data, __set_data)
 
@@ -77,7 +77,7 @@ class JSONRPCError(object):
 
     @property
     def json(self):
-        return self.serialize(self._dict)
+        return self.serialize(self._data)
 
 
 class JSONRPCParseError(JSONRPCError):
