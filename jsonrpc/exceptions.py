@@ -9,17 +9,19 @@ class JSONRPCError(object):
     When a rpc call encounters an error, the Response Object MUST contain the
     error member with a value that is a Object with the following members:
 
-    code: A Number that indicates the error type that occurred.
+    :param int code: A Number that indicates the error type that occurred.
         This MUST be an integer.
 
-    message: A String providing a short description of the error.
+    :param str message: A String providing a short description of the error.
         The message SHOULD be limited to a concise single sentence.
 
-    data: A Primitive or Structured value that contains additional information
-        about the error.
+    :param data: A Primitive or Structured value that contains additional
+        information about the error.
         This may be omitted.
         The value of this member is defined by the Server (e.g. detailed error
         information, nested errors etc.).
+
+    :type data: None or int or str or dict or list
 
     The error codes from and including -32768 to -32000 are reserved for
     pre-defined errors. Any code within this range, but not defined explicitly
