@@ -95,3 +95,18 @@ There are [several libraries](http://en.wikipedia.org/wiki/JSON-RPC#Implementati
 | 4 |tinyrpc         | [![Downloads](https://pypip.in/v/tinyrpc/badge.png)](https://crate.io/packages/tinyrpc)                 | 2013-02-24    |
 | 5 |simple-json-rpc | [![Downloads](https://pypip.in/v/simple-json-rpc/badge.png)](https://crate.io/packages/simple-json-rpc) | 2012-06-16    |
 | 6 |pjsonrpc        | -                                                                                                       | 2011          |
+
+TODO
+----
+version 1.1:
+
+* add method dispatcher.
+* update documentation (api, fix params and return docstrings).
+* add notification support. JSONRPCRequest(_id=None) would not be notification, add flag to force notification creation. It allows to use {id: null} as in specification.
+* add json serializer to process datetime.date datetime.datetime and decimal.Decimal objects.
+
+Changelog
+---------
+**version 1.0.5-** Implement JSON-RPC 2.0 specification
+
+**version 1.0.6** Add examples of usage. Init documentation. Remove six from dependencies.
