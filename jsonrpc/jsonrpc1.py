@@ -1,7 +1,7 @@
 from . import six
-import json
 
 from .jsonrpc import JSONRPCBaseRequest
+from .exceptions import JSONRPCInvalidRequestException
 
 JSONRPC_VERSION = "1.0"
 
@@ -20,6 +20,9 @@ class JSONRPC10Request(JSONRPCBaseRequest):
     :param bool is_notification: whether request notification or not.
 
     """
+
+    REQUIRED_FIELDS = set(["method", "params", "id"])
+    POSSIBLE_FIELDS = set(["method", "params", "id"])
 
     @property
     def data(self):
@@ -78,6 +81,23 @@ class JSONRPC10Request(JSONRPCBaseRequest):
                              "Request id should not be None")
 
         self._is_notification = value
+
+    @classmethod
+    def from_json(cls, json_str):
+        data = cls.deserialize(json_str)
+
+        if not isinstance(data, dict):
+            raise ValueError("data should be dict")
+
+        if cls.REQUIRED_FIELDS <= set(data.keys()) <= cls.POSSIBLE_FIELDS:
+            return cls(
+                method=data["method"], params=data["params"], _id=data["id"]
+            )
+        else:
+            extra = set(data.keys()) - cls.POSSIBLE_FIELDS
+            missed = cls.REQUIRED_FIELDS - set(data.keys())
+            msg = "Invalid request. Extra fields: {}, Missed fields: {}"
+            raise JSONRPCInvalidRequestException(msg.format(extra, missed))
 
 
 class JSONRPC10Response(object):
