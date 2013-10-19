@@ -1,6 +1,7 @@
 import json
 import unittest
 
+from ..exceptions import JSONRPCInvalidRequestException
 from ..jsonrpc2 import (
     JSONRPC20Request,
     JSONRPC20BatchRequest,
@@ -71,7 +72,7 @@ class TestJSONRPC20Request(unittest.TestCase):
         self.request_params.update({"params": tuple([0])})
         JSONRPC20Request(**self.request_params)
 
-    def test_params_validation_dics(self):
+    def test_params_validation_dict(self):
         self.request_params.update({"params": {}})
         JSONRPC20Request(**self.request_params)
 
@@ -446,6 +447,32 @@ class TestJSONRPC20Request(unittest.TestCase):
         self.assertEqual(request.params, [0, 1])
         self.assertEqual(request._id, "id")
         self.assertFalse(request.is_notification)
+
+    def test_from_json_invalid_request_jsonrpc(self):
+        str_json = json.dumps({
+            "method": "add",
+        })
+
+        with self.assertRaises(JSONRPCInvalidRequestException):
+            JSONRPC20Request.from_json(str_json)
+
+    def test_from_json_invalid_request_method(self):
+        str_json = json.dumps({
+            "jsonrpc": "2.0",
+        })
+
+        with self.assertRaises(JSONRPCInvalidRequestException):
+            JSONRPC20Request.from_json(str_json)
+
+    def test_from_json_invalid_request_extra_data(self):
+        str_json = json.dumps({
+            "jsonrpc": "2.0",
+            "method": "add",
+            "is_notification": True,
+        })
+
+        with self.assertRaises(JSONRPCInvalidRequestException):
+            JSONRPC20Request.from_json(str_json)
 
 
 class TestJSONRPC20BatchRequest(unittest.TestCase):

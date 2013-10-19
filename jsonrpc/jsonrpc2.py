@@ -1,7 +1,7 @@
 ﻿from . import six
 import json
 
-from .exceptions import JSONRPCError
+from .exceptions import JSONRPCError, JSONRPCInvalidRequestException
 from .jsonrpc import JSONRPCBaseRequest
 
 JSONRPC_VERSION = "2.0"
@@ -43,6 +43,9 @@ class JSONRPC20Request(JSONRPCBaseRequest):
     cannot be represented exactly as binary fractions.
 
     """
+
+    REQUIRED_FIELDS = set(["jsonrpc", "method"])
+    POSSIBLE_FIELDS = set(["jsonrpc", "method", "params", "id"])
 
     @property
     def data(self):
@@ -117,13 +120,18 @@ class JSONRPC20Request(JSONRPCBaseRequest):
         if not all(isinstance(d, dict) for d in data):
             raise ValueError("Each request should be an object (dict)")
 
-        try:
-            result = [JSONRPC20Request(
-                method=d["method"], params=d.get("params"), _id=d.get("id"),
-                is_notification="id" not in d,
-            ) for d in data]
-        except KeyError as e:
-            raise ValueError("Incorrect Request {}".format(str(e)))
+        result = []
+        for d in data:
+            if cls.REQUIRED_FIELDS <= set(d.keys()) <= cls.POSSIBLE_FIELDS:
+                result.append(JSONRPC20Request(
+                    method=d["method"], params=d.get("params"),
+                    _id=d.get("id"), is_notification="id" not in d,
+                ))
+            else:
+                extra = set(d.keys()) - cls.POSSIBLE_FIELDS
+                missed = cls.REQUIRED_FIELDS - set(d.keys())
+                msg = "Invalid request. Extra fields: {}, Missed fields: {}"
+                raise JSONRPCInvalidRequestException(msg.format(extra, missed))
 
         return result if len(result) > 1 or is_batch else result[0]
 
