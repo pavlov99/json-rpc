@@ -44,9 +44,6 @@ class JSONRPC20Request(JSONRPCBaseRequest):
 
     """
 
-    serialize = staticmethod(json.dumps)
-    deserialize = staticmethod(json.loads)
-
     @property
     def data(self):
         data = {
