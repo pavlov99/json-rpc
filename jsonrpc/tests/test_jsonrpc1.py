@@ -1,6 +1,7 @@
 import json
 import unittest
 
+from ..exceptions import JSONRPCInvalidRequestException
 from ..jsonrpc1 import (
     JSONRPC10Request,
     JSONRPC10Response,
@@ -266,6 +267,72 @@ class TestJSONRPC10Request(unittest.TestCase):
 
 
     # TODO: test from_json
+    def test_from_json_invalid_request_method(self):
+        str_json = json.dumps({
+            "params": [1, 2],
+            "id": 0,
+        })
+
+        with self.assertRaises(JSONRPCInvalidRequestException):
+            JSONRPC10Request.from_json(str_json)
+
+    def test_from_json_invalid_request_params(self):
+        str_json = json.dumps({
+            "method": "add",
+            "id": 0,
+        })
+
+        with self.assertRaises(JSONRPCInvalidRequestException):
+            JSONRPC10Request.from_json(str_json)
+
+    def test_from_json_invalid_request_id(self):
+        str_json = json.dumps({
+            "method": "add",
+            "params": [1, 2],
+        })
+
+        with self.assertRaises(JSONRPCInvalidRequestException):
+            JSONRPC10Request.from_json(str_json)
+
+    def test_from_json_invalid_request_extra_data(self):
+        str_json = json.dumps({
+            "method": "add",
+            "params": [1, 2],
+            "id": 0,
+            "is_notification": True,
+        })
+
+        with self.assertRaises(JSONRPCInvalidRequestException):
+            JSONRPC10Request.from_json(str_json)
+
+    def test_from_json_request(self):
+        str_json = json.dumps({
+            "method": "add",
+            "params": [1, 2],
+            "id": 0,
+        })
+
+        request = JSONRPC10Request.from_json(str_json)
+        self.assertTrue(isinstance(request, JSONRPC10Request))
+        self.assertEqual(request.method, "add")
+        self.assertEqual(request.params, [1, 2])
+        self.assertEqual(request._id, 0)
+        self.assertFalse(request.is_notification)
+
+    def test_from_json_request_notification(self):
+        str_json = json.dumps({
+            "method": "add",
+            "params": [1, 2],
+            "id": None,
+        })
+
+        request = JSONRPC10Request.from_json(str_json)
+        self.assertTrue(isinstance(request, JSONRPC10Request))
+        self.assertEqual(request.method, "add")
+        self.assertEqual(request.params, [1, 2])
+        self.assertEqual(request._id, None)
+        self.assertTrue(request.is_notification)
+
 
 
 class TestJSONRPC10Response(unittest.TestCase):
