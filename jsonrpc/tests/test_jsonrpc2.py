@@ -71,7 +71,7 @@ class TestJSONRPC20Request(unittest.TestCase):
         self.request_params.update({"params": tuple([0])})
         JSONRPC20Request(**self.request_params)
 
-    def test_params_validation_data(self):
+    def test_params_validation_dics(self):
         self.request_params.update({"params": {}})
         JSONRPC20Request(**self.request_params)
 
