@@ -265,8 +265,6 @@ class TestJSONRPC10Request(unittest.TestCase):
         with self.assertRaises(ValueError):
             r.is_notification = False
 
-
-    # TODO: test from_json
     def test_from_json_invalid_request_method(self):
         str_json = json.dumps({
             "params": [1, 2],
@@ -332,7 +330,6 @@ class TestJSONRPC10Request(unittest.TestCase):
         self.assertEqual(request.params, [1, 2])
         self.assertEqual(request._id, None)
         self.assertTrue(request.is_notification)
-
 
 
 class TestJSONRPC10Response(unittest.TestCase):
