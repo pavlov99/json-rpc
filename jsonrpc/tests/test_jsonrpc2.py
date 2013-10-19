@@ -3,11 +3,8 @@ import unittest
 
 from ..jsonrpc2 import (
     JSONRPC20Request,
+    JSONRPC20BatchRequest,
 )
-
-
-def isjsonequal(json1, json2):
-    return json.loads(json1) == json.loads(json2)
 
 
 class TestJSONRPC20Request(unittest.TestCase):
@@ -447,3 +444,59 @@ class TestJSONRPC20Request(unittest.TestCase):
         self.assertEqual(request.params, [0, 1])
         self.assertEqual(request._id, "id")
         self.assertFalse(request.is_notification)
+
+
+class TestJSONRPC20BatchRequest(unittest.TestCase):
+
+    """ Test JSONRPC20BatchRequest functionality."""
+
+    def test_batch_request(self):
+        request = JSONRPC20BatchRequest(
+            JSONRPC20Request("devide", {"num": 1, "denom": 2}, _id=1),
+            JSONRPC20Request("devide", {"num": 3, "denom": 2}, _id=2),
+        )
+        self.assertEqual(json.loads(request.json), [
+            {"method": "devide", "params": {"num": 1, "denom": 2}, "id": 1,
+             "jsonrpc": "2.0"},
+            {"method": "devide", "params": {"num": 3, "denom": 2}, "id": 2,
+             "jsonrpc": "2.0"},
+        ])
+
+    def test_from_json_batch(self):
+        str_json = json.dumps([
+            {"method": "add", "params": [1, 2], "jsonrpc": "2.0"},
+            {"method": "mul", "params": [1, 2], "jsonrpc": "2.0"},
+        ])
+
+        requests = JSONRPC20Request.from_json(str_json)
+        self.assertTrue(isinstance(requests, list))
+        for r in requests:
+            self.assertTrue(isinstance(r, JSONRPC20Request))
+            self.assertTrue(r.method in ["add", "mul"])
+            self.assertEqual(r.params, [1, 2])
+            self.assertEqual(r._id, None)
+            self.assertTrue(r.is_notification)
+
+    def test_from_json_batch_one(self):
+        str_json = json.dumps([
+            {"method": "add", "params": [1, 2], "jsonrpc": "2.0", "id": None},
+        ])
+
+        requests = JSONRPC20Request.from_json(str_json)
+        self.assertTrue(isinstance(requests, list))
+        self.assertEqual(len(requests), 1)
+        r = requests[0]
+        self.assertTrue(isinstance(r, JSONRPC20Request))
+        self.assertEqual(r.method, "add")
+        self.assertEqual(r.params, [1, 2])
+        self.assertEqual(r._id, None)
+        self.assertFalse(r.is_notification)
+
+    def test_response_iterator(self):
+        requests = JSONRPC20BatchRequest(
+            JSONRPC20Request("devide", {"num": 1, "denom": 2}, _id=1),
+            JSONRPC20Request("devide", {"num": 3, "denom": 2}, _id=2),
+        )
+        for request in requests:
+            self.assertTrue(isinstance(request, JSONRPC20Request))
+            self.assertEqual(request.method, "devide")
