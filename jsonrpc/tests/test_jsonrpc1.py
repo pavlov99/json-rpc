@@ -111,6 +111,162 @@ class TestJSONRPC10Request(unittest.TestCase):
         del self.request_params["_id"]
         JSONRPC10Request(**self.request_params)
 
+    def test_data_method_1(self):
+        r = JSONRPC10Request("add", [])
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_data_method_2(self):
+        r = JSONRPC10Request(method="add", params=[])
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_data_params_1(self):
+        r = JSONRPC10Request("add", params=[], _id=None)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_data_params_2(self):
+        r = JSONRPC10Request("add", ())
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_data_params_3(self):
+        r = JSONRPC10Request("add", (1, 2))
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [1, 2],
+            "id": None,
+        })
+
+    def test_data_id_1(self):
+        r = JSONRPC10Request("add", [], _id="null")
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": "null",
+        })
+
+    def test_data_id_1_notification(self):
+        r = JSONRPC10Request("add", [], _id="null", is_notification=True)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_data_id_2(self):
+        r = JSONRPC10Request("add", [], _id=None)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_data_id_2_notification(self):
+        r = JSONRPC10Request("add", [], _id=None, is_notification=True)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_data_id_3(self):
+        r = JSONRPC10Request("add", [], _id="id")
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": "id",
+        })
+
+    def test_data_id_3_notification(self):
+        r = JSONRPC10Request("add", [], _id="id", is_notification=True)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_data_id_4(self):
+        r = JSONRPC10Request("add", [], _id=0)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": 0,
+        })
+
+    def test_data_id_4_notification(self):
+        r = JSONRPC10Request("add", [], _id=0, is_notification=True)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "method": "add",
+            "params": [],
+            "id": None,
+        })
+
+    def test_is_notification(self):
+        r = JSONRPC10Request("add", [])
+        self.assertTrue(r.is_notification)
+
+        r = JSONRPC10Request("add", [], _id=None)
+        self.assertTrue(r.is_notification)
+
+        r = JSONRPC10Request("add", [], _id="null")
+        self.assertFalse(r.is_notification)
+
+        r = JSONRPC10Request("add", [], _id=0)
+        self.assertFalse(r.is_notification)
+
+        r = JSONRPC10Request("add", [], is_notification=True)
+        self.assertTrue(r.is_notification)
+
+        r = JSONRPC10Request("add", [], is_notification=True, _id=None)
+        self.assertTrue(r.is_notification)
+
+        r = JSONRPC10Request("add", [], is_notification=True, _id=0)
+        self.assertTrue(r.is_notification)
+
+    def test_set_unset_notification_keep_id(self):
+        r = JSONRPC10Request("add", [], is_notification=True, _id=0)
+        self.assertTrue(r.is_notification)
+        self.assertEqual(r.data["id"], None)
+
+        r.is_notification = False
+        self.assertFalse(r.is_notification)
+        self.assertEqual(r.data["id"], 0)
+
+    def test_error_if_notification_true_but_id_none(self):
+        r = JSONRPC10Request("add", [], is_notification=True, _id=None)
+        with self.assertRaises(ValueError):
+            r.is_notification = False
+
+
+    # TODO: test from_json
+
 
 class TestJSONRPC10Response(unittest.TestCase):
 
