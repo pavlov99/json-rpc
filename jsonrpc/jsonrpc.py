@@ -15,13 +15,13 @@ class JSONRPCBaseRequest(JSONSerializable):
 
     """ Base class for JSON-RPC 1.0 and JSON-RPC 2.0 requests. """
 
-    def __init__(self, method=None, params=None,
-                 is_notification=None, _id=None):
+    def __init__(self, method=None, params=None, _id=None,
+                 is_notification=None):
         self.data = dict()
         self.method = method
         self.params = params
-        self.is_notification = is_notification
         self._id = _id
+        self.is_notification = is_notification
 
     @property
     def data(self):
