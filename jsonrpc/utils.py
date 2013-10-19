@@ -14,12 +14,10 @@ class JSONSerializable(six.with_metaclass(ABCMeta, object)):
     serialize = staticmethod(json.dumps)
     deserialize = staticmethod(json.loads)
 
-    #@property
     @abstractmethod
     def json(self):
         pass
 
-    #@classmethod
     @abstractmethod
     def from_json(cls, json_str):
         pass
