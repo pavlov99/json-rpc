@@ -77,9 +77,7 @@ class TestJSONRPC10Request(unittest.TestCase):
             JSONRPC10Request(**self.request_params)
 
     def test_request_args(self):
-        self.assertEqual(JSONRPC10Request("add").args, ())
         self.assertEqual(JSONRPC10Request("add", []).args, ())
-        self.assertEqual(JSONRPC10Request("add", {"a": 1}).args, ())
         self.assertEqual(JSONRPC10Request("add", [1, 2]).args, (1, 2))
 
     def test_id_validation_string(self):
@@ -100,8 +98,7 @@ class TestJSONRPC10Request(unittest.TestCase):
 
     def test_id_validation_float(self):
         self.request_params.update({"_id": 0.1})
-        with self.assertRaises(ValueError):
-            JSONRPC10Request(**self.request_params)
+        JSONRPC10Request(**self.request_params)
 
     def test_id_validation_list_tuple(self):
         self.request_params.update({"_id": []})
