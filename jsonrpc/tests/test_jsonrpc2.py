@@ -282,6 +282,16 @@ class TestJSONRPC20Request(unittest.TestCase):
         self.assertTrue(r.is_notification)
         self.assertNotIn("id", r.data)
 
+    def test_set_unset_notification_keep_id(self):
+        r = JSONRPC20Request("add", is_notification=True, _id=0)
+        self.assertTrue(r.is_notification)
+        self.assertFalse("id" in r.data)
+
+        r.is_notification = False
+        self.assertFalse(r.is_notification)
+        self.assertTrue("id" in r.data)
+        self.assertEqual(r.data["id"], 0)
+
     def test_serialize_method_1(self):
         r = JSONRPC20Request("add")
         self.assertTrue({
