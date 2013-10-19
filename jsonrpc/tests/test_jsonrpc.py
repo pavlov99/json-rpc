@@ -2,43 +2,10 @@ import json
 import unittest
 
 from ..jsonrpc import (
-    JSONRPCRequest,
-    JSONRPCBatchRequest,
-    JSONRPCResponse,
-    JSONRPCBatchResponse,
     JSONRPCResponseManager,
 )
 
 
-class TestJSONRPCBatchResponse(unittest.TestCase):
-    def test_batch_response(self):
-        response = JSONRPCBatchResponse(
-            JSONRPCResponse(result="result", _id=1),
-            JSONRPCResponse(error={"code": 0, "message": ""}, _id=2),
-        )
-        self.assertEqual(json.loads(response.json), [
-            {"result": "result", "id": 1, "jsonrpc": "2.0"},
-            {"error": {"code": 0, "message": ""}, "id": 2, "jsonrpc": "2.0"},
-        ])
-
-    def test_response_iterator(self):
-        responses = JSONRPCBatchResponse(
-            JSONRPCResponse(result="result", _id=1),
-            JSONRPCResponse(result="result", _id=2),
-        )
-        for response in responses:
-            self.assertTrue(isinstance(response, JSONRPCResponse))
-            self.assertEqual(response.result, "result")
-
-    def test_batch_response_dict(self):
-        response = JSONRPCBatchResponse(
-            JSONRPCResponse(result="result", _id=1),
-            JSONRPCResponse(result="result", _id=2),
-        )
-        self.assertEqual(response._data, [
-            {"id": 1, "jsonrpc": "2.0", "result": "result"},
-            {"id": 2, "jsonrpc": "2.0", "result": "result"},
-        ])
 
 
 class TestJSONRPCResponseManager(unittest.TestCase):
