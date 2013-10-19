@@ -1,32 +1,10 @@
-﻿import json
-from . import six
-from .exceptions import (
-    JSONRPCError,
-    JSONRPCInvalidParams,
-    JSONRPCInvalidRequest,
-    JSONRPCMethodNotFound,
-    JSONRPCParseError,
-    JSONRPCServerError,
-)
+﻿from . import six
+import json
 
+from .exceptions import JSONRPCError
 from .jsonrpc import JSONRPCBaseRequest
 
 JSONRPC_VERSION = "2.0"
-
-
-class JSONRPCProtocol(object):
-
-    """ JSON-RPC protocol implementation."""
-
-    JSONRPC_VERSION = "2.0"
-
-    @classmethod
-    def create_request(cls, method, params, _id=None):
-        return JSONRPC20Request(method, params, _id=_id)
-
-    @classmethod
-    def parse_request(cls, json_str):
-        return JSONRPC20Request.from_json(json_str)
 
 
 class JSONRPC20Request(JSONRPCBaseRequest):
@@ -176,7 +154,7 @@ class JSONRPC20BatchRequest(object):
         return iter(self.requests)
 
 
-class JSONRPCResponse(object):
+class JSONRPC20Response(object):
 
     """ JSON-RPC response object to JSONRPC20Request.
 
@@ -221,7 +199,7 @@ class JSONRPCResponse(object):
 
     @property
     def jsonrpc(self):
-        return JSONRPCProtocol.JSONRPC_VERSION
+        return JSONRPC_VERSION
 
     def __get_result(self):
         return self.data.get("result")
@@ -265,7 +243,7 @@ class JSONRPCResponse(object):
         return self.serialize(self.data)
 
 
-class JSONRPCBatchResponse(object):
+class JSONRPC20BatchResponse(object):
     def __init__(self, *responses):
         self.responses = responses
 
@@ -279,81 +257,3 @@ class JSONRPCBatchResponse(object):
 
     def __iter__(self):
         return iter(self.responses)
-
-
-class JSONRPCResponseManager(object):
-
-    """ JSON-RPC response manager.
-
-    Method brings syntactic sugar into library. Given dispatcher it handles
-    request (both single and batch) and handles errors.
-    Request could be handled in parallel, it is server responsibility.
-
-    :param str request: json string. Will be converted into JSONRPC20Request or
-        JSONRPCBatchRequest
-
-    :param dict dispather: dict<function_name:function>.
-
-    """
-
-    @classmethod
-    def handle(cls, request_str, dispatcher):
-        try:
-            json.loads(request_str)
-        except (TypeError, ValueError):
-            return JSONRPCResponse(error=JSONRPCParseError().data)
-
-        try:
-            request = JSONRPCProtocol.parse_request(request_str)
-        except ValueError:
-            return JSONRPCResponse(error=JSONRPCInvalidRequest().data)
-
-        rs = [request] if isinstance(request, JSONRPC20Request) else request
-        responses = [r for r in cls._get_responses(rs, dispatcher)
-                     if r is not None]
-
-        # notifications
-        if not responses:
-            return
-
-        if isinstance(request, JSONRPC20Request):
-            return responses[0]
-        else:
-            return JSONRPCBatchResponse(*responses)
-
-    @classmethod
-    def _get_responses(cls, requests, dispatcher):
-        """ Response to each single JSON-RPC Request.
-
-        :return iterator(JSONRPCResponse):
-
-        """
-        for request in requests:
-            response = lambda **kwargs: JSONRPCResponse(
-                _id=request._id, **kwargs)
-
-            if request.is_notification:
-                yield
-                continue
-
-            try:
-                method = dispatcher[request.method]
-            except KeyError:
-                yield response(error=JSONRPCMethodNotFound().data)
-                continue
-
-            try:
-                result = method(*request.args, **request.kwargs)
-            except TypeError:
-                yield response(error=JSONRPCInvalidParams().data)
-                continue
-            except Exception as e:
-                data = {
-                    "type": e.__class__.__name__,
-                    "args": e.args,
-                    "message": str(e),
-                }
-                yield response(error=JSONRPCServerError(data=data).data)
-                continue
-
-            yield response(result=result)
