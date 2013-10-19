@@ -23,9 +23,8 @@ class JSONRPC10Request(JSONRPCBaseRequest):
 
     @property
     def data(self):
-        data = self._data.items()
+        data = {k: v for k, v in self._data.items()}
         data["id"] = None if self.is_notification else data["id"]
-        data["jsonrpc"] = JSONRPC_VERSION
         return data
 
     @data.setter
@@ -66,14 +65,17 @@ class JSONRPC10Request(JSONRPCBaseRequest):
         self._data["id"] = value
 
     @property
-    def is_notifiation(self):
+    def is_notification(self):
         return self._data["id"] is None or self._is_notification
 
-    @is_notifiation.setter
-    def is_notifiation(self, value):
-        if not value and self._data["id"] is None:
+    @is_notification.setter
+    def is_notification(self, value):
+        if value is None:
+            value = self._id is None
+
+        if self._id is None and not value:
             raise ValueError("Can not set attribute is_notification. " +
-                             "Request is should not be None")
+                             "Request id should not be None")
 
         self._is_notification = value
 
