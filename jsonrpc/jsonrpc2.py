@@ -133,11 +133,8 @@ class JSONRPC20Request(JSONRPCBaseRequest):
     def from_json(cls, json_str):
         data = cls.deserialize(json_str)
 
-        if isinstance(data, list):
-            is_batch = True
-        else:
-            data = [data]
-            is_batch = False
+        is_batch = isinstance(data, list)
+        data = data if is_batch else [data]
 
         if not data:
             raise ValueError("[] value is not accepted")
@@ -150,15 +147,15 @@ class JSONRPC20Request(JSONRPCBaseRequest):
                 method=d["method"], params=d.get("params"), _id=d.get("id"),
                 is_notification="id" not in d,
             ) for d in data]
-        except KeyError:
-            raise ValueError("Incorrect Request")
+        except KeyError as e:
+            raise ValueError("Incorrect Request {}".format(str(e)))
 
         return result if len(result) > 1 or is_batch else result[0]
 
 
-class JSONRPCBatchRequest(object):
+class JSONRPC20BatchRequest(object):
 
-    """ Batch JSON-RPC Request.
+    """ Batch JSON-RPC 2.0 Request.
 
     :param JSONRPC20Request *requests: requests
 
