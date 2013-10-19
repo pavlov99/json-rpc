@@ -4,12 +4,14 @@ import unittest
 from ..jsonrpc2 import (
     JSONRPC20Request,
     JSONRPC20BatchRequest,
+    JSONRPC20Response,
+    JSONRPC20BatchResponse,
 )
 
 
 class TestJSONRPC20Request(unittest.TestCase):
 
-    """ Test JSONRPC20Request class."""
+    """ Test JSONRPC20Request functionality."""
 
     def setUp(self):
         self.request_params = {
@@ -69,7 +71,7 @@ class TestJSONRPC20Request(unittest.TestCase):
         self.request_params.update({"params": tuple([0])})
         JSONRPC20Request(**self.request_params)
 
-    def test_params_validation_dict(self):
+    def test_params_validation_data(self):
         self.request_params.update({"params": {}})
         JSONRPC20Request(**self.request_params)
 
@@ -127,7 +129,7 @@ class TestJSONRPC20Request(unittest.TestCase):
         with self.assertRaises(ValueError):
             JSONRPC20Request(**self.request_params)
 
-    def test_dict_method_1(self):
+    def test_data_method_1(self):
         r = JSONRPC20Request("add")
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -135,7 +137,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_method_2(self):
+    def test_data_method_2(self):
         r = JSONRPC20Request(method="add")
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -143,7 +145,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_method_3(self):
+    def test_data_method_3(self):
         r = JSONRPC20Request("add", None)
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -151,7 +153,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_params_1(self):
+    def test_data_params_1(self):
         r = JSONRPC20Request("add", params=None, _id=None)
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -159,7 +161,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_params_2(self):
+    def test_data_params_2(self):
         r = JSONRPC20Request("add", [])
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -168,7 +170,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_params_3(self):
+    def test_data_params_3(self):
         r = JSONRPC20Request("add", ())
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -177,7 +179,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_params_4(self):
+    def test_data_params_4(self):
         r = JSONRPC20Request("add", (1, 2))
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -186,7 +188,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_params_5(self):
+    def test_data_params_5(self):
         r = JSONRPC20Request("add", {"a": 0})
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -195,7 +197,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_id_1(self):
+    def test_data_id_1(self):
         r = JSONRPC20Request("add", _id="null")
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -203,14 +205,14 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": "null",
         })
 
-    def test_dict_id_1_notification(self):
+    def test_data_id_1_notification(self):
         r = JSONRPC20Request("add", _id="null", is_notification=True)
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
             "method": "add",
         })
 
-    def test_dict_id_2(self):
+    def test_data_id_2(self):
         r = JSONRPC20Request("add", _id=None)
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -218,14 +220,14 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": None,
         })
 
-    def test_dict_id_2_notification(self):
+    def test_data_id_2_notification(self):
         r = JSONRPC20Request("add", _id=None, is_notification=True)
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
             "method": "add",
         })
 
-    def test_dict_id_3(self):
+    def test_data_id_3(self):
         r = JSONRPC20Request("add", _id="id")
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -233,14 +235,14 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": "id",
         })
 
-    def test_dict_id_3_notification(self):
+    def test_data_id_3_notification(self):
         r = JSONRPC20Request("add", _id="id", is_notification=True)
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
             "method": "add",
         })
 
-    def test_dict_id_4(self):
+    def test_data_id_4(self):
         r = JSONRPC20Request("add", _id=0)
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -248,7 +250,7 @@ class TestJSONRPC20Request(unittest.TestCase):
             "id": 0,
         })
 
-    def test_dict_id_4_notification(self):
+    def test_data_id_4_notification(self):
         r = JSONRPC20Request("add", _id=0, is_notification=True)
         self.assertEqual(r.data, {
             "jsonrpc": "2.0",
@@ -500,3 +502,155 @@ class TestJSONRPC20BatchRequest(unittest.TestCase):
         for request in requests:
             self.assertTrue(isinstance(request, JSONRPC20Request))
             self.assertEqual(request.method, "devide")
+
+
+class TestJSONRPC20Response(unittest.TestCase):
+
+    """ Test JSONRPC20Response functionality."""
+
+    def setUp(self):
+        self.response_success_params = {
+            "result": "",
+            "_id": 1,
+        }
+        self.response_error_params = {
+            "error": {
+                "code": 1,
+                "message": "error",
+            },
+            "_id": 1,
+        }
+
+    def test_correct_init(self):
+        """ Test object is created."""
+        JSONRPC20Response(**self.response_success_params)
+
+    def test_validation_incorrect_no_parameters(self):
+        with self.assertRaises(ValueError):
+            JSONRPC20Response()
+
+    def test_validation_incorrect_result_and_error(self):
+        with self.assertRaises(ValueError):
+            JSONRPC20Response(result="", error={"code": 1, "message": ""})
+
+    def test_validation_error_correct(self):
+        JSONRPC20Response(**self.response_error_params)
+
+    def test_validation_error_incorrect(self):
+        self.response_error_params["error"].update({"code": "str"})
+        with self.assertRaises(ValueError):
+            JSONRPC20Response(**self.response_error_params)
+
+    def test_validation_error_incorrect_no_code(self):
+        del self.response_error_params["error"]["code"]
+        with self.assertRaises(ValueError):
+            JSONRPC20Response(**self.response_error_params)
+
+    def test_validation_error_incorrect_no_message(self):
+        del self.response_error_params["error"]["message"]
+        with self.assertRaises(ValueError):
+            JSONRPC20Response(**self.response_error_params)
+
+    def test_validation_error_incorrect_message_not_str(self):
+        self.response_error_params["error"].update({"message": 0})
+        with self.assertRaises(ValueError):
+            JSONRPC20Response(**self.response_error_params)
+
+    def test_data_result(self):
+        r = JSONRPC20Response(result="")
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "jsonrpc": "2.0",
+            "result": "",
+            "id": None,
+        })
+
+    def test_data_result_id_none(self):
+        r = JSONRPC20Response(result="", _id=None)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "jsonrpc": "2.0",
+            "result": "",
+            "id": None,
+        })
+
+    def test_data_result_id(self):
+        r = JSONRPC20Response(result="", _id=0)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "jsonrpc": "2.0",
+            "result": "",
+            "id": 0,
+        })
+
+    def test_data_error(self):
+        r = JSONRPC20Response(error={"code": 0, "message": ""})
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "jsonrpc": "2.0",
+            "error": {
+                "code": 0,
+                "message": "",
+            },
+            "id": None,
+        })
+
+    def test_data_error_id_none(self):
+        r = JSONRPC20Response(error={"code": 0, "message": ""}, _id=None)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "jsonrpc": "2.0",
+            "error": {
+                "code": 0,
+                "message": "",
+            },
+            "id": None,
+        })
+
+    def test_data_error_id(self):
+        r = JSONRPC20Response(error={"code": 0, "message": ""}, _id=0)
+        self.assertEqual(json.loads(r.json), r.data)
+        self.assertEqual(r.data, {
+            "jsonrpc": "2.0",
+            "error": {
+                "code": 0,
+                "message": "",
+            },
+            "id": 0,
+        })
+
+
+class TestJSONRPC20BatchResponse(unittest.TestCase):
+
+    """ Test JSONRPC20BatchResponse functionality."""
+
+    def test_batch_response(self):
+        response = JSONRPC20BatchResponse(
+            JSONRPC20Response(result="result", _id=1),
+            JSONRPC20Response(error={"code": 0, "message": ""}, _id=2),
+        )
+        self.assertEqual(json.loads(response.json), [
+            {"result": "result", "id": 1, "jsonrpc": "2.0"},
+            {"error": {"code": 0, "message": ""}, "id": 2, "jsonrpc": "2.0"},
+        ])
+
+    def test_response_iterator(self):
+        responses = JSONRPC20BatchResponse(
+            JSONRPC20Response(result="result", _id=1),
+            JSONRPC20Response(result="result", _id=2),
+        )
+        for response in responses:
+            self.assertTrue(isinstance(response, JSONRPC20Response))
+            self.assertEqual(response.result, "result")
+
+    def test_batch_response_data(self):
+        response = JSONRPC20BatchResponse(
+            JSONRPC20Response(result="result", _id=1),
+            JSONRPC20Response(result="result", _id=2),
+            JSONRPC20Response(result="result"),
+        )
+        self.assertEqual(response.data, [
+            {"id": 1, "jsonrpc": "2.0", "result": "result"},
+            {"id": 2, "jsonrpc": "2.0", "result": "result"},
+            {"id": None, "jsonrpc": "2.0", "result": "result"},
+        ])
