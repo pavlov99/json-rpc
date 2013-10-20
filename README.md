@@ -100,13 +100,17 @@ TODO
 ----
 version 1.1:
 
-* add method dispatcher.
++ add method dispatcher.
 * update documentation (api, fix params and return docstrings).
-* add notification support. JSONRPCRequest(_id=None) would not be notification, add flag to force notification creation. It allows to use {id: null} as in specification.
-* add json serializer to process datetime.date datetime.datetime and decimal.Decimal objects.
++ add notification support. JSONRPCRequest(_id=None) would not be notification, add flag to force notification creation. It allows to use {id: null} as in specification.
++ add json serializer to process datetime.date datetime.datetime and decimal.Decimal objects.
+* add jsonrpc 1.0 support
+
+version 1.2
+
+* add from_json support for JSONRPCResponse.
 
 Changelog
 ---------
-**version 1.0.5-** Implement JSON-RPC 2.0 specification
-
 **version 1.0.6** Add examples of usage. Init documentation. Remove six from dependencies.
+**version 1.0.5-** Implement JSON-RPC 2.0 specification
