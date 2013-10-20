@@ -335,3 +335,26 @@ class TestJSONRPC10Request(unittest.TestCase):
 class TestJSONRPC10Response(unittest.TestCase):
 
     """ Test JSONRPC10Response functionality."""
+
+    def setUp(self):
+        self.response_success_params = {
+            "result": "",
+            "error": None,
+            "_id": 1,
+        }
+        self.response_error_params = {
+            "result": None,
+            "error": {
+                "code": 1,
+                "message": "error",
+            },
+            "_id": 1,
+        }
+
+    def test_correct_init(self):
+        """ Test object is created."""
+        JSONRPC10Response(**self.response_success_params)
+
+    def test_validation_incorrect_no_parameters(self):
+        with self.assertRaises(ValueError):
+            JSONRPC10Response()

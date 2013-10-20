@@ -18,9 +18,14 @@ class JSONSerializable(six.with_metaclass(ABCMeta, object)):
     def json(self):
         pass
 
-    @abstractmethod
+    @classmethod
     def from_json(cls, json_str):
-        pass
+        data = cls.deserialize(json_str)
+
+        if not isinstance(data, dict):
+            raise ValueError("data should be dict")
+
+        return cls(**data)
 
 
 class DatetimeDecimalEncoder(json.JSONEncoder):
