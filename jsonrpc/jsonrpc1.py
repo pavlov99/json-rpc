@@ -1,6 +1,6 @@
 from . import six
 
-from .jsonrpc import JSONRPCBaseRequest
+from .jsonrpc import JSONRPCBaseRequest, JSONRPCBaseResponse
 from .exceptions import JSONRPCInvalidRequestException
 
 JSONRPC_VERSION = "1.0"
@@ -100,5 +100,48 @@ class JSONRPC10Request(JSONRPCBaseRequest):
             raise JSONRPCInvalidRequestException(msg.format(extra, missed))
 
 
-class JSONRPC10Response(object):
-    pass
+class JSONRPC10Response(JSONRPCBaseResponse):
+
+    @property
+    def data(self):
+        data = {k: v for k, v in self._data.items()}
+        return data
+
+    @data.setter
+    def data(self, value):
+        if not isinstance(value, dict):
+            raise ValueError("data should be dict")
+
+        self._data = value
+
+    @property
+    def result(self):
+        return self._data.get("result")
+
+    @result.setter
+    def result(self, value):
+        if value is not None:
+            if self.error is not None:
+                raise ValueError("Either result or error should be used")
+
+        self._data["result"] = value
+
+    @property
+    def error(self):
+        return self._data.get("error")
+
+    @error.setter
+    def error(self, value):
+        if value is not None:
+            if self.result is not None:
+                raise ValueError("Either result or error should be used")
+
+        self._data["error"] = value
+
+    @property
+    def _id(self):
+        return self._data.get("_id")
+
+    @_id.setter
+    def _id(self, value):
+        self._data["id"] = value

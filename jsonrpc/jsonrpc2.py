@@ -2,7 +2,7 @@
 import json
 
 from .exceptions import JSONRPCError, JSONRPCInvalidRequestException
-from .jsonrpc import JSONRPCBaseRequest
+from .jsonrpc import JSONRPCBaseRequest, JSONRPCBaseResponse
 
 JSONRPC_VERSION = "2.0"
 
@@ -159,7 +159,7 @@ class JSONRPC20BatchRequest(object):
         return iter(self.requests)
 
 
-class JSONRPC20Response(object):
+class JSONRPC20Response(JSONRPCBaseResponse):
 
     """ JSON-RPC response object to JSONRPC20Request.
 
@@ -190,62 +190,55 @@ class JSONRPC20Response(object):
 
     """
 
-    serialize = staticmethod(json.dumps)
+    @property
+    def data(self):
+        data = {k: v for k, v in self._data.items()}
+        data["jsonrpc"] = JSONRPC_VERSION
+        return data
 
-    def __init__(self, result=None, error=None, _id=None):
-        self.data = dict(jsonrpc=self.jsonrpc)
+    @data.setter
+    def data(self, value):
+        if not isinstance(value, dict):
+            raise ValueError("data should be dict")
 
-        if result is None and error is None:
-            raise ValueError("Either result or error should be used")
-
-        self.result = result
-        self.error = error
-        self._id = _id
+        self._data = value
 
     @property
-    def jsonrpc(self):
-        return JSONRPC_VERSION
+    def result(self):
+        return self._data.get("result")
 
-    def __get_result(self):
-        return self.data.get("result")
-
-    def __set_result(self, value):
+    @result.setter
+    def result(self, value):
         if value is not None:
             if self.error is not None:
                 raise ValueError("Either result or error should be used")
 
-            self.data["result"] = value
+            self._data["result"] = value
 
-    result = property(__get_result, __set_result)
+    @property
+    def error(self):
+        return self._data.get("error")
 
-    def __get_error(self):
-        return self.data.get("error")
-
-    def __set_error(self, value):
+    @error.setter
+    def error(self, value):
         if value is not None:
             if self.result is not None:
                 raise ValueError("Either result or error should be used")
 
             JSONRPCError(**value)
-            self.data["error"] = value
+            self._data["error"] = value
 
-    error = property(__get_error, __set_error)
+    @property
+    def _id(self):
+        return self._data.get("_id")
 
-    def __get_id(self):
-        return self.data["_id"]
-
-    def __set_id(self, value):
+    @_id.setter
+    def _id(self, value):
         if value is not None and \
            not isinstance(value, six.string_types + six.integer_types):
             raise ValueError("id should be string or integer")
 
-        self.data["id"] = value
-
-    _id = property(__get_id, __set_id)
-
-    @property
-    def json(self):
-        return self.serialize(self.data)
+        self._data["id"] = value
 
 
 class JSONRPC20BatchResponse(object):
