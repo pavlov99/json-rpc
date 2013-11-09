@@ -133,7 +133,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
                 msg = "Invalid request. Extra fields: {}, Missed fields: {}"
                 raise JSONRPCInvalidRequestException(msg.format(extra, missed))
 
-        return result if len(result) > 1 or is_batch else result[0]
+        return result if is_batch else result[0]
 
 
 class JSONRPC20BatchRequest(object):
