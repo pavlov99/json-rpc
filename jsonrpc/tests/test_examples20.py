@@ -6,7 +6,7 @@ http://www.jsonrpc.org/specification#examples
 """
 import unittest
 import json
-from ..jsonrpc import JSONRPCResponseManager
+from ..manager import JSONRPCResponseManager
 
 
 def isjsonequal(json1, json2):
