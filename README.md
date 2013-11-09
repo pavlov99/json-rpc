@@ -9,13 +9,12 @@ json-rpc
 Overview
 --------
 
-JSON-RPC 2.0 and 1.0 transport realization with python3 support.
-Implementation follows [JSON-RPC2.0](http://www.jsonrpc.org/specification) and [JSON-RPC1.0](http://json-rpc.org/wiki/specification) specification.
+[JSON-RPC2.0](http://www.jsonrpc.org/specification) and [JSON-RPC1.0](http://json-rpc.org/wiki/specification) transport specification implementation. Supports python2.6+.
 
 Documentation: http://json-rpc.readthedocs.org
 
 This implementation does not have any transport functionality realization, only protocol.
-Any client or server realization is easy based on current code, but requires transport libraries, such as requests, gevent or zmq, see examples directory.
+Any client or server realization is easy based on current code, but requires transport libraries, such as requests, gevent or zmq, see [examples](https://github.com/pavlov99/json-rpc/tree/master/examples) directory.
 
 Install
 -------
