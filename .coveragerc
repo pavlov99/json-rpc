@@ -4,7 +4,7 @@ omit=
     jsonrpc/tests/*
 source=jsonrpc
 exclude_lines=
-    raise(NotImplemented)
+    raise NotImplemented
 
 [run]
 omit=
@@ -12,4 +12,4 @@ omit=
     jsonrpc/tests/*
 source=jsonrpc
 exclude_lines=
-    raise(NotImplemented)
+    raise NotImplemented
