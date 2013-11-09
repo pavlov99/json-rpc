@@ -6,17 +6,16 @@ json-rpc
 [![Downloads](https://pypip.in/v/json-rpc/badge.png)](https://crate.io/packages/json-rpc)
 [![Downloads](https://pypip.in/d/json-rpc/badge.png)](https://crate.io/packages/json-rpc)
 
-JSON-RPC2.0 transport with python3 support. Implementation follows [JSON-RPC](http://www.jsonrpc.org/specification) specification.
-
-Documentation: http://json-rpc.readthedocs.org
-
-
 Overview
 --------
 
-JSON-RPC is a stateless, light-weight remote procedure call (RPC) protocol. Primarily this specification defines several data structures and the rules around their processing. It is transport agnostic in that the concepts can be used within the same process, over sockets, over http, or in many various message passing environments. It uses JSON (RFC 4627) as data format.
+JSON-RPC 2.0 and 1.0 transport realization with python3 support.
+Implementation follows [JSON-RPC2.0](http://www.jsonrpc.org/specification) and [JSON-RPC1.0](http://json-rpc.org/wiki/specification) specification.
 
-This implementation does not have any transport functionality realization, only protocol. Any client or server realization is easy based on current code, but requires transport libraries, such as requests, gevent or zmq.
+Documentation: http://json-rpc.readthedocs.org
+
+This implementation does not have any transport functionality realization, only protocol.
+Any client or server realization is easy based on current code, but requires transport libraries, such as requests, gevent or zmq, see examples directory.
 
 Install
 -------
@@ -34,17 +33,20 @@ Server (uses Werkzeug)
 
     from werkzeug.wrappers import Request, Response
     from werkzeug.serving import run_simple
-    from jsonrpc.jsonrpc import JSONRPCResponseManager
+
+    from jsonrpc import JSONRPCResponseManager, dispatcher
+
+
+    @dispatcher.add_method
+    def foobar(**kwargs):
+        return kwargs["foo"] + kwargs["bar"]
 
 
     @Request.application
     def application(request):
-        # Dispatcher is a dictionary {<method_name>: callable function}
-        dispatcher = {
-            "echo": lambda s: s,
-            "add": lambda a, b: a + b,
-            "foobar": lambda **kwargs: kwargs["foo"] + kwargs["bar"],
-        }
+        # Dispatcher is dictionary {<method_name>: callable}
+        dispatcher["echo"] = lambda s: s
+        dispatcher["add"] = lambda a, b: a + b
 
         response = JSONRPCResponseManager.handle(
             request.data, dispatcher)
@@ -80,8 +82,6 @@ Client (uses requests)
 
     if __name__ == "__main__":
         main()
-
-For examples see examples folder as well.
 
 Competitors
 -----------
