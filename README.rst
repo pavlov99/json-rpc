@@ -1,10 +1,21 @@
 json-rpc
 ========
 
-[![Build Status](https://travis-ci.org/pavlov99/json-rpc.png?branch=master)](https://travis-ci.org/pavlov99/json-rpc)
-[![Coverage Status](https://coveralls.io/repos/pavlov99/json-rpc/badge.png)](https://coveralls.io/r/pavlov99/json-rpc)
-[![Downloads](https://pypip.in/v/json-rpc/badge.png)](https://crate.io/packages/json-rpc)
-[![Downloads](https://pypip.in/d/json-rpc/badge.png)](https://crate.io/packages/json-rpc)
+.. image:: https://travis-ci.org/pavlov99/json-rpc.png
+    :target: https://travis-ci.org/pavlov99/json-rpc
+    :alt: Build Status
+
+.. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png
+    :target: https://coveralls.io/r/pavlov99/json-rpc
+    :alt: Coverage Status
+
+.. image:: https://pypip.in/v/json-rpc/badge.png
+    :target: https://crate.io/packages/json-rpc
+    :alt: Version
+
+.. image:: https://pypip.in/d/json-rpc/badge.png
+    :target: https://crate.io/packages/json-rpc
+    :alt: Downloads
 
 [JSON-RPC2.0](http://www.jsonrpc.org/specification) and [JSON-RPC1.0](http://json-rpc.org/wiki/specification) transport specification implementation. Supports python2.6+, python3.2+.
 
