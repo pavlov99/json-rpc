@@ -46,15 +46,6 @@ class JSONRPCBaseRequest(JSONSerializable):
     def json(self):
         return self.serialize(self.data)
 
-    @classmethod
-    def from_json(cls, json_str):
-        data = cls.deserialize(json_str)
-
-        if not isinstance(data, dict):
-            raise ValueError("data should be dict")
-
-        return cls(**data)
-
 
 class JSONRPCBaseResponse(JSONSerializable):
 
