@@ -144,4 +144,6 @@ class JSONRPC10Response(JSONRPCBaseResponse):
 
     @_id.setter
     def _id(self, value):
+        if value is None:
+            raise ValueError("id could not be null for JSON-RPC1.0 Response")
         self._data["id"] = value
