@@ -40,7 +40,7 @@ Tests
 
 Quickstart
 ----------
-Server (uses [Werkzeug](http://werkzeug.pocoo.org/))
+Server (uses `Werkzeug <http://werkzeug.pocoo.org/>`_)
 
 .. code-block:: python
 
@@ -69,7 +69,7 @@ Server (uses [Werkzeug](http://werkzeug.pocoo.org/))
     if __name__ == '__main__':
         run_simple('localhost', 4000, application)
 
-Client (uses [requests](http://www.python-requests.org/en/latest/))
+Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 
 .. code-block:: python
 
@@ -100,13 +100,4 @@ Client (uses [requests](http://www.python-requests.org/en/latest/))
 
 Competitors
 -----------
-There are [several libraries](http://en.wikipedia.org/wiki/JSON-RPC#Implementations) implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
-
-| # |package         | version                                                                                                 | last modified |
-|---|----------------|---------------------------------------------------------------------------------------------------------|---------------|
-| 1 |python-jsonrpc  | [![Downloads](https://pypip.in/v/python-jsonrpc/badge.png)](https://crate.io/packages/python-jsonrpc)   | 2013-07-07    |
-| 2 |jsonrpc         | [![Downloads](https://pypip.in/v/jsonrpc/badge.png)](https://crate.io/packages/jsonrpc)                 | 2012-02-06    |
-| 3 |jsonrpc2        | [![Downloads](https://pypip.in/v/jsonrpc2/badge.png)](https://crate.io/packages/jsonrpc2)               | 2011-06-06    |
-| 4 |tinyrpc         | [![Downloads](https://pypip.in/v/tinyrpc/badge.png)](https://crate.io/packages/tinyrpc)                 | 2013-02-24    |
-| 5 |simple-json-rpc | [![Downloads](https://pypip.in/v/simple-json-rpc/badge.png)](https://crate.io/packages/simple-json-rpc) | 2012-06-16    |
-| 6 |pjsonrpc        | -                                                                                                       | 2011          |
+There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementations>`_ implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
