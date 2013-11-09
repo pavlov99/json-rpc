@@ -3,6 +3,7 @@ import datetime
 import decimal
 import json
 import unittest
+from mock import patch
 
 from ..utils import JSONSerializable, DatetimeDecimalEncoder
 
@@ -17,10 +18,6 @@ class TestJSONSerializable(unittest.TestCase):
             def json(self):
                 pass
 
-            @classmethod
-            def from_json(cls, self):
-                pass
-
         self._class = A
 
     def test_abstract_class(self):
@@ -33,6 +30,13 @@ class TestJSONSerializable(unittest.TestCase):
         """ Test classmethods of inherited class."""
         self.assertEqual(self._class.serialize({}), "{}")
         self.assertEqual(self._class.deserialize("{}"), {})
+
+    def test_from_json(self):
+        self.assertTrue(isinstance(self._class.from_json('{}'), self._class))
+
+    def test_from_json_incorrect(self):
+        with self.assertRaises(ValueError):
+            self._class.from_json('[]')
 
 
 class TestDatetimeDecimalEncoder(unittest.TestCase):
@@ -70,3 +74,10 @@ class TestDatetimeDecimalEncoder(unittest.TestCase):
         self.assertEqual(
             json.dumps(obj, cls=DatetimeDecimalEncoder),
             "0.1")
+
+    def test_default(self):
+        encoder = DatetimeDecimalEncoder()
+        with patch.object(json.JSONEncoder, 'default') as json_default:
+            encoder.default("")
+
+        self.assertEqual(json_default.call_count, 1)
