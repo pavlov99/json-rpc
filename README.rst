@@ -17,28 +17,32 @@ json-rpc
     :target: https://crate.io/packages/json-rpc
     :alt: Downloads
 
-[JSON-RPC2.0](http://www.jsonrpc.org/specification) and [JSON-RPC1.0](http://json-rpc.org/wiki/specification) transport specification implementation. Supports python2.6+, python3.2+.
-
-JSONRPC1-spec_ JSONRPC2-spec_
+`JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation. Supports python2.6+, python3.2+.
 
 Documentation: http://json-rpc.readthedocs.org
 
 This implementation does not have any transport functionality realization, only protocol.
-Any client or server realization is easy based on current code, but requires transport libraries, such as requests, gevent or zmq, see [examples](https://github.com/pavlov99/json-rpc/tree/master/examples) directory.
+Any client or server realization is easy based on current code, but requires transport libraries, such as requests, gevent or zmq, see `examples <https://github.com/pavlov99/json-rpc/tree/master/examples>`_.
 
-Install ::
+Install
 -------
+
+.. code-block:: python
 
     pip install json-rpc
 
 Tests
 -----
 
+.. code-block:: python
+
     tox
 
 Quickstart
 ----------
 Server (uses [Werkzeug](http://werkzeug.pocoo.org/))
+
+.. code-block:: python
 
     from werkzeug.wrappers import Request, Response
     from werkzeug.serving import run_simple
@@ -66,6 +70,8 @@ Server (uses [Werkzeug](http://werkzeug.pocoo.org/))
         run_simple('localhost', 4000, application)
 
 Client (uses [requests](http://www.python-requests.org/en/latest/))
+
+.. code-block:: python
 
     import requests
     import json
@@ -104,9 +110,3 @@ There are [several libraries](http://en.wikipedia.org/wiki/JSON-RPC#Implementati
 | 4 |tinyrpc         | [![Downloads](https://pypip.in/v/tinyrpc/badge.png)](https://crate.io/packages/tinyrpc)                 | 2013-02-24    |
 | 5 |simple-json-rpc | [![Downloads](https://pypip.in/v/simple-json-rpc/badge.png)](https://crate.io/packages/simple-json-rpc) | 2012-06-16    |
 | 6 |pjsonrpc        | -                                                                                                       | 2011          |
-
-.. _links:
-
-.. _JSONRPC1-spec: http://json-rpc.org/wiki/specification
-.. _JSONRPC2-spec: http://www.jsonrpc.org/specification
-.. _example_of_usage:
