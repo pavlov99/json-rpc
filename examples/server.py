@@ -7,17 +7,20 @@ NOTE: server handles all url paths the same way (there are no different urls).
 
 from werkzeug.wrappers import Request, Response
 from werkzeug.serving import run_simple
-from jsonrpc.jsonrpc import JSONRPCResponseManager
+
+from jsonrpc import JSONRPCResponseManager, dispatcher
+
+
+@dispatcher.add_method
+def foobar(**kwargs):
+    return kwargs["foo"] + kwargs["bar"]
 
 
 @Request.application
 def application(request):
-    # Dispatcher is a dictionary {<method_name>: callable function}
-    dispatcher = {
-        "echo": lambda s: s,
-        "add": lambda a, b: a + b,
-        "foobar": lambda **kwargs: kwargs["foo"] + kwargs["bar"],
-    }
+    # Dispatcher is dictionary {<method_name>: callable}
+    dispatcher["echo"] = lambda s: s
+    dispatcher["add"] = lambda a, b: a + b
 
     response = JSONRPCResponseManager.handle(
         request.data, dispatcher)
