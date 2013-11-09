@@ -331,6 +331,24 @@ class TestJSONRPC10Request(unittest.TestCase):
         self.assertEqual(request._id, None)
         self.assertTrue(request.is_notification)
 
+    def test_from_json_string_not_dict(self):
+        with self.assertRaises(ValueError):
+            JSONRPC10Request.from_json("[]")
+
+        with self.assertRaises(ValueError):
+            JSONRPC10Request.from_json("0")
+
+    def test_data_setter(self):
+        request = JSONRPC10Request(**self.request_params)
+        with self.assertRaises(ValueError):
+            request.data = []
+
+        with self.assertRaises(ValueError):
+            request.data = ""
+
+        with self.assertRaises(ValueError):
+            request.data = None
+
 
 class TestJSONRPC10Response(unittest.TestCase):
 
@@ -372,6 +390,14 @@ class TestJSONRPC10Response(unittest.TestCase):
         with self.assertRaises(ValueError):
             JSONRPC10Response(**wrong_params)
 
+    def test_validation_incorrect_result_and_error(self):
+        with self.assertRaises(ValueError):
+            JSONRPC10Response(result="", error="", _id=0)
+
+        response = JSONRPC10Response(error="", _id=0)
+        with self.assertRaises(ValueError):
+            response.result = ""
+
     def test_data(self):
         r = JSONRPC10Response(result="", _id=0)
         self.assertEqual(json.loads(r.json), r.data)
@@ -380,3 +406,18 @@ class TestJSONRPC10Response(unittest.TestCase):
             "error": None,
             "id": 0,
         })
+
+    def test_data_setter(self):
+        response = JSONRPC10Response(**self.response_success_params)
+        with self.assertRaises(ValueError):
+            response.data = []
+
+        with self.assertRaises(ValueError):
+            response.data = ""
+
+        with self.assertRaises(ValueError):
+            response.data = None
+
+    def test_validation_id(self):
+        response = JSONRPC10Response(**self.response_success_params)
+        self.assertEqual(response._id, self.response_success_params["_id"])
