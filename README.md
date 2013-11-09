@@ -112,7 +112,7 @@ version 1.2
 
 Changelog
 ---------
-**version 1.1rc1** Add JSON-RPC 1.0 support, dispatcher for functions, notification support for JSON-RPC2.0, custom serializers support (add datetime + decimal example).
+**version 1.1.rc1** Add JSON-RPC 1.0 support, dispatcher for functions, notification support for JSON-RPC2.0, custom serializers support (add datetime + decimal example).
 
 **version 1.0.6** Add examples of usage. Init documentation. Remove six from dependencies.
 
