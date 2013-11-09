@@ -474,6 +474,17 @@ class TestJSONRPC20Request(unittest.TestCase):
         with self.assertRaises(JSONRPCInvalidRequestException):
             JSONRPC20Request.from_json(str_json)
 
+    def test_data_setter(self):
+        request = JSONRPC20Request(**self.request_params)
+        with self.assertRaises(ValueError):
+            request.data = []
+
+        with self.assertRaises(ValueError):
+            request.data = ""
+
+        with self.assertRaises(ValueError):
+            request.data = None
+
 
 class TestJSONRPC20BatchRequest(unittest.TestCase):
 
@@ -497,7 +508,7 @@ class TestJSONRPC20BatchRequest(unittest.TestCase):
             {"method": "mul", "params": [1, 2], "jsonrpc": "2.0"},
         ])
 
-        requests = JSONRPC20Request.from_json(str_json)
+        requests = JSONRPC20BatchRequest.from_json(str_json)
         self.assertTrue(isinstance(requests, JSONRPC20BatchRequest))
         for r in requests:
             self.assertTrue(isinstance(r, JSONRPC20Request))
@@ -561,6 +572,10 @@ class TestJSONRPC20Response(unittest.TestCase):
         with self.assertRaises(ValueError):
             JSONRPC20Response(result="", error={"code": 1, "message": ""})
 
+        response = JSONRPC20Response(error={"code": 1, "message": ""})
+        with self.assertRaises(ValueError):
+            response.result = ""
+
     def test_validation_error_correct(self):
         JSONRPC20Response(**self.response_error_params)
 
@@ -583,6 +598,10 @@ class TestJSONRPC20Response(unittest.TestCase):
         self.response_error_params["error"].update({"message": 0})
         with self.assertRaises(ValueError):
             JSONRPC20Response(**self.response_error_params)
+
+    def test_validation_id(self):
+        response = JSONRPC20Response(**self.response_success_params)
+        self.assertEqual(response._id, self.response_success_params["_id"])
 
     def test_data_result(self):
         r = JSONRPC20Response(result="")
@@ -646,6 +665,17 @@ class TestJSONRPC20Response(unittest.TestCase):
             },
             "id": 0,
         })
+
+    def test_data_setter(self):
+        response = JSONRPC20Response(**self.response_success_params)
+        with self.assertRaises(ValueError):
+            response.data = []
+
+        with self.assertRaises(ValueError):
+            response.data = ""
+
+        with self.assertRaises(ValueError):
+            response.data = None
 
 
 class TestJSONRPC20BatchResponse(unittest.TestCase):
