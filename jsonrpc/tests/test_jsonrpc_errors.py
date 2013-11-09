@@ -66,6 +66,13 @@ class TestJSONRPCError(unittest.TestCase):
         self.error_params.update({"data": ""})
         JSONRPCError(**self.error_params)
 
+    def test_json(self):
+        error = JSONRPCError(**self.error_params)
+        self.assertEqual(
+            json.loads(error.json),
+            self.error_params,
+        )
+
     def test_from_json(self):
         str_json = json.dumps({
             "code": 0,
