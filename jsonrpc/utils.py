@@ -16,7 +16,7 @@ class JSONSerializable(six.with_metaclass(ABCMeta, object)):
 
     @abstractmethod
     def json(self):
-        pass
+        raise(NotImplemented)
 
     @classmethod
     def from_json(cls, json_str):
@@ -37,7 +37,7 @@ class DatetimeDecimalEncoder(json.JSONEncoder):
 
     """
 
-    def default(self, o):  # noqa
+    def default(self, o):
         """ Encode JSON.
 
         :return str: A JSON encoded string
