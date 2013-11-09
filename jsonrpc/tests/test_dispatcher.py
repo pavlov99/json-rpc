@@ -30,6 +30,14 @@ class TestDispatcher(unittest.TestCase):
         self.assertIn("add", d)
         self.assertEqual(d["add"](1, 1), 2)
 
+    def test_del_method(self):
+        d = Dispatcher()
+        d["method"] = lambda: ""
+        self.assertIn("method", d)
+
+        del d["method"]
+        self.assertNotIn("method", d)
+
     def test_to_dict(self):
         d = Dispatcher()
         func = lambda: ""
