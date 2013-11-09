@@ -498,7 +498,7 @@ class TestJSONRPC20BatchRequest(unittest.TestCase):
         ])
 
         requests = JSONRPC20Request.from_json(str_json)
-        self.assertTrue(isinstance(requests, list))
+        self.assertTrue(isinstance(requests, JSONRPC20BatchRequest))
         for r in requests:
             self.assertTrue(isinstance(r, JSONRPC20Request))
             self.assertTrue(r.method in ["add", "mul"])
@@ -512,7 +512,8 @@ class TestJSONRPC20BatchRequest(unittest.TestCase):
         ])
 
         requests = JSONRPC20Request.from_json(str_json)
-        self.assertTrue(isinstance(requests, list))
+        self.assertTrue(isinstance(requests, JSONRPC20BatchRequest))
+        requests = list(requests)
         self.assertEqual(len(requests), 1)
         r = requests[0]
         self.assertTrue(isinstance(r, JSONRPC20Request))

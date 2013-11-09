@@ -2,9 +2,7 @@
 import json
 
 from .exceptions import JSONRPCError, JSONRPCInvalidRequestException
-from .jsonrpc import JSONRPCBaseRequest, JSONRPCBaseResponse
-
-JSONRPC_VERSION = "2.0"
+from .base import JSONRPCBaseRequest, JSONRPCBaseResponse
 
 
 class JSONRPC20Request(JSONRPCBaseRequest):
@@ -44,6 +42,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
 
     """
 
+    JSONRPC_VERSION = "2.0"
     REQUIRED_FIELDS = set(["jsonrpc", "method"])
     POSSIBLE_FIELDS = set(["jsonrpc", "method", "params", "id"])
 
@@ -53,7 +52,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
             k: v for k, v in self._data.items()
             if not (k == "id" and self.is_notification)
         }
-        data["jsonrpc"] = JSONRPC_VERSION
+        data["jsonrpc"] = self.JSONRPC_VERSION
         return data
 
     @data.setter
@@ -122,18 +121,24 @@ class JSONRPC20Request(JSONRPCBaseRequest):
 
         result = []
         for d in data:
-            if cls.REQUIRED_FIELDS <= set(d.keys()) <= cls.POSSIBLE_FIELDS:
-                result.append(JSONRPC20Request(
-                    method=d["method"], params=d.get("params"),
-                    _id=d.get("id"), is_notification="id" not in d,
-                ))
-            else:
+            if not cls.REQUIRED_FIELDS <= set(d.keys()) <= cls.POSSIBLE_FIELDS:
                 extra = set(d.keys()) - cls.POSSIBLE_FIELDS
                 missed = cls.REQUIRED_FIELDS - set(d.keys())
                 msg = "Invalid request. Extra fields: {}, Missed fields: {}"
                 raise JSONRPCInvalidRequestException(msg.format(extra, missed))
 
-        return result if is_batch else result[0]
+            try:
+                result.append(JSONRPC20Request(
+                    method=d["method"], params=d.get("params"),
+                    _id=d.get("id"), is_notification="id" not in d,
+                ))
+            except ValueError as e:
+                raise JSONRPCInvalidRequestException(str(e))
+
+        if is_batch:
+            return JSONRPC20BatchRequest(*result)
+        else:
+            return result[0]
 
 
 class JSONRPC20BatchRequest(object):
@@ -143,6 +148,8 @@ class JSONRPC20BatchRequest(object):
     :param JSONRPC20Request *requests: requests
 
     """
+
+    JSONRPC_VERSION = "2.0"
 
     def __init__(self, *requests):
         self.requests = requests
@@ -190,10 +197,12 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
     """
 
+    JSONRPC_VERSION = "2.0"
+
     @property
     def data(self):
         data = {k: v for k, v in self._data.items()}
-        data["jsonrpc"] = JSONRPC_VERSION
+        data["jsonrpc"] = self.JSONRPC_VERSION
         return data
 
     @data.setter
@@ -242,6 +251,9 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
 
 class JSONRPC20BatchResponse(object):
+
+    JSONRPC_VERSION = "2.0"
+
     def __init__(self, *responses):
         self.responses = responses
 

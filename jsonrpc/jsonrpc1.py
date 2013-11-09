@@ -1,9 +1,7 @@
 from . import six
 
-from .jsonrpc import JSONRPCBaseRequest, JSONRPCBaseResponse
+from .base import JSONRPCBaseRequest, JSONRPCBaseResponse
 from .exceptions import JSONRPCInvalidRequestException
-
-JSONRPC_VERSION = "1.0"
 
 
 class JSONRPC10Request(JSONRPCBaseRequest):
@@ -21,6 +19,7 @@ class JSONRPC10Request(JSONRPCBaseRequest):
 
     """
 
+    JSONRPC_VERSION = "1.0"
     REQUIRED_FIELDS = set(["method", "params", "id"])
     POSSIBLE_FIELDS = set(["method", "params", "id"])
 
@@ -101,6 +100,8 @@ class JSONRPC10Request(JSONRPCBaseRequest):
 
 
 class JSONRPC10Response(JSONRPCBaseResponse):
+
+    JSONRPC_VERSION = "1.0"
 
     @property
     def data(self):

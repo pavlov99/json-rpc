@@ -1,19 +1,19 @@
 import json
 from .exceptions import (
-    #JSONRPCError,
     JSONRPCInvalidParams,
     JSONRPCInvalidRequest,
+    JSONRPCInvalidRequestException,
     JSONRPCMethodNotFound,
     JSONRPCParseError,
     JSONRPCServerError,
 )
-from .jsonrpc1 import JSONRPC10Request, JSONRPC10Response
+from .jsonrpc1 import JSONRPC10Response
 from .jsonrpc2 import (
     JSONRPC20BatchRequest,
     JSONRPC20BatchResponse,
-    JSONRPC20Request,
     JSONRPC20Response,
 )
+from .jsonrpc import JSONRPCRequest
 
 
 class JSONRPCResponseManager(object):
@@ -31,7 +31,10 @@ class JSONRPCResponseManager(object):
 
     """
 
-    pass
+    RESPONSE_CLASS_MAP = {
+        "1.0": JSONRPC10Response,
+        "2.0": JSONRPC20Response,
+    }
 
     @classmethod
     def handle(cls, request_str, dispatcher):
@@ -41,11 +44,12 @@ class JSONRPCResponseManager(object):
             return JSONRPC20Response(error=JSONRPCParseError()._data)
 
         try:
-            request = JSONRPC20Request.from_json(request_str)
-        except ValueError:
+            request = JSONRPCRequest.from_json(request_str)
+        except JSONRPCInvalidRequestException:
             return JSONRPC20Response(error=JSONRPCInvalidRequest()._data)
 
-        rs = [request] if isinstance(request, JSONRPC20Request) else request
+        rs = request if isinstance(request, JSONRPC20BatchRequest) \
+            else [request]
         responses = [r for r in cls._get_responses(rs, dispatcher)
                      if r is not None]
 
@@ -53,10 +57,10 @@ class JSONRPCResponseManager(object):
         if not responses:
             return
 
-        if isinstance(request, (JSONRPC10Request, JSONRPC20Request)):
-            return responses[0]
-        else:
+        if isinstance(request, JSONRPC20BatchRequest):
             return JSONRPC20BatchResponse(*responses)
+        else:
+            return responses[0]
 
     @classmethod
     def _get_responses(cls, requests, dispatcher):
@@ -66,8 +70,8 @@ class JSONRPCResponseManager(object):
 
         """
         for request in requests:
-            response = lambda **kwargs: JSONRPC20Response(
-                _id=request._id, **kwargs)
+            response = lambda **kwargs: cls.RESPONSE_CLASS_MAP[
+                request.JSONRPC_VERSION](_id=request._id, **kwargs)
 
             if request.is_notification:
                 yield
