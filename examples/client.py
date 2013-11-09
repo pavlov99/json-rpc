@@ -20,6 +20,20 @@ def main():
     assert response["jsonrpc"] == "2.0"
     assert response["id"] == 0
 
+    # Example echo method JSON-RPC 1.0
+    payload = {
+        "method": "echo",
+        "params": ["echome!"],
+        "id": 0,
+    }
+    response = requests.post(
+        url, data=json.dumps(payload), headers=headers).json()
+
+    assert response["result"] == "echome!"
+    assert response["error"] is None
+    assert response["id"] == 0
+    assert "jsonrpc" not in response
+
     # Example add method
     payload = {
         "method": "add",
