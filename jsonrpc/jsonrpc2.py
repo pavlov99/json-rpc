@@ -237,7 +237,7 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
     @property
     def _id(self):
-        return self._data.get("_id")
+        return self._data.get("id")
 
     @_id.setter
     def _id(self, value):
