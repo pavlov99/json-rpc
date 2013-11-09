@@ -6,6 +6,9 @@
 	JSON-RPC 2.0 request).
 	* Add custom json serializer (based on json) with datetime.Datetime
 	and decimal.Decimal serialization support.
+	* Move JSONRPC* classes to JSONRPC20*, as far as there is JSONRPC10*.
+	* Add dispatcher and JSONPRCManager to jsonrpc/__init__, they are no
+	longer in jsonrpc.jsonrpc module.
 
 2013-10-13  kirill.pavlov@phystech.edu
 
