@@ -603,6 +603,18 @@ class TestJSONRPC20Response(unittest.TestCase):
         response = JSONRPC20Response(**self.response_success_params)
         self.assertEqual(response._id, self.response_success_params["_id"])
 
+    def test_validation_id_incorrect_type(self):
+        response = JSONRPC20Response(**self.response_success_params)
+
+        with self.assertRaises(ValueError):
+            response._id = []
+
+        with self.assertRaises(ValueError):
+            response._id = {}
+
+        with self.assertRaises(ValueError):
+            response._id = 0.1
+
     def test_data_result(self):
         r = JSONRPC20Response(result="")
         self.assertEqual(json.loads(r.json), r.data)
