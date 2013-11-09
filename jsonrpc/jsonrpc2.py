@@ -114,10 +114,11 @@ class JSONRPC20Request(JSONRPCBaseRequest):
         data = data if is_batch else [data]
 
         if not data:
-            raise ValueError("[] value is not accepted")
+            raise JSONRPCInvalidRequestException("[] value is not accepted")
 
         if not all(isinstance(d, dict) for d in data):
-            raise ValueError("Each request should be an object (dict)")
+            raise JSONRPCInvalidRequestException(
+                "Each request should be an object (dict)")
 
         result = []
         for d in data:
@@ -135,10 +136,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
             except ValueError as e:
                 raise JSONRPCInvalidRequestException(str(e))
 
-        if is_batch:
-            return JSONRPC20BatchRequest(*result)
-        else:
-            return result[0]
+        return JSONRPC20BatchRequest(*result) if is_batch else result[0]
 
 
 class JSONRPC20BatchRequest(object):
