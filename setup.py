@@ -36,6 +36,7 @@ setup(
     author_email="kirill.pavlov@phystech.edu",
     url="https://github.com/pavlov99/json-rpc",
     description="JSON-RPC transport realisation",
+    long_description=read('README.md'),
 
     # Full list:
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
