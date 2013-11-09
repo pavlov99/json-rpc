@@ -84,4 +84,3 @@ class JSONRPCBaseResponse(JSONSerializable):
     @property
     def json(self):
         return self.serialize(self.data)
-
