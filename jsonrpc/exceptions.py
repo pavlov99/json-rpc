@@ -1,5 +1,19 @@
-import json
 from . import six
+import json
+
+
+class JSONRPCException(Exception):
+
+    """ JSON-RPC Exception."""
+
+    pass
+
+
+class JSONRPCInvalidRequestException(JSONRPCException):
+
+    """ Request is not valid."""
+
+    pass
 
 
 class JSONRPCError(object):

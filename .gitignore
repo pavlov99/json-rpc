@@ -5,6 +5,7 @@
 .coverage
 .env
 .env3
+.ropeproject
 .tox
 build/
 dist/
