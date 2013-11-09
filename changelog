@@ -1,0 +1,18 @@
+2013-11-09  kirill.pavlov@phystech.edu
+
+	* Add JSON-RPC 1.0 support.
+	* Add dispatcher for functions.
+	* Add notification support (separate notification and id=null for
+	JSON-RPC 2.0 request).
+	* Add custom json serializer (based on json) with datetime.Datetime
+	and decimal.Decimal serialization support.
+
+2013-10-13  kirill.pavlov@phystech.edu
+
+	* Add examples of usage.
+	* Init documentation.
+	* Remove six from dependencies.
+
+2013-10-08  kirill.pavlov@phystech.edu
+
+	* Implement JSON-RPC 2.0 specification.

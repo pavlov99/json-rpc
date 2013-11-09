@@ -6,10 +6,7 @@ json-rpc
 [![Downloads](https://pypip.in/v/json-rpc/badge.png)](https://crate.io/packages/json-rpc)
 [![Downloads](https://pypip.in/d/json-rpc/badge.png)](https://crate.io/packages/json-rpc)
 
-Overview
---------
-
-[JSON-RPC2.0](http://www.jsonrpc.org/specification) and [JSON-RPC1.0](http://json-rpc.org/wiki/specification) transport specification implementation. Supports python2.6+.
+[JSON-RPC2.0](http://www.jsonrpc.org/specification) and [JSON-RPC1.0](http://json-rpc.org/wiki/specification) transport specification implementation. Supports python2.6+, python3.2+.
 
 Documentation: http://json-rpc.readthedocs.org
 
@@ -28,7 +25,7 @@ Tests
 
 Quickstart
 ----------
-Server (uses Werkzeug)
+Server (uses [Werkzeug](http://werkzeug.pocoo.org/))
 
     from werkzeug.wrappers import Request, Response
     from werkzeug.serving import run_simple
@@ -55,7 +52,7 @@ Server (uses Werkzeug)
     if __name__ == '__main__':
         run_simple('localhost', 4000, application)
 
-Client (uses requests)
+Client (uses [requests](http://www.python-requests.org/en/latest/))
 
     import requests
     import json
@@ -94,25 +91,3 @@ There are [several libraries](http://en.wikipedia.org/wiki/JSON-RPC#Implementati
 | 4 |tinyrpc         | [![Downloads](https://pypip.in/v/tinyrpc/badge.png)](https://crate.io/packages/tinyrpc)                 | 2013-02-24    |
 | 5 |simple-json-rpc | [![Downloads](https://pypip.in/v/simple-json-rpc/badge.png)](https://crate.io/packages/simple-json-rpc) | 2012-06-16    |
 | 6 |pjsonrpc        | -                                                                                                       | 2011          |
-
-TODO
-----
-version 1.1:
-
-+ add method dispatcher.
-+ add notification support. JSONRPCRequest(_id=None) would not be notification, add flag to force notification creation. It allows to use {id: null} as in specification.
-+ add json serializer to process datetime.date datetime.datetime and decimal.Decimal objects.
-+ add jsonrpc 1.0 support
-
-version 1.2
-
-* update documentation (api, fix params and return docstrings).
-* add from_json support for JSONRPCResponse.
-
-Changelog
----------
-**version 1.1.rc1** Add JSON-RPC 1.0 support, dispatcher for functions, notification support for JSON-RPC2.0, custom serializers support (add datetime + decimal example).
-
-**version 1.0.6** Add examples of usage. Init documentation. Remove six from dependencies.
-
-**version 1.0.5-** Implement JSON-RPC 2.0 specification
