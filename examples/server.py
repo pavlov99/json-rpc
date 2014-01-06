@@ -23,7 +23,7 @@ def application(request):
     dispatcher["add"] = lambda a, b: a + b
 
     response = JSONRPCResponseManager.handle(
-        request.data, dispatcher)
+        request.get_data(cache=False, as_text=True), dispatcher)
     return Response(response.json, mimetype='application/json')
 
 
