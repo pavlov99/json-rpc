@@ -38,6 +38,9 @@ class JSONRPCResponseManager(object):
 
     @classmethod
     def handle(cls, request_str, dispatcher):
+        if isinstance(request_str, bytes):
+            request_str = request_str.decode("utf-8")
+
         try:
             json.loads(request_str)
         except (TypeError, ValueError):
