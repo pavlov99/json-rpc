@@ -101,3 +101,9 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 Competitors
 -----------
 There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementations>`_ implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
+
+
+.. image:: https://d2weczhvl823v0.cloudfront.net/pavlov99/json-rpc/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
+
