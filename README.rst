@@ -107,3 +107,9 @@ There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementati
    :alt: Bitdeli badge
    :target: https://bitdeli.com/free
 
+
+
+.. image:: https://d2weczhvl823v0.cloudfront.net/pavlov99/json-rpc/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
+
