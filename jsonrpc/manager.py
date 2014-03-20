@@ -16,6 +16,8 @@ from .jsonrpc2 import (
 )
 from .jsonrpc import JSONRPCRequest
 
+logger = logging.getLogger(__name__)
+
 
 class JSONRPCResponseManager(object):
 
@@ -90,17 +92,15 @@ class JSONRPCResponseManager(object):
             try:
                 result = method(*request.args, **request.kwargs)
             except TypeError:
-                #import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
                 yield response(error=JSONRPCInvalidParams()._data)
                 continue
             except Exception as e:
-                logger = logging.getLogger("jsonrpc")
-                logger.exception("API Exception")
                 data = {
                     "type": e.__class__.__name__,
                     "args": e.args,
                     "message": str(e),
                 }
+                logger.exception("API Exception: {}".format(data))
                 yield response(error=JSONRPCServerError(data=data)._data)
                 continue
 
