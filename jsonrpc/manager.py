@@ -1,4 +1,5 @@
 import json
+import logging
 from .exceptions import (
     JSONRPCInvalidParams,
     JSONRPCInvalidRequest,
@@ -93,6 +94,8 @@ class JSONRPCResponseManager(object):
                 yield response(error=JSONRPCInvalidParams()._data)
                 continue
             except Exception as e:
+                logger = logging.getLogger("jsonrpc")
+                logger.exception("API Exception")
                 data = {
                     "type": e.__class__.__name__,
                     "args": e.args,
