@@ -1,4 +1,5 @@
 import unittest
+from mock import MagicMock
 
 from ..manager import JSONRPCResponseManager
 from ..jsonrpc2 import (
@@ -15,11 +16,13 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         def raise_(e):
             raise e
 
+        self.long_time_method = MagicMock()
         self.dispatcher = {
             "add": sum,
             "list_len": len,
             "101_base": lambda **kwargs: int("101", **kwargs),
-            "error": lambda: raise_(KeyError("error_explanation"))
+            "error": lambda: raise_(KeyError("error_explanation")),
+            "long_time_method": self.long_time_method,
         }
 
     def test_returned_type_response(self):
@@ -77,3 +80,24 @@ class TestJSONRPCResponseManager(unittest.TestCase):
             "args": ('error_explanation',),
             "message": "'error_explanation'",
         })
+
+    def test_notification_calls_method(self):
+        request = JSONRPC20Request("long_time_method", is_notification=True)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertEqual(response, None)
+        self.long_time_method.assert_called_once_with()
+
+    def test_notification_does_not_return_error_does_not_exist(self):
+        request = JSONRPC20Request("does_not_exist", is_notification=True)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertEqual(response, None)
+
+    def test_notification_does_not_return_error_invalid_params(self):
+        request = JSONRPC20Request("add", {"a": 0}, is_notification=True)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertEqual(response, None)
+
+    def test_notification_does_not_return_error(self):
+        request = JSONRPC20Request("error", is_notification=True)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertEqual(response, None)

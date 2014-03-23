@@ -79,21 +79,18 @@ class JSONRPCResponseManager(object):
             response = lambda **kwargs: cls.RESPONSE_CLASS_MAP[
                 request.JSONRPC_VERSION](_id=request._id, **kwargs)
 
-            if request.is_notification:
-                yield
-                continue
-
             try:
                 method = dispatcher[request.method]
             except KeyError:
-                yield response(error=JSONRPCMethodNotFound()._data)
+                if not request.is_notification:
+                    yield response(error=JSONRPCMethodNotFound()._data)
                 continue
 
             try:
                 result = method(*request.args, **request.kwargs)
             except TypeError:
-                yield response(error=JSONRPCInvalidParams()._data)
-                continue
+                if not request.is_notification:
+                    yield response(error=JSONRPCInvalidParams()._data)
             except Exception as e:
                 data = {
                     "type": e.__class__.__name__,
@@ -101,7 +98,9 @@ class JSONRPCResponseManager(object):
                     "message": str(e),
                 }
                 logger.exception("API Exception: {}".format(data))
-                yield response(error=JSONRPCServerError(data=data)._data)
-                continue
-
-            yield response(result=result)
+                result = response(error=JSONRPCServerError(data=data)._data)
+                if not request.is_notification:
+                    yield result
+            else:
+                if not request.is_notification:
+                    yield response(result=result)
