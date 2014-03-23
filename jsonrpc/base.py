@@ -58,9 +58,6 @@ class JSONRPCBaseResponse(JSONSerializable):
         self.error = error
         self._id = _id
 
-        if self.result is None and self.error is None:
-            raise ValueError("Either result or error should be used")
-
     @property
     def data(self):
         return self._data
