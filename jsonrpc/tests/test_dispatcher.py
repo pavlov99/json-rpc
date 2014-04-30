@@ -1,5 +1,9 @@
 from ..dispatcher import Dispatcher
-import unittest
+import sys
+if sys.version_info < (2,7):
+    import unittes2
+else:
+    import unittest
 
 
 class TestDispatcher(unittest.TestCase):
