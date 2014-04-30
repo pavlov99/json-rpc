@@ -71,7 +71,7 @@ class TestDatetimeDecimalEncoder(unittest.TestCase):
         )
 
     def test_decimal_encoder(self):
-        obj = decimal.Decimal(0.1)
+        obj = decimal.Decimal('0.1')
 
         with self.assertRaises(TypeError):
             json.dumps(obj)
