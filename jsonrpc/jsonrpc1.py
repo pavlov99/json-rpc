@@ -54,7 +54,7 @@ class JSONRPC10Request(JSONRPCBaseRequest):
     @params.setter
     def params(self, value):
         if not isinstance(value, (list, tuple)):
-            raise ValueError("Incorrect params {}".format(value))
+            raise ValueError("Incorrect params {0}".format(value))
 
         self._data["params"] = list(value)
 
@@ -95,7 +95,7 @@ class JSONRPC10Request(JSONRPCBaseRequest):
         else:
             extra = set(data.keys()) - cls.POSSIBLE_FIELDS
             missed = cls.REQUIRED_FIELDS - set(data.keys())
-            msg = "Invalid request. Extra fields: {}, Missed fields: {}"
+            msg = "Invalid request. Extra fields: {0}, Missed fields: {1}"
             raise JSONRPCInvalidRequestException(msg.format(extra, missed))
 
 
