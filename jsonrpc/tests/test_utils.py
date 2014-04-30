@@ -2,7 +2,12 @@
 import datetime
 import decimal
 import json
-import unittest
+import sys
+if sys.version_info < (2,7):
+    import unittes2
+else:
+    import unittest
+
 from mock import patch
 
 from ..utils import JSONSerializable, DatetimeDecimalEncoder

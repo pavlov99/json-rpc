@@ -19,6 +19,11 @@ install: pip install --quiet --use-mirrors tox
 
 script: tox
 
+before_script:
+    - if [ $TOVENV == "py26" ]; then
+          pip install --quiet --use-mirrors unittest2;
+      fi
+
 after_script:
     - if [ $TOXENV == "cov" ]; then
         pip install --quiet --use-mirrors coveralls;

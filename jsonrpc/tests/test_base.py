@@ -1,5 +1,9 @@
 """ Test base JSON-RPC classes."""
-import unittest
+import sys
+if sys.version_info < (2,7):
+    import unittes2
+else:
+    import unittest
 
 from ..base import JSONRPCBaseRequest, JSONRPCBaseResponse
 
