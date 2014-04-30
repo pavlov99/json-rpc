@@ -2,7 +2,7 @@
 import os
 from setuptools import setup, find_packages
 from jsonrpc import version
-
+#
 # Import multiprocessing to prevent test run problem. In case of nosetests
 # (not nose2) there is probles, for details see:
 # https://groups.google.com/forum/#!msg/nose-users/fnJ-kAUbYHQ/_UsLN786ygcJ

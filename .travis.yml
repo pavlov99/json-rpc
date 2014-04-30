@@ -23,7 +23,7 @@ before_script:
     - if [ $TOVENV -e "py26" ]; then
         pip install --quiet unittest2;
     fi
-#
+
 after_script:
     - if [ $TOXENV == "cov" ]; then
         pip install --quiet --use-mirrors coveralls;
