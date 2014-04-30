@@ -48,10 +48,10 @@ class JSONRPC20Request(JSONRPCBaseRequest):
 
     @property
     def data(self):
-        data = {
-            k: v for k, v in self._data.items()
+        data = dict(
+            (k, v) for k, v in self._data.items()
             if not (k == "id" and self.is_notification)
-        }
+        )
         data["jsonrpc"] = self.JSONRPC_VERSION
         return data
 
@@ -199,7 +199,7 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
     @property
     def data(self):
-        data = {k: v for k, v in self._data.items()}
+        data = dict((k, v) for k, v in self._data.items())
         data["jsonrpc"] = self.JSONRPC_VERSION
         return data
 
