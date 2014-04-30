@@ -5,9 +5,9 @@ python: "2.6"
 env:
     - TOXENV=py26
     - TOXENV=py27
-    - TOXENV=py32
-    - TOXENV=py33
-    - TOXENV=cov
+#    - TOXENV=py32
+#    - TOXENV=py33
+#    - TOXENV=cov
 
 branches:
     only:
@@ -19,10 +19,11 @@ install: pip install --quiet --use-mirrors tox
 
 script: tox
 
-before_script:
-    - if [ $TOVENV -e "py26" ]; then
-        pip install --quiet unittest2;
-    fi
+before_script: pip install --quiet unittest2
+
+#    - if [ $TOVENV -e "py26" ]; then
+#        pip install --quiet unittest2;
+#    fi
 
 after_script:
     - if [ $TOXENV == "cov" ]; then
