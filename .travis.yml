@@ -15,11 +15,13 @@ branches:
         - develop
         - py26
 
-install: pip install --quiet --use-mirrors tox
+install: 
+    - pip install --quiet --use-mirrors tox
+    - pip install unittest2
+    - pip freeze
 
 script: tox
 
-before_script: pip install unittest2
 
 #    - if [ $TOVENV -e "py26" ]; then
 #        pip install --quiet unittest2;
