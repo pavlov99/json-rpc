@@ -19,7 +19,7 @@ install: pip install --quiet --use-mirrors tox
 
 script: tox
 
-before_script: pip install --quiet unittest2
+before_script: pip install unittest2
 
 #    - if [ $TOVENV -e "py26" ]; then
 #        pip install --quiet unittest2;
