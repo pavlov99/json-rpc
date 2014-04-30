@@ -25,7 +25,7 @@ class JSONRPC10Request(JSONRPCBaseRequest):
 
     @property
     def data(self):
-        data = {k: v for k, v in self._data.items()}
+        data = dict((k, v) for k, v in self._data.items())
         data["id"] = None if self.is_notification else data["id"]
         return data
 
@@ -105,7 +105,7 @@ class JSONRPC10Response(JSONRPCBaseResponse):
 
     @property
     def data(self):
-        data = {k: v for k, v in self._data.items()}
+        data = dict((k, v) for k, v in self._data.items())
         return data
 
     @data.setter
