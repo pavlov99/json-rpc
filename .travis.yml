@@ -13,6 +13,7 @@ branches:
     only:
         - master
         - develop
+        - py26
 
 install: pip install --quiet --use-mirrors tox
 
