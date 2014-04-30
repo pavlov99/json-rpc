@@ -56,7 +56,7 @@ class TestDatetimeDecimalEncoder(unittest.TestCase):
 
         self.assertEqual(
             json.dumps(obj, cls=DatetimeDecimalEncoder),
-            '"{}"'.format(obj.isoformat()),
+            '"{0}"'.format(obj.isoformat()),
         )
 
     def test_datetime_encoder(self):
@@ -67,7 +67,7 @@ class TestDatetimeDecimalEncoder(unittest.TestCase):
 
         self.assertEqual(
             json.dumps(obj, cls=DatetimeDecimalEncoder),
-            '"{}"'.format(obj.isoformat()),
+            '"{0}"'.format(obj.isoformat()),
         )
 
     def test_decimal_encoder(self):
