@@ -17,6 +17,24 @@ json-rpc
     :target: https://crate.io/packages/json-rpc
     :alt: Downloads
 
+.. image:: https://pypip.in/egg/json-rpc/badge.png
+    :target: https://pypi.python.org/pypi/json-rpc/
+    :alt: Egg Status
+
+.. image:: https://pypip.in/wheel/json-rpc/badge.png
+    :target: https://pypi.python.org/pypi/json-rpc/
+    :alt: Wheel Status
+
+.. image:: https://pypip.in/format/json-rpc/badge.png
+    :target: https://pypi.python.org/pypi/json-rpc/
+    :alt: Download format
+
+
+.. image:: https://pypip.in/license/json-rpc/badge.png
+    :target: https://pypi.python.org/pypi/json-rpc/
+    :alt: License
+
+
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation. Supports python2.6+, python3.2+.
 
 Documentation: http://json-rpc.readthedocs.org
@@ -101,15 +119,3 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 Competitors
 -----------
 There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementations>`_ implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
-
-
-.. image:: https://d2weczhvl823v0.cloudfront.net/pavlov99/json-rpc/trend.png
-   :alt: Bitdeli badge
-   :target: https://bitdeli.com/free
-
-
-
-.. image:: https://d2weczhvl823v0.cloudfront.net/pavlov99/json-rpc/trend.png
-   :alt: Bitdeli badge
-   :target: https://bitdeli.com/free
-
