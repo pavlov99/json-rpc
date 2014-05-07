@@ -13,7 +13,7 @@ class Dispatcher(collections.MutableMapping):
         """ Build method dispatcher.
 
         :param prototype: Initial method mapping.
-        :type prototype: None or object
+        :type prototype: None or object or dict
 
         """
         self.method_map = dict()
@@ -50,16 +50,18 @@ class Dispatcher(collections.MutableMapping):
         """ Add prototype methods to the dispatcher.
 
         :param prototype: Method mapping.
-        :type prototype: None or object
+        :type prototype: None or object or dict
 
-        All public prototype methods can be accessed using dispatcher.
+        If given prototype is a dictionary then all callable objects
+        will be added to dispatcher.  If given prototype is an object
+        then all public methods will be used.
 
         """
-        methods = [method for method in dir(prototype)
-                   if not method.startswith('_')]
+        if not isinstance(prototype, dict):
+            prototype = dict((method, getattr(prototype, method))
+                             for method in dir(prototype)
+                             if not method.startswith('_'))
 
-        for method in methods:
-            attr = getattr(prototype, method)
-
-            if callable(attr):
-                self[method] = attr
+        for attr, method in prototype.items():
+            if callable(method):
+                self[attr] = method

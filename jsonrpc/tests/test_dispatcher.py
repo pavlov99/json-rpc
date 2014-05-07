@@ -61,3 +61,15 @@ class TestDispatcher(unittest.TestCase):
         self.assertIn("one", d)
         self.assertIn("two", d)
         self.assertNotIn("__class__", d)
+
+    def test_init_from_dictionary(self):
+
+        dummy = {
+            'one': lambda x: x,
+            'two': lambda x: x,
+        }
+
+        d = Dispatcher(dummy)
+
+        self.assertIn("one", d)
+        self.assertIn("two", d)
