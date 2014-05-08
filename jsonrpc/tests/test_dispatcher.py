@@ -43,3 +43,33 @@ class TestDispatcher(unittest.TestCase):
         func = lambda: ""
         d["method"] = func
         self.assertEqual(dict(d), {"method": func})
+
+    def test_init_from_object_instance(self):
+
+        class Dummy():
+
+            def one(self):
+                pass
+
+            def two(self):
+                pass
+
+        dummy = Dummy()
+
+        d = Dispatcher(dummy)
+
+        self.assertIn("one", d)
+        self.assertIn("two", d)
+        self.assertNotIn("__class__", d)
+
+    def test_init_from_dictionary(self):
+
+        dummy = {
+            'one': lambda x: x,
+            'two': lambda x: x,
+        }
+
+        d = Dispatcher(dummy)
+
+        self.assertIn("one", d)
+        self.assertIn("two", d)
