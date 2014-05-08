@@ -19,17 +19,13 @@ def read(fname):
     except IOError:
         return ""
 
-install_requires = [l for l in read('requirements.txt').split('\n')
-                    if l and not l.startswith('#')]
-
 setup(
     name="json-rpc",
     version=version,
     packages=find_packages(),
     # test_suite="nose2.collector.collector",
     test_suite="nose.collector",
-    tests_require=["nose"],
-    install_requires=install_requires,
+    tests_require=["nose", "mock"],
 
     # metadata for upload to PyPI
     author="Kirill Pavlov",
