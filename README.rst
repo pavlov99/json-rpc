@@ -17,6 +17,7 @@ json-rpc
     :target: https://crate.io/packages/json-rpc
     :alt: Downloads
 
+
 .. image:: https://pypip.in/egg/json-rpc/badge.png
     :target: https://pypi.python.org/pypi/json-rpc/
     :alt: Egg Status
