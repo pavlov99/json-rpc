@@ -97,7 +97,7 @@ class JSONRPCResponseManager(object):
                     "args": e.args,
                     "message": str(e),
                 }
-                logger.exception("API Exception: {}".format(data))
+                logger.exception("API Exception: {0}".format(data))
                 result = response(error=JSONRPCServerError(data=data)._data)
                 if not request.is_notification:
                     yield result
