@@ -76,9 +76,9 @@ class TestDatetimeDecimalEncoder(unittest.TestCase):
         with self.assertRaises(TypeError):
             json.dumps(obj)
 
-        self.assertEqual(
-            json.dumps(obj, cls=DatetimeDecimalEncoder),
-            "0.1")
+        result = json.dumps(obj, cls=DatetimeDecimalEncoder)
+        self.assertTrue(isinstance(result, str))
+        self.assertEqual(float(result), float(0.1))
 
     def test_default(self):
         encoder = DatetimeDecimalEncoder()
