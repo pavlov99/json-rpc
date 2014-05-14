@@ -36,6 +36,9 @@ class Dispatcher(collections.MutableMapping):
     def __iter__(self):
         return iter(self.method_map)
 
+    def __repr__(self):
+        return repr(self.method_map)
+
     def add_method(self, f, name=None):
         """ Add a method to the dispatcher.
 
