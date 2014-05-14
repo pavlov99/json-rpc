@@ -30,6 +30,16 @@ class TestDispatcher(unittest.TestCase):
         self.assertIn("add", d)
         self.assertEqual(d["add"](1, 1), 2)
 
+    def test_add_method_keep_function_definitions(self):
+
+        d = Dispatcher()
+
+        @d.add_method
+        def one(x):
+            return x
+
+        self.assertIsNotNone(one)
+
     def test_del_method(self):
         d = Dispatcher()
         d["method"] = lambda: ""
