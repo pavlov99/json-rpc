@@ -43,8 +43,10 @@ class Dispatcher(collections.MutableMapping):
         :param name: Name to register
         :type name: None or str
 
+        When used as a decorator keep callable object unmodified.
         """
         self.method_map[name or f.__name__] = f
+        return f
 
     def build_method_map(self, prototype):
         """ Add prototype methods to the dispatcher.
