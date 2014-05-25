@@ -1,6 +1,6 @@
 language: python
 
-python: "2.6"
+python: "2.7"
 
 env:
     - TOXENV=py26
@@ -13,14 +13,13 @@ branches:
     only:
         - master
         - develop
-        - py26
 
-install: pip install --quiet --use-mirrors tox
+install: pip install --quiet tox
 
 script: tox
 
 after_script:
     - if [ $TOXENV == "cov" ]; then
-        pip install --quiet --use-mirrors coveralls;
+        pip install --quiet coveralls;
         coveralls;
       fi
