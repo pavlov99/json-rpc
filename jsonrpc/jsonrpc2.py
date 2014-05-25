@@ -48,10 +48,10 @@ class JSONRPC20Request(JSONRPCBaseRequest):
 
     @property
     def data(self):
-        data = {
-            k: v for k, v in self._data.items()
+        data = dict(
+            (k, v) for k, v in self._data.items()
             if not (k == "id" and self.is_notification)
-        }
+        )
         data["jsonrpc"] = self.JSONRPC_VERSION
         return data
 
@@ -87,7 +87,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
     @params.setter
     def params(self, value):
         if value is not None and not isinstance(value, (list, tuple, dict)):
-            raise ValueError("Incorrect params {}".format(value))
+            raise ValueError("Incorrect params {0}".format(value))
 
         value = list(value) if isinstance(value, tuple) else value
 
@@ -125,7 +125,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
             if not cls.REQUIRED_FIELDS <= set(d.keys()) <= cls.POSSIBLE_FIELDS:
                 extra = set(d.keys()) - cls.POSSIBLE_FIELDS
                 missed = cls.REQUIRED_FIELDS - set(d.keys())
-                msg = "Invalid request. Extra fields: {}, Missed fields: {}"
+                msg = "Invalid request. Extra fields: {0}, Missed fields: {1}"
                 raise JSONRPCInvalidRequestException(msg.format(extra, missed))
 
             try:
@@ -199,7 +199,7 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
     @property
     def data(self):
-        data = {k: v for k, v in self._data.items()}
+        data = dict((k, v) for k, v in self._data.items())
         data["jsonrpc"] = self.JSONRPC_VERSION
         return data
 

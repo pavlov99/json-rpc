@@ -2,7 +2,7 @@
 import os
 from setuptools import setup, find_packages
 from jsonrpc import version
-
+#
 # Import multiprocessing to prevent test run problem. In case of nosetests
 # (not nose2) there is probles, for details see:
 # https://groups.google.com/forum/#!msg/nose-users/fnJ-kAUbYHQ/_UsLN786ygcJ
@@ -42,6 +42,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Operating System :: OS Independent",
+        "Programming Language :: Python :: 2.6"
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.2",
         "Programming Language :: Python :: 3.3",
