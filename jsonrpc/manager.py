@@ -82,25 +82,23 @@ class JSONRPCResponseManager(object):
             try:
                 method = dispatcher[request.method]
             except KeyError:
-                if not request.is_notification:
-                    yield response(error=JSONRPCMethodNotFound()._data)
-                continue
-
-            try:
-                result = method(*request.args, **request.kwargs)
-            except TypeError:
-                if not request.is_notification:
-                    yield response(error=JSONRPCInvalidParams()._data)
-            except Exception as e:
-                data = {
-                    "type": e.__class__.__name__,
-                    "args": e.args,
-                    "message": str(e),
-                }
-                logger.exception("API Exception: {0}".format(data))
-                result = response(error=JSONRPCServerError(data=data)._data)
-                if not request.is_notification:
-                    yield result
+                output = response(error=JSONRPCMethodNotFound()._data)
             else:
+                try:
+                    result = method(*request.args, **request.kwargs)
+                except TypeError:
+                    output = response(error=JSONRPCInvalidParams()._data)
+                except Exception as e:
+                    data = {
+                        "type": e.__class__.__name__,
+                        "args": e.args,
+                        "message": str(e),
+                    }
+                    logger.exception("API Exception: {0}".format(data))
+                    output = response(
+                        error=JSONRPCServerError(data=data)._data)
+                else:
+                    output = response(result=result)
+            finally:
                 if not request.is_notification:
-                    yield response(result=result)
+                    yield output
