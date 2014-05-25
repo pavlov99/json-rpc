@@ -2,7 +2,12 @@
 import datetime
 import decimal
 import json
-import unittest
+import sys
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
+
 from mock import patch
 
 from ..utils import JSONSerializable, DatetimeDecimalEncoder
@@ -51,7 +56,7 @@ class TestDatetimeDecimalEncoder(unittest.TestCase):
 
         self.assertEqual(
             json.dumps(obj, cls=DatetimeDecimalEncoder),
-            '"{}"'.format(obj.isoformat()),
+            '"{0}"'.format(obj.isoformat()),
         )
 
     def test_datetime_encoder(self):
@@ -62,18 +67,18 @@ class TestDatetimeDecimalEncoder(unittest.TestCase):
 
         self.assertEqual(
             json.dumps(obj, cls=DatetimeDecimalEncoder),
-            '"{}"'.format(obj.isoformat()),
+            '"{0}"'.format(obj.isoformat()),
         )
 
     def test_decimal_encoder(self):
-        obj = decimal.Decimal(0.1)
+        obj = decimal.Decimal('0.1')
 
         with self.assertRaises(TypeError):
             json.dumps(obj)
 
-        self.assertEqual(
-            json.dumps(obj, cls=DatetimeDecimalEncoder),
-            "0.1")
+        result = json.dumps(obj, cls=DatetimeDecimalEncoder)
+        self.assertTrue(isinstance(result, str))
+        self.assertEqual(float(result), float(0.1))
 
     def test_default(self):
         encoder = DatetimeDecimalEncoder()
