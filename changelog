@@ -1,3 +1,10 @@
+2014-05-25 kirill.pavlov@phystech.edu
+
+	* Add python 2.6 support
+	* Update server notification processing
+	* Add functionality to dispatcher, it is possible to init it with
+	class
+
 2013-11-09  kirill.pavlov@phystech.edu
 
 	* Add JSON-RPC 1.0 support.
