@@ -167,3 +167,11 @@ class JSONRPCServerError(JSONRPCError):
 
     CODE = -32000
     MESSAGE = "Server error"
+
+
+class JSONRPCDispatchException(JSONRPCException):
+
+    """ JSON-RPC Exception."""
+    def __init__(self, code=None, message=None, data=None, *args, **kwargs):
+        super(JSONRPCDispatchException, self).__init__(args, kwargs)
+        self.error = JSONRPCError(code=code, data=data, message=message)

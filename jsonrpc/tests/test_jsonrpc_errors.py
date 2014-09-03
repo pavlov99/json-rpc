@@ -13,6 +13,7 @@ from ..exceptions import (
     JSONRPCMethodNotFound,
     JSONRPCParseError,
     JSONRPCServerError,
+    JSONRPCDispatchException,
 )
 
 
@@ -137,3 +138,11 @@ class TestJSONRPCMethodNotFound(unittest.TestCase):
         self.assertEqual(error.code, -32601)
         self.assertEqual(error.message, "Method not found")
         self.assertEqual(error.data, None)
+
+
+class TestJSONRPCDispatchException(unittest.TestCase):
+    def test_code_message(self):
+        error = JSONRPCDispatchException(message="message", code=400, data={"param": 1})
+        self.assertEqual(error.error.code, 400)
+        self.assertEqual(error.error.message, "message")
+        self.assertEqual(error.error.data, {"param": 1})
