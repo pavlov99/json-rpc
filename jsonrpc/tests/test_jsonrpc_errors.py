@@ -142,7 +142,8 @@ class TestJSONRPCMethodNotFound(unittest.TestCase):
 
 class TestJSONRPCDispatchException(unittest.TestCase):
     def test_code_message(self):
-        error = JSONRPCDispatchException(message="message", code=400, data={"param": 1})
+        error = JSONRPCDispatchException(message="message",
+                                         code=400, data={"param": 1})
         self.assertEqual(error.error.code, 400)
         self.assertEqual(error.error.message, "message")
         self.assertEqual(error.error.data, {"param": 1})

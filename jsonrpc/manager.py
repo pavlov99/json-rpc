@@ -7,7 +7,7 @@ from .exceptions import (
     JSONRPCMethodNotFound,
     JSONRPCParseError,
     JSONRPCServerError,
-    JSONRPCDispatchException
+    JSONRPCDispatchException,
 )
 from .jsonrpc1 import JSONRPC10Response
 from .jsonrpc2 import (
