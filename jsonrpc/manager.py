@@ -7,6 +7,7 @@ from .exceptions import (
     JSONRPCMethodNotFound,
     JSONRPCParseError,
     JSONRPCServerError,
+    JSONRPCDispatchException
 )
 from .jsonrpc1 import JSONRPC10Response
 from .jsonrpc2 import (
@@ -88,6 +89,8 @@ class JSONRPCResponseManager(object):
                     result = method(*request.args, **request.kwargs)
                 except TypeError:
                     output = response(error=JSONRPCInvalidParams()._data)
+                except JSONRPCDispatchException as e:
+                    output = response(error=e.error._data)
                 except Exception as e:
                     data = {
                         "type": e.__class__.__name__,
