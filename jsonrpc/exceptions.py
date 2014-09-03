@@ -171,7 +171,12 @@ class JSONRPCServerError(JSONRPCError):
 
 class JSONRPCDispatchException(JSONRPCException):
 
-    """ JSON-RPC Exception."""
+    """ JSON-RPC Dispatch Exception.
+
+    Should be thrown in dispatch methods.
+
+    """
+
     def __init__(self, code=None, message=None, data=None, *args, **kwargs):
         super(JSONRPCDispatchException, self).__init__(args, kwargs)
         self.error = JSONRPCError(code=code, data=data, message=message)
