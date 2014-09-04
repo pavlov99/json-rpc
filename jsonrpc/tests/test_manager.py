@@ -13,6 +13,7 @@ from ..jsonrpc2 import (
     JSONRPC20Response,
 )
 from ..jsonrpc1 import JSONRPC10Request, JSONRPC10Response
+from ..exceptions import JSONRPCDispatchException
 
 
 class TestJSONRPCResponseManager(unittest.TestCase):
@@ -27,7 +28,18 @@ class TestJSONRPCResponseManager(unittest.TestCase):
             "101_base": lambda **kwargs: int("101", **kwargs),
             "error": lambda: raise_(KeyError("error_explanation")),
             "long_time_method": self.long_time_method,
+            "dispatch_error": lambda x: raise_(
+                JSONRPCDispatchException(code=4000, message="error",
+                                         data={"param": 1})),
         }
+
+    def test_dispatch_error(self):
+        request = JSONRPC20Request("dispatch_error", ["test"], _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.error["message"], "error")
+        self.assertEqual(response.error["code"], 4000)
+        self.assertEqual(response.error["data"], {"param": 1})
 
     def test_returned_type_response(self):
         request = JSONRPC20Request("add", [[]], _id=0)
