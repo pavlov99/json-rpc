@@ -1,3 +1,7 @@
+2014-09-04  kirill.pavlov@phystech.edu
+
+	* Add custom exception functionality by @julianhille
+
 2014-05-25 kirill.pavlov@phystech.edu
 
 	* Add python 2.6 support
