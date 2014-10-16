@@ -55,6 +55,20 @@ class JSONRPCResponseManager(object):
         except JSONRPCInvalidRequestException:
             return JSONRPC20Response(error=JSONRPCInvalidRequest()._data)
 
+        return cls.handle_request(request, dispatcher)
+
+    @classmethod
+    def handle_request(cls, request, dispatcher):
+        """ Handle request data.
+
+        At this moment request has correct jsonrpc format.
+
+        :param dict request: data parsed from request_str.
+        :param jsonrpc.dispatcher.Dispatcher dispatcher:
+
+        .. versionadded: 1.8.0
+
+        """
         rs = request if isinstance(request, JSONRPC20BatchRequest) \
             else [request]
         responses = [r for r in cls._get_responses(rs, dispatcher)
@@ -77,8 +91,9 @@ class JSONRPCResponseManager(object):
 
         """
         for request in requests:
-            response = lambda **kwargs: cls.RESPONSE_CLASS_MAP[
-                request.JSONRPC_VERSION](_id=request._id, **kwargs)
+            def response(**kwargs):
+                return cls.RESPONSE_CLASS_MAP[request.JSONRPC_VERSION](
+                    _id=request._id, **kwargs)
 
             try:
                 method = dispatcher[request.method]
