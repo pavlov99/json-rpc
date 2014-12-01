@@ -24,12 +24,7 @@ class JSONRPCAPI(object):
 
     @require_http_methods(["POST"])
     def jsonrpc(self, request):
-        """ JSON-RPC 2.0 handler.
-
-        NOTE: step1 -> move dirty views to json-rpc calls.
-            step2 -> move models communication to resources.
-
-        """
+        """ JSON-RPC 2.0 handler."""
         request_str = request.body
         try:
             jsonrpc_request = JSONRPCRequest.from_json(request_str)
