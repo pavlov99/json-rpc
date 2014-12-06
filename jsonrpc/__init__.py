@@ -1,4 +1,4 @@
-__version = (1, 8, 0)
+__version = (1, 8, 1)
 
 __version__ = version = '.'.join(map(str, __version))
 __project__ = PROJECT = __name__
