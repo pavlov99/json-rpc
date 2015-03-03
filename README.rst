@@ -111,3 +111,8 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 Competitors
 -----------
 There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementations>`_ implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
+
+
+Testing
+-------
+json-rpc is python library, it supports pythons: 2.6, 2.7, 3.3, 3.4. There is optional support for django1.6 (python2.6 does not support django1.7).
