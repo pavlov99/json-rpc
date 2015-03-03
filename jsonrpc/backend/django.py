@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from django.conf.urls import url
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
@@ -14,6 +16,7 @@ class JSONRPCAPI(object):
     def __init__(self, dispatcher=None):
         self.dispatcher = dispatcher or Dispatcher()
 
+    @property
     def urls(self):
         urls = [
             url(r'^$', self.jsonrpc),
@@ -25,7 +28,7 @@ class JSONRPCAPI(object):
     @require_http_methods(["POST"])
     def jsonrpc(self, request):
         """ JSON-RPC 2.0 handler."""
-        request_str = request.body
+        request_str = request.body.decode('utf8')
         try:
             jsonrpc_request = JSONRPCRequest.from_json(request_str)
         except (TypeError, ValueError, JSONRPCInvalidRequestException):
