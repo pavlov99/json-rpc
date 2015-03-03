@@ -62,3 +62,9 @@ class TestDjangoBackend(TestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['error']['code'], -32700)
         self.assertEqual(data['error']['message'], 'Parse error')
+
+    def test_resource_map(self):
+        response = self.client.get('/map')
+        self.assertEqual(response.status_code, 200)
+        data = response.content.decode('utf8')
+        self.assertIn("JSON-RPC map", data)
