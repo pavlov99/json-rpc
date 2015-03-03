@@ -26,7 +26,7 @@ class TestDjangoBackend(TestCase):
         for api_url in api.urls:
             self.assertTrue(isinstance(api_url, RegexURLPattern))
 
-    def test_client_args(self):
+    def test_client(self):
         @api.dispatcher.add_method
         def dummy(request):
             return ""
@@ -44,3 +44,21 @@ class TestDjangoBackend(TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['result'], '')
+
+    def test_method_not_allowed(self):
+        response = self.client.get(
+            '',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 405, "Should allow only POST")
+
+    def test_invalid_request(self):
+        response = self.client.post(
+            '',
+            '{',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['error']['code'], -32700)
+        self.assertEqual(data['error']['message'], 'Parse error')
