@@ -57,8 +57,8 @@ class JSONRPCAPI(object):
         :return str:
 
         """
-        result = "<h1>JSON-RPC map</h1><pre>{}</pre>".format("\n\n".join([
-            "{}: {}".format(fname, f.__doc__)
+        result = "<h1>JSON-RPC map</h1><pre>{0}</pre>".format("\n\n".join([
+            "{0}: {1}".format(fname, f.__doc__)
             for fname, f in self.dispatcher.items()
         ]))
         return HttpResponse(result)
