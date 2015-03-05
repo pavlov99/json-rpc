@@ -9,7 +9,6 @@ env:
     - TOXENV=py33
     - TOXENV=py34
     - TOXENV=pypy
-    - TOXENV=jython
     - TOXENV=cov
 
 branches:
