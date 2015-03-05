@@ -8,6 +8,7 @@ env:
     - TOXENV=py32
     - TOXENV=py33
     - TOXENV=py34
+    - TOXENV=pypy
     - TOXENV=cov
 
 branches:
