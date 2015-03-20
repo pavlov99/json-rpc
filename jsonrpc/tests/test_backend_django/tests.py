@@ -1,14 +1,7 @@
 """ Test Django Backend."""
 from __future__ import absolute_import
-import sys
 import os
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
 
-
-from django.conf.urls import url
 from django.core.urlresolvers import RegexURLPattern
 from django.test import TestCase
 from ...backend.django import api
@@ -18,8 +11,8 @@ import json
 class TestDjangoBackend(TestCase):
     @classmethod
     def setUpClass(cls):
-        os.environ['DJANGO_SETTINGS_MODULE'] = 'jsonrpc.tests.test_backend_django.settings'
-        # django.setup()
+        os.environ['DJANGO_SETTINGS_MODULE'] = \
+            'jsonrpc.tests.test_backend_django.settings'
 
     def test_urls(self):
         self.assertTrue(isinstance(api.urls, list))
@@ -68,3 +61,14 @@ class TestDjangoBackend(TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.content.decode('utf8')
         self.assertIn("JSON-RPC map", data)
+
+    def test_method_not_allowed_prefix(self):
+        response = self.client.get(
+            '/prefix',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 405)
+
+    def test_resource_map_prefix(self):
+        response = self.client.get('/prefix/map')
+        self.assertEqual(response.status_code, 200)
