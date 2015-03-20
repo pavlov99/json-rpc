@@ -102,8 +102,14 @@ class JSONRPCResponseManager(object):
             else:
                 try:
                     result = method(*request.args, **request.kwargs)
-                except TypeError:
-                    output = response(error=JSONRPCInvalidParams()._data)
+                except TypeError as e:
+                    data = {
+                        "type": e.__class__.__name__,
+                        "args": e.args,
+                        "message": str(e),
+                    }
+                    output = response(
+                        error=JSONRPCInvalidParams(data=data)._data)
                 except JSONRPCDispatchException as e:
                     output = response(error=e.error._data)
                 except Exception as e:

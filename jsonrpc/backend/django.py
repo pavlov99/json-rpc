@@ -19,7 +19,7 @@ class JSONRPCAPI(object):
     def urls(self):
         urls = [
             url(r'^$', self.jsonrpc),
-            url(r'^map$', self.jsonrpc_map),
+            url(r'map$', self.jsonrpc_map),
         ]
 
         return urls
