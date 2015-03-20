@@ -85,9 +85,10 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertTrue(isinstance(response, JSONRPC20Response))
         self.assertEqual(response.error["message"], "Invalid params")
         self.assertEqual(response.error["code"], -32602)
-        self.assertEqual(
-            response.error["data"]["message"],
-            'sum() takes no keyword arguments')
+        self.assertIn(response.error["data"]["message"], [
+            'sum() takes no keyword arguments',
+            "sum() got an unexpected keyword argument 'a'",
+        ])
 
     def test_server_error(self):
         request = JSONRPC20Request("error", _id=0)
