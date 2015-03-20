@@ -27,6 +27,7 @@ class TestJSONRPCResponseManager(unittest.TestCase):
             "list_len": len,
             "101_base": lambda **kwargs: int("101", **kwargs),
             "error": lambda: raise_(KeyError("error_explanation")),
+            "type_error": lambda: raise_(TypeError("TypeError inside method")),
             "long_time_method": self.long_time_method,
             "dispatch_error": lambda x: raise_(
                 JSONRPCDispatchException(code=4000, message="error",
@@ -84,6 +85,9 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertTrue(isinstance(response, JSONRPC20Response))
         self.assertEqual(response.error["message"], "Invalid params")
         self.assertEqual(response.error["code"], -32602)
+        self.assertEqual(
+            response.error["data"]["message"],
+            'sum() takes no keyword arguments')
 
     def test_server_error(self):
         request = JSONRPC20Request("error", _id=0)
@@ -117,3 +121,15 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         request = JSONRPC20Request("error", is_notification=True)
         response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
         self.assertEqual(response, None)
+
+    def test_type_error_inside_method(self):
+        request = JSONRPC20Request("type_error", _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.error["message"], "Invalid params")
+        self.assertEqual(response.error["code"], -32602)
+        self.assertEqual(response.error["data"], {
+            "type": "TypeError",
+            "args": ('TypeError inside method',),
+            "message": 'TypeError inside method',
+        })
