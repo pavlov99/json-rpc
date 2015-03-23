@@ -2,6 +2,7 @@
 from abc import ABCMeta, abstractmethod
 import datetime
 import decimal
+import inspect
 import json
 
 from . import six
@@ -50,3 +51,31 @@ class DatetimeDecimalEncoder(json.JSONEncoder):
             return o.isoformat()
 
         return json.JSONEncoder.default(self, o)
+
+
+def is_invalid_params(func, *args, **kwargs):
+    """ Check, whether function 'func' accepts parameters 'args', 'kwargs'.
+
+    NOTE: Method is called after funct(*args, **kwargs) generated TypeError,
+    it is aimed to destinguish TypeError because of invalid parameters from
+    TypeError from inside the function.
+
+    """
+    # For builtin functions inspect.getargspec(funct) return error. If builtin
+    # function generates TypeError, it is because of wrong parameters.
+    if not inspect.isfunction(func):
+        return True
+
+    funcargs, varargs, varkwargs, defaults = inspect.getargspec(func)
+    if defaults:
+        funcargs = funcargs[:-len(defaults)]
+
+    if args and len(args) != len(funcargs):
+            return True
+    if kwargs and set(kwargs.keys()) != set(funcargs):
+        return True
+
+    if not args and not kwargs and funcargs:
+        return True
+
+    return False
