@@ -10,7 +10,7 @@ else:
 
 from mock import patch
 
-from ..utils import JSONSerializable, DatetimeDecimalEncoder
+from ..utils import JSONSerializable, DatetimeDecimalEncoder, is_invalid_params
 
 
 class TestJSONSerializable(unittest.TestCase):
@@ -86,3 +86,25 @@ class TestDatetimeDecimalEncoder(unittest.TestCase):
             encoder.default("")
 
         self.assertEqual(json_default.call_count, 1)
+
+
+class TestUtils(unittest.TestCase):
+
+    """ Test utils functions."""
+
+    def test_is_invalid_params_builtin(self):
+        self.assertTrue(is_invalid_params(sum, 0, 0))
+        # NOTE: Function generates TypeError already
+        # self.assertFalse(is_invalid_params(sum, [0, 0]))
+
+    def test_is_invalid_params_args(self):
+        self.assertTrue(is_invalid_params(lambda a, b: None, 0))
+        self.assertTrue(is_invalid_params(lambda a, b: None, 0, 1, 2))
+
+    def test_is_invalid_params_kwargs(self):
+        self.assertTrue(is_invalid_params(lambda x: None, **{}))
+        self.assertTrue(is_invalid_params(lambda x: None, **{"x": 0, "y": 1}))
+
+    def test_invalid_params_correct(self):
+        # self.assertFalse(is_invalid_params(lambda: None))
+        self.assertFalse(is_invalid_params(lambda a: None, 0))
