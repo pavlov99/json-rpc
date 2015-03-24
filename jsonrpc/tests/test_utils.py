@@ -108,3 +108,4 @@ class TestUtils(unittest.TestCase):
     def test_invalid_params_correct(self):
         # self.assertFalse(is_invalid_params(lambda: None))
         self.assertFalse(is_invalid_params(lambda a: None, 0))
+        self.assertFalse(is_invalid_params(lambda a, b=0: None, 0))
