@@ -1,5 +1,6 @@
 import json
 import logging
+from .utils import is_invalid_params
 from .exceptions import (
     JSONRPCInvalidParams,
     JSONRPCInvalidRequest,
@@ -89,6 +90,9 @@ class JSONRPCResponseManager(object):
 
         :return iterator(JSONRPC20Response):
 
+        .. versionadded: 1.9.0
+          TypeError inside the function is distinguished from Invalid Params.
+
         """
         for request in requests:
             def response(**kwargs):
@@ -102,14 +106,6 @@ class JSONRPCResponseManager(object):
             else:
                 try:
                     result = method(*request.args, **request.kwargs)
-                except TypeError as e:
-                    data = {
-                        "type": e.__class__.__name__,
-                        "args": e.args,
-                        "message": str(e),
-                    }
-                    output = response(
-                        error=JSONRPCInvalidParams(data=data)._data)
                 except JSONRPCDispatchException as e:
                     output = response(error=e.error._data)
                 except Exception as e:
@@ -118,9 +114,14 @@ class JSONRPCResponseManager(object):
                         "args": e.args,
                         "message": str(e),
                     }
-                    logger.exception("API Exception: {0}".format(data))
-                    output = response(
-                        error=JSONRPCServerError(data=data)._data)
+                    if isinstance(e, TypeError) and is_invalid_params(
+                            method, *request.args, **request.kwargs):
+                        output = response(
+                            error=JSONRPCInvalidParams(data=data)._data)
+                    else:
+                        logger.exception("API Exception: {0}".format(data))
+                        output = response(
+                            error=JSONRPCServerError(data=data)._data)
                 else:
                     output = response(result=result)
             finally:
