@@ -60,6 +60,8 @@ def is_invalid_params(func, *args, **kwargs):
     it is aimed to destinguish TypeError because of invalid parameters from
     TypeError from inside the function.
 
+    .. versionadded: 1.9.0
+
     """
     # For builtin functions inspect.getargspec(funct) return error. If builtin
     # function generates TypeError, it is because of wrong parameters.
