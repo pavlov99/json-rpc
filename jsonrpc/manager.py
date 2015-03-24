@@ -90,6 +90,9 @@ class JSONRPCResponseManager(object):
 
         :return iterator(JSONRPC20Response):
 
+        .. versionadded: 1.9.0
+          TypeError inside the function is distinguished from Invalid Params.
+
         """
         for request in requests:
             def response(**kwargs):
@@ -112,7 +115,7 @@ class JSONRPCResponseManager(object):
                         "message": str(e),
                     }
                     if isinstance(e, TypeError) and is_invalid_params(
-                        method, *request.args, **request.kwargs):
+                            method, *request.args, **request.kwargs):
                         output = response(
                             error=JSONRPCInvalidParams(data=data)._data)
                     else:
