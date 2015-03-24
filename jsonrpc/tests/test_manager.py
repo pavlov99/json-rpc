@@ -24,6 +24,7 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.long_time_method = MagicMock()
         self.dispatcher = {
             "add": sum,
+            "multiply": lambda a, b: a * b,
             "list_len": len,
             "101_base": lambda **kwargs: int("101", **kwargs),
             "error": lambda: raise_(KeyError("error_explanation")),
@@ -90,6 +91,31 @@ class TestJSONRPCResponseManager(unittest.TestCase):
             "sum() got an unexpected keyword argument 'a'",
         ])
 
+    def test_invalid_params_custom_function(self):
+        request = JSONRPC20Request("multiply", [0], _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.error["message"], "Invalid params")
+        self.assertEqual(response.error["code"], -32602)
+
+        request = JSONRPC20Request("multiply", [0, 1, 2], _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.error["message"], "Invalid params")
+        self.assertEqual(response.error["code"], -32602)
+
+        request = JSONRPC20Request("multiply", {"a": 1}, _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.error["message"], "Invalid params")
+        self.assertEqual(response.error["code"], -32602)
+
+        request = JSONRPC20Request("multiply", {"a": 1, "b": 2, "c": 3}, _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.error["message"], "Invalid params")
+        self.assertEqual(response.error["code"], -32602)
+
     def test_server_error(self):
         request = JSONRPC20Request("error", _id=0)
         response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
@@ -127,10 +153,18 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         request = JSONRPC20Request("type_error", _id=0)
         response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
         self.assertTrue(isinstance(response, JSONRPC20Response))
-        self.assertEqual(response.error["message"], "Invalid params")
-        self.assertEqual(response.error["code"], -32602)
+        self.assertEqual(response.error["message"], "Server error")
+        self.assertEqual(response.error["code"], -32000)
         self.assertEqual(response.error["data"], {
             "type": "TypeError",
             "args": ('TypeError inside method',),
             "message": 'TypeError inside method',
         })
+
+    def test_invalid_params_before_dispatcher_error(self):
+        request = JSONRPC20Request(
+            "dispatch_error", ["invalid", "params"], _id=0)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.error["message"], "Invalid params")
+        self.assertEqual(response.error["code"], -32602)
