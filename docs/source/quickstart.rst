@@ -75,4 +75,6 @@ Client
     if __name__ == "__main__":
         main()
 
-q
+Package ensures that request and response messages have correct format.
+Besides that it provides :class:`jsonrpc.manager.JSONRPCResponseManager` which handles server common cases, such as incorrect message format or invalid method parameters.
+Futher topics describe how to add methods to manager, how to handle custom exceptions and optional Django integration.

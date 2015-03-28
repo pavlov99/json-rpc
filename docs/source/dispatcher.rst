@@ -1,4 +1,6 @@
-Dispatcher
-==========
+Method dispatcher
+=================
 
-0
+.. automodule:: jsonrpc.dispatcher
+    :members:
+    :special-members:  __init__
