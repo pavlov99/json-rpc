@@ -46,3 +46,8 @@ test: clean
 $(ENV):
 	virtualenv --no-site-packages .env
 	$(ENV)/bin/pip install -r requirements.txt
+
+.PHONY: serve
+# target: serve - server docs
+serve:
+	python3 -mhttp.server
