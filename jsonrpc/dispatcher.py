@@ -1,19 +1,30 @@
+""" Dispatcher is used to add methods (functions) to the server.
+
+For usage examples see :meth:`Dispatcher.add_method`
+
+"""
 import collections
 
 
 class Dispatcher(collections.MutableMapping):
 
-    """ Method dispatcher.
-
-    Dictionary like object which holds map method_name to method.
-
-    """
+    """ Dictionary like object which maps method_name to method."""
 
     def __init__(self, prototype=None):
         """ Build method dispatcher.
 
-        :param prototype: Initial method mapping.
-        :type prototype: None or object or dict
+        Parameters
+        ----------
+        prototype : object or dict, optional
+            Initial method mapping.
+
+        Examples
+        --------
+
+        Init object with method dictionary.
+
+        >>> Dispatcher({"sum": lambda a, b: a + b})
+        None
 
         """
         self.method_map = dict()
@@ -42,11 +53,33 @@ class Dispatcher(collections.MutableMapping):
     def add_method(self, f, name=None):
         """ Add a method to the dispatcher.
 
-        :param callable f: Callable to be added.
-        :param name: Name to register
-        :type name: None or str
+        Parameters
+        ----------
+        f : callable
+            Callable to be added.
+        name : str, optional
+            Name to register (the default is function **f** name)
 
-        When used as a decorator keep callable object unmodified.
+        Notes
+        -----
+        When used as a decorator keeps callable object unmodified.
+
+        Examples
+        --------
+
+        Use as method
+
+        >>> d = Dispatcher()
+        >>> d.add_method(lambda a, b: a + b, name="sum")
+        <function __main__.<lambda>>
+
+        Or use as decorator
+
+        >>> d = Dispatcher()
+        >>> @d.add_method
+            def mymethod(*args, **kwargs):
+                print(args, kwargs)
+
         """
         self.method_map[name or f.__name__] = f
         return f
@@ -54,12 +87,14 @@ class Dispatcher(collections.MutableMapping):
     def build_method_map(self, prototype):
         """ Add prototype methods to the dispatcher.
 
-        :param prototype: Method mapping.
-        :type prototype: None or object or dict
-
-        If given prototype is a dictionary then all callable objects
-        will be added to dispatcher.  If given prototype is an object
-        then all public methods will be used.
+        Parameters
+        ----------
+        prototype : object or dict
+            Initial method mapping.
+            If given prototype is a dictionary then all callable objects will
+            be added to dispatcher.
+            If given prototype is an object then all public methods will
+            be used.
 
         """
         if not isinstance(prototype, dict):
