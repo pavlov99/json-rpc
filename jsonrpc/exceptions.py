@@ -3,20 +3,6 @@ from . import six
 import json
 
 
-class JSONRPCException(Exception):
-
-    """ JSON-RPC Exception."""
-
-    pass
-
-
-class JSONRPCInvalidRequestException(JSONRPCException):
-
-    """ Request is not valid."""
-
-    pass
-
-
 class JSONRPCError(object):
 
     """ Error for JSON-RPC communication.
@@ -170,6 +156,20 @@ class JSONRPCServerError(JSONRPCError):
 
     CODE = -32000
     MESSAGE = "Server error"
+
+
+class JSONRPCException(Exception):
+
+    """ JSON-RPC Exception."""
+
+    pass
+
+
+class JSONRPCInvalidRequestException(JSONRPCException):
+
+    """ Request is not valid."""
+
+    pass
 
 
 class JSONRPCDispatchException(JSONRPCException):
