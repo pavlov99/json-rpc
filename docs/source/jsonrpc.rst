@@ -9,14 +9,6 @@ jsonrpc Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`exceptions` Module
-------------------------
-
-.. automodule:: jsonrpc.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`jsonrpc` Module
 ---------------------
 
@@ -25,3 +17,7 @@ jsonrpc Package
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: jsonrpc.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
