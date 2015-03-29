@@ -30,7 +30,7 @@ from jsonrpc import version, PROJECT
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
+    'sphinxcontrib.napoleon',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
 ]
@@ -106,7 +106,8 @@ html_theme = 'sphinx_rtd_theme'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+import sphinx_rtd_theme
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
