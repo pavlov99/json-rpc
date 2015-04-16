@@ -9,8 +9,11 @@ JSON-RPC transport implementation
 :Source code: https://github.com/pavlov99/json-rpc
 :Issue tracker: https://github.com/pavlov99/json-rpc/issues
 
-
 JSON-RPC is a stateless, light-weight remote procedure call (RPC) protocol. Primarily this specification defines several data structures and the rules around their processing. It is transport agnostic in that the concepts can be used within the same process, over sockets, over http, or in many various message passing environments. It uses JSON (RFC 4627) as data format.
+
+.. raw:: html
+
+    <iframe src="https://ghbtns.com/github-btn.html?user=pavlov99&repo=json-rpc&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
 
 Features
 --------
