@@ -1,3 +1,7 @@
+2015-05-05  kirill.pavlov@phystech.edu
+
+	* Add logger to django api client
+
 2014-09-04  kirill.pavlov@phystech.edu
 
 	* Add custom exception functionality by @julianhille
