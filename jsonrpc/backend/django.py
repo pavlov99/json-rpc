@@ -2,13 +2,19 @@ from __future__ import absolute_import
 
 from django.conf.urls import url
 from django.http import HttpResponse, HttpResponseNotAllowed
+import copy
 import json
+import logging
+import time
 
 from ..exceptions import JSONRPCInvalidRequestException
 from ..jsonrpc import JSONRPCRequest
 from ..manager import JSONRPCResponseManager
 from ..utils import DatetimeDecimalEncoder
 from ..dispatcher import Dispatcher
+
+
+logger = logging.getLogger(__name__)
 
 
 class JSONRPCAPI(object):
@@ -37,10 +43,16 @@ class JSONRPCAPI(object):
                 request_str, self.dispatcher)
         else:
             jsonrpc_request.params = jsonrpc_request.params or {}
+            jsonrpc_request_params = copy.copy(jsonrpc_request.params)
             if isinstance(jsonrpc_request.params, dict):
                 jsonrpc_request.params.update(request=request)
+
+            t1 = time.time()
             response = JSONRPCResponseManager.handle_request(
                 jsonrpc_request, self.dispatcher)
+            t2 = time.time()
+            logger.info('{0}({1}) {2:.2f} sec'.format(
+                jsonrpc_request.method, jsonrpc_request_params, t2 - t1))
 
         if response:
             def serialize(s):
