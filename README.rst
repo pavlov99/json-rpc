@@ -1,6 +1,10 @@
 json-rpc
 ========
 
+.. image:: https://badges.gitter.im/Join%20Chat.svg
+   :alt: Join the chat at https://gitter.im/pavlov99/json-rpc
+   :target: https://gitter.im/pavlov99/json-rpc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 .. image:: https://travis-ci.org/pavlov99/json-rpc.png
     :target: https://travis-ci.org/pavlov99/json-rpc
     :alt: Build Status
