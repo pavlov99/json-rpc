@@ -51,11 +51,11 @@ class Dispatcher(collections.MutableMapping):
         return repr(self.method_map)
 
     def add_class(self, cls):
-        prefix = cls.__name__.lower()+'.'
+        prefix = cls.__name__.lower() + '.'
         self.build_method_map(cls(), prefix)
 
     def add_object(self, obj):
-        prefix = obj.__class__.__name__.lower()+'.'
+        prefix = obj.__class__.__name__.lower() + '.'
         self.build_method_map(obj, prefix)
 
     def add_dict(self, dict, prefix=''):
@@ -119,4 +119,4 @@ class Dispatcher(collections.MutableMapping):
 
         for attr, method in prototype.items():
             if callable(method):
-                self[prefix+attr] = method
+                self[prefix + attr] = method
