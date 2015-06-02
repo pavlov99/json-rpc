@@ -9,10 +9,10 @@ else:
 class Math:
 
     def sum(self, a, b):
-        return a+b
+        return a + b
 
     def diff(self, a, b):
-        return a-b
+        return a - b
 
 
 class TestDispatcher(unittest.TestCase):
