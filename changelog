@@ -1,3 +1,8 @@
+2015-06-03  kirill.pavlov@phystech.edu
+
+	* Added support of method prefixes
+	https://github.com/pavlov99/json-rpc/pull/31
+
 2015-05-05  kirill.pavlov@phystech.edu
 
 	* Add logger to django api client
