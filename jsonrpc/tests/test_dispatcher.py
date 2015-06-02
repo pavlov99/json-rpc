@@ -6,6 +6,15 @@ else:
     import unittest
 
 
+class Math:
+
+    def sum(self, a, b):
+        return a+b
+
+    def diff(self, a, b):
+        return a-b
+
+
 class TestDispatcher(unittest.TestCase):
 
     """ Test Dispatcher functionality."""
@@ -33,6 +42,31 @@ class TestDispatcher(unittest.TestCase):
 
         self.assertIn("add", d)
         self.assertEqual(d["add"](1, 1), 2)
+
+    def test_add_class(self):
+        d = Dispatcher()
+        d.add_class(Math)
+
+        self.assertIn("math.sum", d)
+        self.assertIn("math.diff", d)
+        self.assertEqual(d["math.sum"](3, 8), 11)
+        self.assertEqual(d["math.diff"](6, 9), -3)
+
+    def test_add_object(self):
+        d = Dispatcher()
+        d.add_object(Math())
+
+        self.assertIn("math.sum", d)
+        self.assertIn("math.diff", d)
+        self.assertEqual(d["math.sum"](5, 2), 7)
+        self.assertEqual(d["math.diff"](15, 9), 6)
+
+    def test_add_dict(self):
+        d = Dispatcher()
+        d.add_dict({"sum": lambda *args: sum(args)}, "util")
+
+        self.assertIn("util.sum", d)
+        self.assertEqual(d["util.sum"](13, -2), 11)
 
     def test_add_method_keep_function_definitions(self):
 
