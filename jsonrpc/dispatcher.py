@@ -50,6 +50,19 @@ class Dispatcher(collections.MutableMapping):
     def __repr__(self):
         return repr(self.method_map)
 
+    def add_class(self, cls):
+        prefix = cls.__name__.lower()+'.'
+        self.build_method_map(cls(), prefix)
+
+    def add_object(self, obj):
+        prefix = obj.__class__.__name__.lower()+'.'
+        self.build_method_map(obj, prefix)
+
+    def add_dict(self, dict, prefix=''):
+        if prefix:
+            prefix += '.'
+        self.build_method_map(dict, prefix)
+
     def add_method(self, f, name=None):
         """ Add a method to the dispatcher.
 
@@ -84,7 +97,7 @@ class Dispatcher(collections.MutableMapping):
         self.method_map[name or f.__name__] = f
         return f
 
-    def build_method_map(self, prototype):
+    def build_method_map(self, prototype, prefix=''):
         """ Add prototype methods to the dispatcher.
 
         Parameters
@@ -95,6 +108,8 @@ class Dispatcher(collections.MutableMapping):
             be added to dispatcher.
             If given prototype is an object then all public methods will
             be used.
+        prefix: string, optional
+            Prefix of methods
 
         """
         if not isinstance(prototype, dict):
@@ -104,4 +119,4 @@ class Dispatcher(collections.MutableMapping):
 
         for attr, method in prototype.items():
             if callable(method):
-                self[attr] = method
+                self[prefix+attr] = method
