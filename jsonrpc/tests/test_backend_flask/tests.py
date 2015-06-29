@@ -1,17 +1,23 @@
 import json
-from unittest import TestCase
+import sys
 
-from flask import Flask
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
 
-from ...backend.flask import api
+if sys.version_info < (3, 0) or sys.version_info >= (3, 3):
+    from flask import Flask
+    from ...backend.flask import api
+
+    @api.dispatcher.add_method
+    def dummy():
+        return ""
 
 
-@api.dispatcher.add_method
-def dummy():
-    return ""
-
-
-class TestFlaskBackend(TestCase):
+@unittest.skipIf((3, 0) <= sys.version_info < (3, 3),
+                 'Flask does not support python 3.0 - 3.2')
+class TestFlaskBackend(unittest.TestCase):
     def setUp(self):
         app = Flask(__name__)
         app.config["TESTING"] = True
