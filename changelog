@@ -1,24 +1,29 @@
-2015-06-03  kirill.pavlov@phystech.edu
+2015-06-29  Kirill Pavlov <kirill.pavlov@phystech.edu>
+
+	* Flask backend support by Lev Orekhov <lev.orekhov@gmail.com>
+	(https://github.com/lorehov)
+
+2015-06-03  Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Added support of method prefixes
 	https://github.com/pavlov99/json-rpc/pull/31
 
-2015-05-05  kirill.pavlov@phystech.edu
+2015-05-05  Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Add logger to django api client
 
-2014-09-04  kirill.pavlov@phystech.edu
+2014-09-04  Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Add custom exception functionality by @julianhille
 
-2014-05-25 kirill.pavlov@phystech.edu
+2014-05-25 Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Add python 2.6 support
 	* Update server notification processing
 	* Add functionality to dispatcher, it is possible to init it with
 	class
 
-2013-11-09  kirill.pavlov@phystech.edu
+2013-11-09  Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Add JSON-RPC 1.0 support.
 	* Add dispatcher for functions.
@@ -30,12 +35,12 @@
 	* Add dispatcher and JSONPRCManager to jsonrpc/__init__, they are no
 	longer in jsonrpc.jsonrpc module.
 
-2013-10-13  kirill.pavlov@phystech.edu
+2013-10-13  Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Add examples of usage.
 	* Init documentation.
 	* Remove six from dependencies.
 
-2013-10-08  kirill.pavlov@phystech.edu
+2013-10-08  Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Implement JSON-RPC 2.0 specification.
