@@ -28,6 +28,7 @@ Add api endpoint to the project
 You have to options to add new endpoint to your Flask application.
 
 First - register as a blueprint. In this case, as small bonus, you got a /map handler, which prints all registered methods.
+
 .. code-block:: python
 
     from flask import Flask
@@ -39,6 +40,7 @@ First - register as a blueprint. In this case, as small bonus, you got a /map ha
 
 
 Second - register as a usual view.
+
 .. code-block:: python
 
     from flask import Flask
