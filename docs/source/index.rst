@@ -34,5 +34,6 @@ Contents
     dispatcher
     exceptions
     django_integration
+    flask_integration
 
     jsonrpc
