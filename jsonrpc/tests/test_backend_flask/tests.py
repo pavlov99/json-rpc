@@ -98,7 +98,7 @@ class TestFlaskBackend(TestCase):
     def test_resource_map(self):
         response = self.client.get('/map')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("JSON-RPC map", response.data.decode('utf8'))
+        self.assertTrue("JSON-RPC map" in response.data.decode('utf8'))
 
     def test_method_not_allowed_prefix(self):
         response = self.client.get(
