@@ -1,7 +1,7 @@
 import json
 from unittest import TestCase
 
-from flask import Blueprint, Flask
+from flask import Flask
 
 from ...backend.flask import api
 
