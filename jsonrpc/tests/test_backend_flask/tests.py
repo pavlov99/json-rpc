@@ -1,5 +1,6 @@
 import json
 import sys
+from mock import patch
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -116,3 +117,7 @@ class TestFlaskBackend(unittest.TestCase):
     def test_resource_map_prefix(self):
         response = self.client.get('/map')
         self.assertEqual(response.status_code, 200)
+
+    def test_as_view(self):
+        with patch.object(api, 'jsonrpc') as mock_jsonrpc:
+            self.assertIs(api.as_view(), mock_jsonrpc)
