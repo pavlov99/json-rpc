@@ -9,31 +9,35 @@ else:
 
 if sys.version_info < (3, 0) or sys.version_info >= (3, 3):
     from flask import Flask
-    from ...backend.flask import api
-
-    @api.dispatcher.add_method
-    def dummy():
-        return ""
+    from ...backend.flask import JSONRPCAPI
 
 
 @unittest.skipIf((3, 0) <= sys.version_info < (3, 3),
                  'Flask does not support python 3.0 - 3.2')
 class TestFlaskBackend(unittest.TestCase):
+    REQUEST = json.dumps({
+        "id": "0",
+        "jsonrpc": "2.0",
+        "method": "dummy",
+    })
+
     def setUp(self):
+        self.client = self._get_test_client(JSONRPCAPI())
+
+    def _get_test_client(self, api):
+        @api.dispatcher.add_method
+        def dummy():
+            return ""
+
         app = Flask(__name__)
         app.config["TESTING"] = True
         app.register_blueprint(api.as_blueprint())
-        self.client = app.test_client()
+        return app.test_client()
 
     def test_client(self):
-        json_data = {
-            "id": "0",
-            "jsonrpc": "2.0",
-            "method": "dummy",
-        }
         response = self.client.post(
             '/',
-            data=json.dumps(json_data),
+            data=self.REQUEST,
             content_type='application/json',
         )
         self.assertEqual(response.status_code, 200)
@@ -52,6 +56,17 @@ class TestFlaskBackend(unittest.TestCase):
             '/',
             data='{',
             content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data.decode('utf8'))
+        self.assertEqual(data['error']['code'], -32700)
+        self.assertEqual(data['error']['message'], 'Parse error')
+
+    def test_wrong_content_type(self):
+        response = self.client.post(
+            '/',
+            data=self.REQUEST,
+            content_type='application/x-www-form-urlencoded',
         )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data.decode('utf8'))
@@ -119,5 +134,27 @@ class TestFlaskBackend(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_as_view(self):
+        api = JSONRPCAPI()
         with patch.object(api, 'jsonrpc') as mock_jsonrpc:
             self.assertIs(api.as_view(), mock_jsonrpc)
+
+    def test_not_check_content_type(self):
+        client = self._get_test_client(JSONRPCAPI(check_content_type=False))
+        response = client.post(
+            '/',
+            data=self.REQUEST,
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data.decode('utf8'))
+        self.assertEqual(data['result'], '')
+
+    def test_check_content_type(self):
+        client = self._get_test_client(JSONRPCAPI(check_content_type=False))
+        response = client.post(
+            '/',
+            data=self.REQUEST,
+            content_type="application/x-www-form-urlencoded"
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data.decode('utf8'))
+        self.assertEqual(data['result'], '')
