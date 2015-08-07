@@ -20,7 +20,8 @@ logger = logging.getLogger(__name__)
 
 class JSONRPCAPI(object):
     def __init__(self, dispatcher=None):
-        self.dispatcher = dispatcher or Dispatcher()
+        self.dispatcher = dispatcher if dispatcher is not None \
+            else Dispatcher()
 
     def as_blueprint(self, name=None):
         blueprint = Blueprint(name if name else str(uuid4()), __name__)
