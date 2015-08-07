@@ -7,9 +7,14 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
+# Flask is supported only for python2 and pyton3.3+
 if sys.version_info < (3, 0) or sys.version_info >= (3, 3):
     from flask import Flask
-    from ...backend.flask import JSONRPCAPI
+    from ...backend.flask import JSONRPCAPI, api
+
+    @api.dispatcher.add_method
+    def dummy():
+        return ""
 
 
 @unittest.skipIf((3, 0) <= sys.version_info < (3, 3),
@@ -158,3 +163,12 @@ class TestFlaskBackend(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data.decode('utf8'))
         self.assertEqual(data['result'], '')
+
+    def test_empty_initial_dispatcher(self):
+        class SubDispatcher(type(api.dispatcher)):
+            pass
+
+        custom_dispatcher = SubDispatcher()
+        custom_api = JSONRPCAPI(custom_dispatcher)
+        self.assertEqual(type(custom_api.dispatcher), SubDispatcher)
+        self.assertEqual(id(custom_api.dispatcher), id(custom_dispatcher))
