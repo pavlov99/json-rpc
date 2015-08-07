@@ -19,9 +19,18 @@ logger = logging.getLogger(__name__)
 
 
 class JSONRPCAPI(object):
-    def __init__(self, dispatcher=None):
+    def __init__(self, dispatcher=None, check_content_type=True):
+        """
+
+        :param dispatcher: methods dispatcher
+        :param check_content_type: if True - content-type must be
+            "application/json"
+        :return:
+
+        """
         self.dispatcher = dispatcher if dispatcher is not None \
             else Dispatcher()
+        self.check_content_type = check_content_type
 
     def as_blueprint(self, name=None):
         blueprint = Blueprint(name if name else str(uuid4()), __name__)
@@ -35,7 +44,7 @@ class JSONRPCAPI(object):
         return self.jsonrpc
 
     def jsonrpc(self):
-        request_str = request.data
+        request_str = self._get_request_str()
         try:
             jsonrpc_request = JSONRPCRequest.from_json(request_str)
         except (TypeError, ValueError, JSONRPCInvalidRequestException):
@@ -68,6 +77,11 @@ class JSONRPCAPI(object):
             for fname, f in self.dispatcher.items()
         ]))
         return Response(result)
+
+    def _get_request_str(self):
+        if self.check_content_type or request.data:
+            return request.data
+        return list(request.form.keys())[0]
 
     @staticmethod
     def _serialize(s):
