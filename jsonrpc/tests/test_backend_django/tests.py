@@ -4,7 +4,7 @@ import os
 
 from django.core.urlresolvers import RegexURLPattern
 from django.test import TestCase
-from ...backend.django import api
+from ...backend.django import JSONRPCAPI, api
 import json
 
 
@@ -72,3 +72,12 @@ class TestDjangoBackend(TestCase):
     def test_resource_map_prefix(self):
         response = self.client.get('/prefix/map')
         self.assertEqual(response.status_code, 200)
+
+    def test_empty_initial_dispatcher(self):
+        class SubDispatcher(type(api.dispatcher)):
+            pass
+
+        custom_dispatcher = SubDispatcher()
+        custom_api = JSONRPCAPI(custom_dispatcher)
+        self.assertEqual(type(custom_api.dispatcher), SubDispatcher)
+        self.assertEqual(id(custom_api.dispatcher), id(custom_dispatcher))

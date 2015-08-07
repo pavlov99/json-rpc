@@ -6,7 +6,7 @@ import logging
 import time
 from uuid import uuid4
 
-from flask import Blueprint, request, Response, g
+from flask import Blueprint, request, Response
 
 from ..exceptions import JSONRPCInvalidRequestException
 from ..jsonrpc import JSONRPCRequest
@@ -21,11 +21,15 @@ logger = logging.getLogger(__name__)
 class JSONRPCAPI(object):
     def __init__(self, dispatcher=None, check_content_type=True):
         """
+
         :param dispatcher: methods dispatcher
-        :param check_content_type: if True - content-type must be "application/json"
+        :param check_content_type: if True - content-type must be
+            "application/json"
         :return:
+
         """
-        self.dispatcher = dispatcher or Dispatcher()
+        self.dispatcher = dispatcher if dispatcher is not None \
+            else Dispatcher()
         self.check_content_type = check_content_type
 
     def as_blueprint(self, name=None):

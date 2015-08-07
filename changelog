@@ -1,3 +1,7 @@
+2015-08-07  Kirill Pavlov <kirill.pavlov@liricco.com>
+
+	* Allow custom empty dispatcher parameter for backend-specific api
+
 2015-06-29  Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Flask backend support by Lev Orekhov <lev.orekhov@gmail.com>

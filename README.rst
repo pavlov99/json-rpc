@@ -53,6 +53,13 @@ Tests
 
     tox
 
+Features
+--------
+
+- Vanilla python, no dependencies
+- Optional backend support for Django, Flask
+- json-rpc 1.1 and 2.0 support
+
 Quickstart
 ----------
 Server (uses `Werkzeug <http://werkzeug.pocoo.org/>`_)
@@ -121,3 +128,15 @@ There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementati
 Testing
 -------
 json-rpc is python library, it supports pythons: 2.6, 2.7, 3.3, 3.4. There is optional support for django1.6 (python2.6 does not support django1.7).
+
+Contributors
+------------
+
+* Kirill Pavlov `@pavlov99 <https://github.com/pavlov99>`_
+* Jan Willems `@jw <https://github.com/jw>`_
+* Robby Dermody (xnova) `@robby-dermody <https://github.com/robby-dermody>`_
+* matee911 `@matee911 <https://github.com/matee911>`_
+* Malyshev Artem `@proofit404 <https://github.com/proofit404>`_
+* Julian Hille `@julianhille <https://github.com/julianhille>`_
+* Pavel Evdokimov `@Santinell <https://github.com/Santinell>`_
+* Lev Orekhov `@lorehov <https://github.com/lorehov>`_
