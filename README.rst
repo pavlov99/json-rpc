@@ -12,6 +12,9 @@ json-rpc
 .. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png
     :target: https://coveralls.io/r/pavlov99/json-rpc
     :alt: Coverage Status
+    
+.. image:: https://www.codacy.com/project/badge/34e0c2c696214041ae4fd5cfcb4af401
+    :target: https://www.codacy.com/app/pavlov99/json-rpc
 
 .. image:: https://pypip.in/v/json-rpc/badge.png
     :target: https://crate.io/packages/json-rpc
