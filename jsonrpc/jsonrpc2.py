@@ -207,7 +207,6 @@ class JSONRPC20Response(JSONRPCBaseResponse):
     def data(self, value):
         if not isinstance(value, dict):
             raise ValueError("data should be dict")
-
         self._data = value
 
     @property
@@ -216,11 +215,9 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
     @result.setter
     def result(self, value):
-        if value is not None:
-            if self.error is not None:
-                raise ValueError("Either result or error should be used")
-
-            self._data["result"] = value
+        if self.error:
+            raise ValueError("Either result or error should be used")
+        self._data["result"] = value
 
     @property
     def error(self):
@@ -228,12 +225,11 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
     @error.setter
     def error(self, value):
-        if value is not None:
-            if self.result is not None:
-                raise ValueError("Either result or error should be used")
-
-            JSONRPCError(**value)
+        self._data.pop('value', None)
+        if value:
             self._data["error"] = value
+            # Test error
+            JSONRPCError(**value)
 
     @property
     def _id(self):
