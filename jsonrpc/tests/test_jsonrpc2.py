@@ -573,9 +573,6 @@ class TestJSONRPC20Response(unittest.TestCase):
             JSONRPC20Response()
 
     def test_validation_incorrect_result_and_error(self):
-        with self.assertRaises(ValueError):
-            JSONRPC20Response(result="", error={"code": 1, "message": ""})
-
         response = JSONRPC20Response(error={"code": 1, "message": ""})
         with self.assertRaises(ValueError):
             response.result = ""
