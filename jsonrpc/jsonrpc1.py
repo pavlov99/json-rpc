@@ -1,7 +1,7 @@
 from . import six
 
 from .base import JSONRPCBaseRequest, JSONRPCBaseResponse
-from .exceptions import JSONRPCInvalidRequestException
+from .exceptions import JSONRPCInvalidRequestException, JSONRPCError
 
 
 class JSONRPC10Request(JSONRPCBaseRequest):
@@ -121,10 +121,8 @@ class JSONRPC10Response(JSONRPCBaseResponse):
 
     @result.setter
     def result(self, value):
-        if value is not None:
-            if self.error is not None:
-                raise ValueError("Either result or error should be used")
-
+        if self.error:
+            raise ValueError("Either result or error should be used")
         self._data["result"] = value
 
     @property
@@ -133,11 +131,11 @@ class JSONRPC10Response(JSONRPCBaseResponse):
 
     @error.setter
     def error(self, value):
-        if value is not None:
-            if self.result is not None:
-                raise ValueError("Either result or error should be used")
-
-        self._data["error"] = value
+        self._data.pop('value', None)
+        if value:
+            self._data["error"] = value
+            # Test error
+            JSONRPCError(**value)
 
     @property
     def _id(self):
