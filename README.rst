@@ -5,12 +5,12 @@ json-rpc
    :alt: Join the chat at https://gitter.im/pavlov99/json-rpc
    :target: https://gitter.im/pavlov99/json-rpc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-.. image:: https://travis-ci.org/pavlov99/json-rpc.png
-    :target: https://travis-ci.org/pavlov99/json-rpc
+.. image:: https://travis-ci.org/pavlov99/json-rpc.png?branch=master
+    :target: https://travis-ci.org/pavlov99/json-rpc?branch=master
     :alt: Build Status
 
-.. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png
-    :target: https://coveralls.io/r/pavlov99/json-rpc
+.. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png?branch=master
+    :target: https://coveralls.io/r/pavlov99/json-rpc?branch=master
     :alt: Coverage Status
 
 .. image:: https://pypip.in/v/json-rpc/badge.png
