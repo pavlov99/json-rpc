@@ -18,7 +18,7 @@ JSON-RPC is a stateless, light-weight remote procedure call (RPC) protocol. Prim
 Features
 --------
 
-* Supports `JSON-PRC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_
+* Supports `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_
 * Implementation is complete and 100% tested
 * Does not depend on transport realisation, no external dependencies
 * It comes with request manager and optional Django support
