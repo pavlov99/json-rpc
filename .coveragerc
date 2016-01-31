@@ -9,4 +9,4 @@ omit=
     jsonrpc/six.py
     jsonrpc/tests/*
 exclude_lines=
-    raise NotImplemented
+    raise NotImplementedError()
