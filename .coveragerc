@@ -1,13 +1,12 @@
-[report]
-omit=
-    jsonrpc/six.py
-    jsonrpc/tests/*
-include=jsonrpc
-exclude_lines=
-    raise NotImplemented
-
 [run]
 omit=
     jsonrpc/six.py
     jsonrpc/tests/*
 source=jsonrpc
+
+[report]
+omit=
+    jsonrpc/six.py
+    jsonrpc/tests/*
+exclude_lines=
+    raise NotImplemented
