@@ -32,7 +32,7 @@ json-rpc
 
 
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation.
-Supports python2.6+, python3.2+, PyPy. Has optional Django and Flask support. 200+ tests.
+Supports python2.6+, python3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
 
 Documentation: http://json-rpc.readthedocs.org
 
