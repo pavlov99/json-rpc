@@ -17,7 +17,7 @@ class JSONSerializable(six.with_metaclass(ABCMeta, object)):
 
     @abstractmethod
     def json(self):
-        raise NotImplemented
+        raise NotImplementedError()
 
     @classmethod
     def from_json(cls, json_str):
