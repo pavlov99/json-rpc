@@ -16,23 +16,6 @@ json-rpc
 .. image:: https://www.codacy.com/project/badge/34e0c2c696214041ae4fd5cfcb4af401
     :target: https://www.codacy.com/app/pavlov99/json-rpc
 
-.. image:: https://pypip.in/v/json-rpc/badge.png
-    :target: https://crate.io/packages/json-rpc
-    :alt: Version
-
-.. image:: https://pypip.in/d/json-rpc/badge.png
-    :target: https://crate.io/packages/json-rpc
-    :alt: Downloads
-
-.. image:: https://pypip.in/format/json-rpc/badge.png
-    :target: https://pypi.python.org/pypi/json-rpc/
-    :alt: Download format
-
-
-.. image:: https://pypip.in/license/json-rpc/badge.png
-    :target: https://pypi.python.org/pypi/json-rpc/
-    :alt: License
-
 
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation.
 Supports python2.6+, python3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
