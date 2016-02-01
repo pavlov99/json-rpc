@@ -5,37 +5,20 @@ json-rpc
    :alt: Join the chat at https://gitter.im/pavlov99/json-rpc
    :target: https://gitter.im/pavlov99/json-rpc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-.. image:: https://travis-ci.org/pavlov99/json-rpc.png
-    :target: https://travis-ci.org/pavlov99/json-rpc
+.. image:: https://travis-ci.org/pavlov99/json-rpc.png?branch=master
+    :target: https://travis-ci.org/pavlov99/json-rpc?branch=master
     :alt: Build Status
 
-.. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png
-    :target: https://coveralls.io/r/pavlov99/json-rpc
+.. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png?branch=master
+    :target: https://coveralls.io/r/pavlov99/json-rpc?branch=master
     :alt: Coverage Status
     
 .. image:: https://www.codacy.com/project/badge/34e0c2c696214041ae4fd5cfcb4af401
     :target: https://www.codacy.com/app/pavlov99/json-rpc
 
-.. image:: https://pypip.in/v/json-rpc/badge.png
-    :target: https://crate.io/packages/json-rpc
-    :alt: Version
-
-.. image:: https://pypip.in/d/json-rpc/badge.png
-    :target: https://crate.io/packages/json-rpc
-    :alt: Downloads
-
-.. image:: https://pypip.in/format/json-rpc/badge.png
-    :target: https://pypi.python.org/pypi/json-rpc/
-    :alt: Download format
-
-
-.. image:: https://pypip.in/license/json-rpc/badge.png
-    :target: https://pypi.python.org/pypi/json-rpc/
-    :alt: License
-
 
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation.
-Supports python2.6+, python3.2+, PyPy. Has optional Django and Flask support. 200+ tests.
+Supports python2.6+, python3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
 
 Documentation: http://json-rpc.readthedocs.org
 
@@ -130,7 +113,7 @@ There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementati
 
 Testing
 -------
-json-rpc is python library, it supports pythons: 2.6, 2.7, 3.3, 3.4. There is optional support for django1.6 (python2.6 does not support django1.7).
+json-rpc is a python library, it supports pythons: 2.6, 2.7, 3.3, 3.4. There is optional support for django1.6 (python2.6 does not support django1.7).
 
 Contributors
 ------------
@@ -143,3 +126,5 @@ Contributors
 * Julian Hille `@julianhille <https://github.com/julianhille>`_
 * Pavel Evdokimov `@Santinell <https://github.com/Santinell>`_
 * Lev Orekhov `@lorehov <https://github.com/lorehov>`_
+* Sergey Nikitin `@nikitinsm <https://github.com/nikitinsm>`_
+* Jean-Christophe Bohin `@Jean-Christophe Bohin <https://github.com/jcbohin>`_
