@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from django.views.decorators.csrf import csrf_exempt
 from django.conf.urls import url
 from django.http import HttpResponse, HttpResponseNotAllowed
 import copy
@@ -31,6 +32,7 @@ class JSONRPCAPI(object):
 
         return urls
 
+    @csrf_exempt
     def jsonrpc(self, request):
         """ JSON-RPC 2.0 handler."""
         if request.method != "POST":
