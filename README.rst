@@ -127,4 +127,5 @@ Contributors
 * Pavel Evdokimov `@Santinell <https://github.com/Santinell>`_
 * Lev Orekhov `@lorehov <https://github.com/lorehov>`_
 * Sergey Nikitin `@nikitinsm <https://github.com/nikitinsm>`_
-* Jean-Christophe Bohin `@Jean-Christophe Bohin <https://github.com/jcbohin>`_
+* Jean-Christophe Bohin `@jcbohin <https://github.com/jcbohin>`_
+* arnuschky `@arnuschky <https://github.com/arnuschky>`_
