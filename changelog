@@ -1,3 +1,8 @@
+2016-01-31  Kirill Pavlov <kirill.pavlov@phystech.edu>
+
+	* Drop support of python 3.2. Pip does not support it, which leads to
+	tests fail
+
 2015-08-07  Kirill Pavlov <kirill.pavlov@liricco.com>
 
 	* Allow custom empty dispatcher parameter for backend-specific api
@@ -36,7 +41,7 @@
 	* Add custom json serializer (based on json) with datetime.Datetime
 	and decimal.Decimal serialization support.
 	* Move JSONRPC* classes to JSONRPC20*, as far as there is JSONRPC10*.
-	* Add dispatcher and JSONPRCManager to jsonrpc/__init__, they are no
+	* Add dispatcher and JSONRPCManager to jsonrpc/__init__, they are no
 	longer in jsonrpc.jsonrpc module.
 
 2013-10-13  Kirill Pavlov <kirill.pavlov@phystech.edu>
