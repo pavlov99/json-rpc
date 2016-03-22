@@ -1,14 +1,17 @@
 import unittest
+import sys
 from manager import JSONRPCResponseManager
 
+if sys.version_info[0] < 3:
+    sys.exit(0)
+
+from p3_test_code import distance
 
 class TestJSONRPCResponseManager(unittest.TestCase):
     def test_typeerror_with_annotations(self):
         """If a function has Python3 annotations and is called with improper
         arguments, make sure the framework doesn't fail with inspect.getargspec
         """
-        def distance(a: float, b: float) -> float:
-            return (a**2 + b**2)**0.5
 
         dispatcher = {
             "distance": distance,
