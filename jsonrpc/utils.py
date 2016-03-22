@@ -68,7 +68,12 @@ def is_invalid_params(func, *args, **kwargs):
     if not inspect.isfunction(func):
         return True
 
-    funcargs, varargs, varkwargs, defaults = inspect.getargspec(func)
+    try:
+        funcargs, varargs, varkwargs, defaults = inspect.getargspec(func)
+    except ValueError:
+        argspec = inspect.getfullargspec(func)
+        funcargs, varargs, varkwargs, defaults = argspec[:4]
+
     if defaults:
         funcargs = funcargs[:-len(defaults)]
 
