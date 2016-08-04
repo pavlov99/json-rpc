@@ -2,8 +2,13 @@
 from __future__ import absolute_import
 import os
 
-from django.core.urlresolvers import RegexURLPattern
-from django.test import TestCase
+try:
+    from django.core.urlresolvers import RegexURLPattern
+    from django.test import TestCase
+except ImportError:
+    import unittest
+    raise unittest.SkipTest('Django not found for testing')
+
 from ...backend.django import JSONRPCAPI, api
 import json
 
