@@ -111,7 +111,6 @@ class JSONRPCResponseManager(object):
                 except Exception as e:
                     data = {
                         "type": e.__class__.__name__,
-                        "args": e.args,
                         "message": str(e),
                     }
                     if isinstance(e, TypeError) and is_invalid_params(
