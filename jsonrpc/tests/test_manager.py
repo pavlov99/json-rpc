@@ -1,3 +1,4 @@
+import os
 import sys
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -122,11 +123,11 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertTrue(isinstance(response, JSONRPC20Response))
         self.assertEqual(response.error["message"], "Server error")
         self.assertEqual(response.error["code"], -32000)
-        self.assertEqual(response.error["data"], {
-            "type": "KeyError",
-            "args": ('error_explanation',),
-            "message": "'error_explanation'",
-        })
+        self.assertEqual(response.error["data"]['type'], "KeyError")
+        self.assertEqual(response.error["data"]['args'], ('error_explanation',))
+        self.assertEqual(response.error["data"]['message'], "'error_explanation'")
+        self.assertIn('traceback', response.error["data"])
+        self.assertIn(os.path.basename(__file__), response.error["data"]['traceback'])
 
     def test_notification_calls_method(self):
         request = JSONRPC20Request("long_time_method", is_notification=True)
@@ -155,11 +156,11 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertTrue(isinstance(response, JSONRPC20Response))
         self.assertEqual(response.error["message"], "Server error")
         self.assertEqual(response.error["code"], -32000)
-        self.assertEqual(response.error["data"], {
-            "type": "TypeError",
-            "args": ('TypeError inside method',),
-            "message": 'TypeError inside method',
-        })
+        self.assertEqual(response.error["data"]['type'], "TypeError")
+        self.assertEqual(response.error["data"]['args'], ('TypeError inside method',))
+        self.assertEqual(response.error["data"]['message'], 'TypeError inside method')
+        self.assertIn('traceback', response.error["data"])
+        self.assertIn(os.path.basename(__file__), response.error["data"]['traceback'])
 
     def test_invalid_params_before_dispatcher_error(self):
         request = JSONRPC20Request(
