@@ -3,14 +3,14 @@ import datetime
 import decimal
 import json
 import sys
+from mock import patch
+
+from ..utils import JSONSerializable, DatetimeDecimalEncoder, is_invalid_params
+
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
     import unittest
-
-from mock import patch
-
-from ..utils import JSONSerializable, DatetimeDecimalEncoder, is_invalid_params
 
 
 class TestJSONSerializable(unittest.TestCase):

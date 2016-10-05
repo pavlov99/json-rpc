@@ -1,8 +1,4 @@
 import sys
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
 from mock import MagicMock
 
 from ..manager import JSONRPCResponseManager
@@ -14,6 +10,11 @@ from ..jsonrpc2 import (
 )
 from ..jsonrpc1 import JSONRPC10Request, JSONRPC10Response
 from ..exceptions import JSONRPCDispatchException
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
 
 
 class TestJSONRPCResponseManager(unittest.TestCase):

@@ -88,7 +88,10 @@ class TestDispatcher(unittest.TestCase):
 
     def test_to_dict(self):
         d = Dispatcher()
-        func = lambda: ""
+
+        def func():
+            return ""
+
         d["method"] = func
         self.assertEqual(dict(d), {"method": func})
 
