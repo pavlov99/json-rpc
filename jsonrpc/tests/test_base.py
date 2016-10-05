@@ -1,11 +1,12 @@
 """ Test base JSON-RPC classes."""
 import sys
+
+from ..base import JSONRPCBaseRequest, JSONRPCBaseResponse
+
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
     import unittest
-
-from ..base import JSONRPCBaseRequest, JSONRPCBaseResponse
 
 
 class TestJSONRPCBaseRequest(unittest.TestCase):

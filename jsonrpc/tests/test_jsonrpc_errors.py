@@ -1,9 +1,5 @@
 import json
 import sys
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
 
 from ..exceptions import (
     JSONRPCError,
@@ -15,6 +11,11 @@ from ..exceptions import (
     JSONRPCServerError,
     JSONRPCDispatchException,
 )
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
 
 
 class TestJSONRPCError(unittest.TestCase):
