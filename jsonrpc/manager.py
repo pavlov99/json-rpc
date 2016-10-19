@@ -109,13 +109,14 @@ class JSONRPCResponseManager(object):
                 except JSONRPCDispatchException as e:
                     output = response(error=e.error._data)
                 except Exception as e:
-                    logger.exception("API Exception:")
-
                     data = {
                         "type": e.__class__.__name__,
                         "args": e.args,
                         "message": str(e),
                     }
+
+                    logger.exception("API Exception: {0}".format(data))
+
                     if isinstance(e, TypeError) and is_invalid_params(
                             method, *request.args, **request.kwargs):
                         output = response(
