@@ -114,12 +114,14 @@ class JSONRPCResponseManager(object):
                         "args": e.args,
                         "message": str(e),
                     }
+
+                    logger.exception("API Exception: {0}".format(data))
+
                     if isinstance(e, TypeError) and is_invalid_params(
                             method, *request.args, **request.kwargs):
                         output = response(
                             error=JSONRPCInvalidParams(data=data)._data)
                     else:
-                        logger.exception("API Exception: {0}".format(data))
                         output = response(
                             error=JSONRPCServerError(data=data)._data)
                 else:
