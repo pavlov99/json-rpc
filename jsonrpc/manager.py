@@ -34,6 +34,8 @@ class JSONRPCResponseManager(object):
 
     :param dict dispather: dict<function_name:function>.
 
+    :param obj request_obj: hope to pass to functions.
+
     """
 
     RESPONSE_CLASS_MAP = {
@@ -42,7 +44,7 @@ class JSONRPCResponseManager(object):
     }
 
     @classmethod
-    def handle(cls, request_str, dispatcher):
+    def handle(cls, request_str, dispatcher, request_obj):
         if isinstance(request_str, bytes):
             request_str = request_str.decode("utf-8")
 
@@ -56,10 +58,10 @@ class JSONRPCResponseManager(object):
         except JSONRPCInvalidRequestException:
             return JSONRPC20Response(error=JSONRPCInvalidRequest()._data)
 
-        return cls.handle_request(request, dispatcher)
+        return cls.handle_request(request_obj, request, dispatcher)
 
     @classmethod
-    def handle_request(cls, request, dispatcher):
+    def handle_request(cls, request_obj, request, dispatcher):
         """ Handle request data.
 
         At this moment request has correct jsonrpc format.
@@ -72,7 +74,7 @@ class JSONRPCResponseManager(object):
         """
         rs = request if isinstance(request, JSONRPC20BatchRequest) \
             else [request]
-        responses = [r for r in cls._get_responses(rs, dispatcher)
+        responses = [r for r in cls._get_responses(request_obj, rs, dispatcher)
                      if r is not None]
 
         # notifications
@@ -85,7 +87,7 @@ class JSONRPCResponseManager(object):
             return responses[0]
 
     @classmethod
-    def _get_responses(cls, requests, dispatcher):
+    def _get_responses(cls, request_obj, requests, dispatcher):
         """ Response to each single JSON-RPC Request.
 
         :return iterator(JSONRPC20Response):
@@ -105,6 +107,7 @@ class JSONRPCResponseManager(object):
                 output = response(error=JSONRPCMethodNotFound()._data)
             else:
                 try:
+                    request.kwargs['request_obj'] = request_obj
                     result = method(*request.args, **request.kwargs)
                 except JSONRPCDispatchException as e:
                     output = response(error=e.error._data)

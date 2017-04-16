@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 import datetime
 import decimal
 import inspect
-import json
+import simplejson as json
 
 from . import six
 
