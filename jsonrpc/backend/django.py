@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from django.utils.html import format_html_join, format_html
 from django.views.decorators.csrf import csrf_exempt
 from django.conf.urls import url
 from django.http import HttpResponse, HttpResponseNotAllowed
@@ -69,13 +70,16 @@ class JSONRPCAPI(object):
     def jsonrpc_map(self, request):
         """ Map of json-rpc available calls.
 
-        :return str:
+        :return HttpResponse:
 
         """
-        result = "<h1>JSON-RPC map</h1><pre>{0}</pre>".format("\n\n".join([
-            "{0}: {1}".format(fname, f.__doc__)
-            for fname, f in self.dispatcher.items()
-        ]))
+        result = format_html(
+            "<h1>JSON-RPC map</h1><pre>{0}</pre>",
+            format_html_join(
+                "\n\n", "{0}: {1}",
+                ((fname, f.__doc__) for fname, f in self.dispatcher.items()),
+            ),
+        )
         return HttpResponse(result)
 
 

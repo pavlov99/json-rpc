@@ -67,6 +67,20 @@ class TestDjangoBackend(TestCase):
         data = response.content.decode('utf8')
         self.assertIn("JSON-RPC map", data)
 
+    def test_resource_map_is_html_encoded(self):
+        @api.dispatcher.add_method
+        def dummy():
+            """Docstring with <tag> & ampersand"""
+            return ""
+
+        response = self.client.get('/map')
+        self.assertEqual(response.status_code, 200)
+        decoded_content = response.content.decode('utf8')
+        self.assertIn("&lt;", decoded_content)
+        self.assertIn("&gt;", decoded_content)
+        self.assertIn("&amp;", decoded_content)
+        self.assertNotIn("<tag>", decoded_content)
+
     def test_method_not_allowed_prefix(self):
         response = self.client.get(
             '/prefix',
