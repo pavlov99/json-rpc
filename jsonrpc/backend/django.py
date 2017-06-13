@@ -34,7 +34,7 @@ class JSONRPCAPI(object):
 
     @csrf_exempt
     def jsonrpc(self, request):
-        """ JSON-RPC 2.0 handler."""
+        """ JSON-RPC 1.0/2.0 handler."""
         if request.method != "POST":
             return HttpResponseNotAllowed(["POST"])
 
@@ -45,7 +45,8 @@ class JSONRPCAPI(object):
             response = JSONRPCResponseManager.handle(
                 request_str, self.dispatcher)
         else:
-            jsonrpc_request.params = jsonrpc_request.params or {}
+            if jsonrpc_request.JSONRPC_VERSION == "2.0":
+                jsonrpc_request.params = jsonrpc_request.params or {}
             jsonrpc_request_params = copy.copy(jsonrpc_request.params)
             if isinstance(jsonrpc_request.params, dict):
                 jsonrpc_request.params.update(request=request)

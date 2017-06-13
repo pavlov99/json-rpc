@@ -24,16 +24,7 @@ class TestDjangoBackend(TestCase):
         for api_url in api.urls:
             self.assertTrue(isinstance(api_url, RegexURLPattern))
 
-    def test_client(self):
-        @api.dispatcher.add_method
-        def dummy(request):
-            return ""
-
-        json_data = {
-            "id": "0",
-            "jsonrpc": "2.0",
-            "method": "dummy",
-        }
+    def assertValidResult(self, json_data, result=''):
         response = self.client.post(
             '',
             json.dumps(json_data),
@@ -41,7 +32,76 @@ class TestDjangoBackend(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['result'], '')
+        self.assertEqual(data.get('error', ''), '')
+        self.assertEqual(data['result'], result)
+
+    def test_client_json_rpc_2_with_no_params(self):
+        @api.dispatcher.add_method
+        def dummy(*args, **kwargs):
+            self.assertEqual(len(args), 0)
+            self.assertEqual(len(kwargs), 1)
+            self.assertIn('request', kwargs)
+            return ""
+
+        self.assertValidResult({
+            "id": "0",
+            "jsonrpc": "2.0",
+            "method": "dummy",
+        })
+
+    def test_client_json_rpc_2_with_empty_param_dict(self):
+        @api.dispatcher.add_method
+        def dummy(*args, **kwargs):
+            self.assertEqual(len(args), 0)
+            self.assertEqual(len(kwargs), 1)
+            self.assertIn('request', kwargs)
+            return ""
+
+        self.assertValidResult({
+            "id": "0",
+            "jsonrpc": "2.0",
+            "method": "dummy",
+            "params": {},
+        })
+
+    def test_client_json_rpc_2_with_empty_param_list(self):
+        @api.dispatcher.add_method
+        def dummy(*args, **kwargs):
+            self.assertEqual(len(args), 0)
+            self.assertEqual(len(kwargs), 1)
+            self.assertIn('request', kwargs)
+            return ""
+
+        self.assertValidResult({
+            "id": "0",
+            "jsonrpc": "2.0",
+            "method": "dummy",
+            "params": [],
+        })
+
+    def test_client_json_rpc_1_with_single_param(self):
+        @api.dispatcher.add_method
+        def dummy(param1):
+            return param1
+
+        self.assertValidResult({
+            "id": "0",
+            "method": "dummy",
+            "params": ['param1'],
+        }, 'param1')
+
+    def test_client_json_rpc_1_with_empty_params(self):
+        @api.dispatcher.add_method
+        def dummy(*args, **kwargs):
+            self.assertEqual(len(args), 0)
+            self.assertEqual(len(kwargs), 0)
+            return ""
+
+        self.assertValidResult({
+            "id": "0",
+            "method": "dummy",
+            "params": [],
+        })
 
     def test_method_not_allowed(self):
         response = self.client.get(
