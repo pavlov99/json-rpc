@@ -32,10 +32,10 @@ class JSONRPCAPI(object):
             else Dispatcher()
         self.check_content_type = check_content_type
 
-    def as_blueprint(self, name=None):
+    def as_blueprint(self, name=None, url='/'):
         blueprint = Blueprint(name if name else str(uuid4()), __name__)
         blueprint.add_url_rule(
-            '/', view_func=self.jsonrpc, methods=['POST'])
+            url, view_func=self.jsonrpc, methods=['POST'])
         blueprint.add_url_rule(
             '/map', view_func=self.jsonrpc_map, methods=['GET'])
         return blueprint
