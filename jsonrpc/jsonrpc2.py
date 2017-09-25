@@ -109,7 +109,10 @@ class JSONRPC20Request(JSONRPCBaseRequest):
     @classmethod
     def from_json(cls, json_str):
         data = cls.deserialize(json_str)
+        return cls.from_data(data)
 
+    @classmethod
+    def from_data(cls, data):
         is_batch = isinstance(data, list)
         data = data if is_batch else [data]
 
