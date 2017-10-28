@@ -1,6 +1,10 @@
 import json
 import sys
-from mock import patch
+
+if sys.version_info < (3, 3):
+    from mock import patch
+else:
+    from unittest.mock import patch
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
