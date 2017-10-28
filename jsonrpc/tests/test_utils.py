@@ -1,16 +1,20 @@
 """ Test utility functionality."""
+from ..utils import JSONSerializable, DatetimeDecimalEncoder, is_invalid_params
+
 import datetime
 import decimal
 import json
 import sys
+
+if sys.version_info < (3, 3):
+    from mock import patch
+else:
+    from unittest.mock import patch
+
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
     import unittest
-
-from mock import patch
-
-from ..utils import JSONSerializable, DatetimeDecimalEncoder, is_invalid_params
 
 
 class TestJSONSerializable(unittest.TestCase):

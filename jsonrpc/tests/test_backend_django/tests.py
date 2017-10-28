@@ -18,6 +18,7 @@ class TestDjangoBackend(TestCase):
     def setUpClass(cls):
         os.environ['DJANGO_SETTINGS_MODULE'] = \
             'jsonrpc.tests.test_backend_django.settings'
+        super(TestDjangoBackend, cls).setUpClass()
 
     def test_urls(self):
         self.assertTrue(isinstance(api.urls, list))

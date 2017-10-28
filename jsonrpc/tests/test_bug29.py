@@ -5,12 +5,14 @@ http://www.jsonrpc.org/specification#examples
 
 """
 import sys
+import json
+
+from ..manager import JSONRPCResponseManager
+
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
     import unittest
-import json
-from ..manager import JSONRPCResponseManager
 
 
 def isjsonequal(json1, json2):
@@ -30,4 +32,3 @@ class TestJSONRPCExamples(unittest.TestCase):
             response.json,
             '{"jsonrpc": "2.0", "result": null, "id": 0}'
         ))
-
