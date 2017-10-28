@@ -1,6 +1,5 @@
 import os
 import sys
-from mock import MagicMock
 
 from ..manager import JSONRPCResponseManager
 from ..jsonrpc2 import (
@@ -16,6 +15,11 @@ if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
     import unittest
+
+if sys.version_info < (3, 3):
+    from mock import MagicMock
+else:
+    from unittest.mock import MagicMock
 
 
 class TestJSONRPCResponseManager(unittest.TestCase):

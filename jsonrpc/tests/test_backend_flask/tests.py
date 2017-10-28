@@ -1,11 +1,15 @@
 import json
 import sys
-from mock import patch
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
     import unittest
+
+if sys.version_info < (3, 3):
+    from mock import patch
+else:
+    from unittest.mock import patch
 
 # Flask is supported only for python2 and python3.3+
 if sys.version_info < (3, 0) or sys.version_info >= (3, 3):

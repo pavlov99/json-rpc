@@ -1,27 +1,27 @@
+# Use containers instead of full VMs for faster startup.
+sudo: false
+
 language: python
-
-python: "2.7"
-
-env:
-    - TOXENV=py27
-    - TOXENV=py33
-    - TOXENV=py34
-    - TOXENV=py35
-    - TOXENV=py36
-    - TOXENV=pypy
-    - TOXENV=cov
+python:
+    - "2.6"
+    - "2.7"
+    - "3.3"
+    - "3.4"
+    - "3.5"
+    - "3.6"
+    - "pypy"
+    - "pypy3"
 
 branches:
     only:
         - master
         - develop
+        - /.*/
 
 install: pip install --quiet tox
 
-script: tox
-
-after_script:
-    - if [ $TOXENV == "cov" ]; then
-        pip install --quiet coveralls;
-        coveralls;
-      fi
+script:
+    # Remove version separator from python version and use it as a key for tox.
+    # Note: prefix it with 'py' for numbered python vestion.
+    - if [[ $TRAVIS_PYTHON_VERSION == 2* || $TRAVIS_PYTHON_VERSION == 3* ]]; then tox -e $(echo $TRAVIS_PYTHON_VERSION | sed 's/\.//g;s/^/py/'); fi
+    - if [[ $TRAVIS_PYTHON_VERSION == 'pypy'* ]]; then tox -e $TRAVIS_PYTHON_VERSION; fi
