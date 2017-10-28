@@ -1,4 +1,3 @@
-import os
 import sys
 
 from ..manager import JSONRPCResponseManager
@@ -133,9 +132,6 @@ class TestJSONRPCResponseManager(unittest.TestCase):
             response.error["data"]['args'], ('error_explanation',))
         self.assertEqual(
             response.error["data"]['message'], "'error_explanation'")
-        self.assertIn('traceback', response.error["data"])
-        self.assertIn(
-            os.path.basename(__file__), response.error["data"]['traceback'])
 
     def test_notification_calls_method(self):
         request = JSONRPC20Request("long_time_method", is_notification=True)
@@ -169,9 +165,6 @@ class TestJSONRPCResponseManager(unittest.TestCase):
             response.error["data"]['args'], ('TypeError inside method',))
         self.assertEqual(
             response.error["data"]['message'], 'TypeError inside method')
-        self.assertIn('traceback', response.error["data"])
-        self.assertIn(
-            os.path.basename(__file__), response.error["data"]['traceback'])
 
     def test_invalid_params_before_dispatcher_error(self):
         request = JSONRPC20Request(

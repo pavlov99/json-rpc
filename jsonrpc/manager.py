@@ -1,5 +1,3 @@
-import sys
-import traceback
 import json
 import logging
 from .utils import is_invalid_params
@@ -115,9 +113,6 @@ class JSONRPCResponseManager(object):
                         "type": e.__class__.__name__,
                         "args": e.args,
                         "message": str(e),
-                        "traceback": ''.join(
-                            traceback.format_exception(*sys.exc_info())
-                        ),
                     }
 
                     logger.exception("API Exception: {0}".format(data))
