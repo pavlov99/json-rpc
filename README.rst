@@ -128,4 +128,7 @@ Contributors
 * Lev Orekhov `@lorehov <https://github.com/lorehov>`_
 * Sergey Nikitin `@nikitinsm <https://github.com/nikitinsm>`_
 * Jean-Christophe Bohin `@jcbohin <https://github.com/jcbohin>`_
-* arnuschky `@arnuschky <https://github.com/arnuschky>`_
+* Arne Brutschy `@arnuschky <https://github.com/arnuschky>`_
+* Piper Merriam <pipermerriam@gmail.com>
+* Luke Lee `@durden <https://github.com/durden>`_
+* Mike Purvis <mike@uwmike.com>
