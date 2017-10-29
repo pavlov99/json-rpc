@@ -1,14 +1,4 @@
 ENV=$(CURDIR)/.env
-PYTHON=$(ENV)/bin/python
-PYVERSION=$(shell pyversions --default)
-SITE_PACKAGES=numpy scipy
-
-RED=\033[0;31m
-GREEN=\033[0;32m
-NC=\033[0m
-
-all: $(ENV)
-	@echo "Virtualenv is installed"
 
 .PHONY: help
 # target: help - Display callable targets
@@ -19,22 +9,11 @@ help:
 # target: clean - Display callable targets
 clean:
 	@rm -rf build dist docs/_build
-	@rm -f *.py[co]
-	@rm -f *.orig
-	@rm -f *.prof
-	@rm -f *.lprof
-	@rm -f *.so
-	@rm -f */*.py[co]
-	@rm -f */*.orig
-	@rm -f */*/*.py[co]
-
-.PHONY: register
-# target: register - Register module on PyPi
-register:
-	@python setup.py register
+	@find . -name \*.py[co] -delete
+	@find . -name *\__pycache__ -delete
 
 .PHONY: upload
-# target: upload - Upload module on PyPi
+# target: upload - Upload module on PyPI
 upload:
 	@python setup.py sdist bdist_wheel upload || echo 'Upload already'
 
@@ -43,9 +22,11 @@ upload:
 test: clean
 	$(PYTHON) setup.py test
 
-$(ENV):
-	virtualenv --no-site-packages .env
-	$(ENV)/bin/pip install -r requirements.txt
+.PHONY: env
+# target: env - Setup development environment
+env:
+	virtualenv --no-site-packages $(ENV)
+	$(ENV)/bin/pip install -r requirements-dev.txt
 
 .PHONY: serve
 # target: serve - server docs
