@@ -84,7 +84,10 @@ class JSONRPC10Request(JSONRPCBaseRequest):
     @classmethod
     def from_json(cls, json_str):
         data = cls.deserialize(json_str)
+        return cls.from_data(data)
 
+    @classmethod
+    def from_data(cls, data):
         if not isinstance(data, dict):
             raise ValueError("data should be dict")
 

@@ -47,12 +47,12 @@ class JSONRPCResponseManager(object):
             request_str = request_str.decode("utf-8")
 
         try:
-            json.loads(request_str)
+            data = json.loads(request_str)
         except (TypeError, ValueError):
             return JSONRPC20Response(error=JSONRPCParseError()._data)
 
         try:
-            request = JSONRPCRequest.from_json(request_str)
+            request = JSONRPCRequest.from_data(data)
         except JSONRPCInvalidRequestException:
             return JSONRPC20Response(error=JSONRPCInvalidRequest()._data)
 
