@@ -29,9 +29,9 @@ setup(
 
     # metadata for upload to PyPI
     author="Kirill Pavlov",
-    author_email="kirill.pavlov@phystech.edu",
+    author_email="k@p99.io",
     url="https://github.com/pavlov99/json-rpc",
-    description="JSON-RPC transport realisation",
+    description="JSON-RPC transport implementation",
     long_description=read('README.rst'),
 
     # Full list:
@@ -46,6 +46,8 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
