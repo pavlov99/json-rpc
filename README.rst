@@ -1,10 +1,6 @@
 json-rpc
 ========
 
-.. image:: https://badges.gitter.im/Join%20Chat.svg
-   :alt: Join the chat at https://gitter.im/pavlov99/json-rpc
-   :target: https://gitter.im/pavlov99/json-rpc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-
 .. image:: https://travis-ci.org/pavlov99/json-rpc.png?branch=master
     :target: https://travis-ci.org/pavlov99/json-rpc?branch=master
     :alt: Build Status
@@ -12,18 +8,34 @@ json-rpc
 .. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png?branch=master
     :target: https://coveralls.io/r/pavlov99/json-rpc?branch=master
     :alt: Coverage Status
-    
+
+.. image:: https://readthedocs.org/projects/json-rpc/badge/?version=latest
+    :target: http://json-rpc.readthedocs.io/en/latest/?badge=latest
+
 .. image:: https://www.codacy.com/project/badge/34e0c2c696214041ae4fd5cfcb4af401
     :target: https://www.codacy.com/app/pavlov99/json-rpc
 
+.. image:: https://img.shields.io/pypi/v/json-rpc.svg
+    :target: https://pypi.org/project/json-rpc/
+    :alt: Latest PyPI version
+
+.. image:: https://img.shields.io/pypi/pyversions/json-rpc.svg
+    :target: https://pypi.org/project/json-rpc/
+    :alt: Supported Python versions
 
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation.
-Supports python2.6+, python3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
+Supports Python 2.6+, Python 3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
 
-Documentation: http://json-rpc.readthedocs.org
+Features
+--------
 
 This implementation does not have any transport functionality realization, only protocol.
-Any client or server realization is easy based on current code, but requires transport libraries, such as requests, gevent or zmq, see `examples <https://github.com/pavlov99/json-rpc/tree/master/examples>`_.
+Any client or server implementation is easy based on current code, but requires transport libraries, such as requests, gevent or zmq, see `examples <https://github.com/pavlov99/json-rpc/tree/master/examples>`_.
+
+- Vanilla Python, no dependencies.
+- 200+ tests for multiple edge cases.
+- Optional backend support for Django, Flask.
+- json-rpc 1.1 and 2.0 support.
 
 Install
 -------
@@ -35,16 +47,46 @@ Install
 Tests
 -----
 
-.. code-block:: python
+Quickstart
+^^^^^^^^^^
+This is an essential part of the library as there are a lot of edge cases in JSON-RPC standard. To manage a variety of supported python versions as well as optional backends json-rpc uses `tox`:
+
+.. code-block:: bash
 
     tox
 
-Features
---------
+.. TIP::
+   During local development use your python version with tox runner. For example, if your are using Python 3.6 run `tox -e py36`. It is easier to develop functionality for specific version first and then expands it to all of the supported versions.
 
-- Vanilla python, no dependencies
-- Optional backend support for Django, Flask
-- json-rpc 1.1 and 2.0 support
+Continuous integration
+^^^^^^^^^^^^^^^^^^^^^^
+This project uses `Travis <https://travis-ci.org/>`_ for continuous integration. All of the python supported versions are managed via `tox.ini` and `.travis.yml` files. Only master and develop branches are tested. Master branch test status is displayed on the badge in the beginning of this document.
+
+Test matrix
+^^^^^^^^^^^
+json-rpc supports multiple python versions: 2.6+, 3.3+, pypy. This introduces difficulties with testing libraries and optional dependencies management. For example, python before version 3.3 does not support `mock` and there is a limited support for `unittest2`. Every dependency translates into *if-then* blocks in the source code and adds complexity to it. Hence, while cross-python support is a core feature of this library, cross-Django or cross-Flask support is limited. In general, json-rpc uses latest stable release which supports current python version. For example, python 2.6 is compatible with Django 1.6 and not compatible with any future versions.
+
+Below is a testing matrix:
+
++--------+-------+-------+-----------+--------+--------+
+| Python | Tests | mock  | unittest  | Django | Flask  |
++========+=======+=======+===========+========+========+
+| 2.6    | nose  | 2.0.0 | unittest2 | 1.6    | 0.12.2 |
++--------+-------+-------+-----------+--------+--------+
+| 2.7    | nose2 | 2.0.0 |           | 1.11   | 0.12.2 |
++--------+-------+-------+-----------+--------+--------+
+| 3.3    | nose2 |       |           | 1.11   | 0.12.2 |
++--------+-------+-------+-----------+--------+--------+
+| 3.4    | nose2 |       |           | 1.11   | 0.12.2 |
++--------+-------+-------+-----------+--------+--------+
+| 3.5    | nose2 |       |           | 1.11   | 0.12.2 |
++--------+-------+-------+-----------+--------+--------+
+| 3.6    | nose2 |       |           | 1.11   | 0.12.2 |
++--------+-------+-------+-----------+--------+--------+
+| pypy   | nose2 | 2.0.0 |           | 1.11   | 0.12.2 |
++--------+-------+-------+-----------+--------+--------+
+| pypy3  | nose2 |       |           | 1.11   | 0.12.2 |
++--------+-------+-------+-----------+--------+--------+
 
 Quickstart
 ----------
@@ -109,26 +151,3 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 Competitors
 -----------
 There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementations>`_ implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
-
-
-Testing
--------
-json-rpc is a python library, it supports pythons: 2.6, 2.7, 3.3, 3.4. There is optional support for django1.6 (python2.6 does not support django1.7).
-
-Contributors
-------------
-
-* Kirill Pavlov `@pavlov99 <https://github.com/pavlov99>`_
-* Jan Willems `@jw <https://github.com/jw>`_
-* Robby Dermody (xnova) `@robby-dermody <https://github.com/robby-dermody>`_
-* matee911 `@matee911 <https://github.com/matee911>`_
-* Malyshev Artem `@proofit404 <https://github.com/proofit404>`_
-* Julian Hille `@julianhille <https://github.com/julianhille>`_
-* Pavel Evdokimov `@Santinell <https://github.com/Santinell>`_
-* Lev Orekhov `@lorehov <https://github.com/lorehov>`_
-* Sergey Nikitin `@nikitinsm <https://github.com/nikitinsm>`_
-* Jean-Christophe Bohin `@jcbohin <https://github.com/jcbohin>`_
-* Arne Brutschy `@arnuschky <https://github.com/arnuschky>`_
-* Piper Merriam <pipermerriam@gmail.com>
-* Luke Lee `@durden <https://github.com/durden>`_
-* Mike Purvis <mike@uwmike.com>
