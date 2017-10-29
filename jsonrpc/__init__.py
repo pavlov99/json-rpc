@@ -1,7 +1,7 @@
 from .manager import JSONRPCResponseManager
 from .dispatcher import Dispatcher
 
-__version = (1, 10, 5)
+__version = (1, 10, 6)
 
 __version__ = version = '.'.join(map(str, __version))
 __project__ = PROJECT = __name__
