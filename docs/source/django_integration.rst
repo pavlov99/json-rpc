@@ -8,7 +8,7 @@ Django integration is similar project to project. Starting from version 1.8.4 js
 Create api instance
 -------------------
 
-If you want to use default (global) object, skip this step. In most cases it is enougth to stert with it, even if you plan to add another version later. Default api is located here:
+If you want to use default (global) object, skip this step. In most cases it is enougth to start with it, even if you plan to add another version later. Default api is located here:
 
 .. code-block:: python
 
