@@ -8,6 +8,7 @@ import sys
 import json
 
 from ..manager import JSONRPCResponseManager
+from ..jsonrpc2 import JSONRPC20Request, JSONRPC20BatchRequest
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -171,3 +172,35 @@ class TestJSONRPCExamples(unittest.TestCase):
         ]"""
         response = JSONRPCResponseManager.handle(req, self.dispatcher)
         self.assertEqual(response, None)
+
+    def test_rpc_call_response_request(self):
+        req = '{"jsonrpc": "2.0", "method": "subtract", "params": [42, 23], "id": 1}'  # noqa
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isinstance(
+            response.request,
+            JSONRPC20Request
+        ))
+        self.assertTrue(isjsonequal(
+            response.request.json,
+            req
+        ))
+
+    def test_rpc_call_response_request_batch(self):
+        req = """[
+            {"jsonrpc": "2.0", "method": "sum", "params": [1,2,4], "id": "1"},
+            {"jsonrpc": "2.0", "method": "notify_hello", "params": [7]},
+            {"jsonrpc": "2.0", "method": "subtract",
+            "params": [42,23], "id": "2"},
+            {"jsonrpc": "2.0", "method": "foo.get",
+            "params": {"name": "myself"}, "id": "5"},
+            {"jsonrpc": "2.0", "method": "get_data", "id": "9"}
+        ]"""
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isinstance(
+            response.request,
+            JSONRPC20BatchRequest
+        ))
+        self.assertTrue(isjsonequal(
+            response.request.json,
+            req
+        ))

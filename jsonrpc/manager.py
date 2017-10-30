@@ -80,7 +80,9 @@ class JSONRPCResponseManager(object):
             return
 
         if isinstance(request, JSONRPC20BatchRequest):
-            return JSONRPC20BatchResponse(*responses)
+            response = JSONRPC20BatchResponse(*responses)
+            response.request = request
+            return response
         else:
             return responses[0]
 
@@ -96,8 +98,10 @@ class JSONRPCResponseManager(object):
         """
         for request in requests:
             def response(**kwargs):
-                return cls.RESPONSE_CLASS_MAP[request.JSONRPC_VERSION](
+                resp = cls.RESPONSE_CLASS_MAP[request.JSONRPC_VERSION](
                     _id=request._id, **kwargs)
+                resp.request = request
+                return resp
 
             try:
                 method = dispatcher[request.method]
