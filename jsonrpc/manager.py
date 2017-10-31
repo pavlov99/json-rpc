@@ -97,21 +97,21 @@ class JSONRPCResponseManager(object):
 
         """
         for request in requests:
-            def response(**kwargs):
-                resp = cls.RESPONSE_CLASS_MAP[request.JSONRPC_VERSION](
+            def make_response(**kwargs):
+                response = cls.RESPONSE_CLASS_MAP[request.JSONRPC_VERSION](
                     _id=request._id, **kwargs)
-                resp.request = request
-                return resp
+                response.request = request
+                return response
 
             try:
                 method = dispatcher[request.method]
             except KeyError:
-                output = response(error=JSONRPCMethodNotFound()._data)
+                output = make_response(error=JSONRPCMethodNotFound()._data)
             else:
                 try:
                     result = method(*request.args, **request.kwargs)
                 except JSONRPCDispatchException as e:
-                    output = response(error=e.error._data)
+                    output = make_response(error=e.error._data)
                 except Exception as e:
                     data = {
                         "type": e.__class__.__name__,
@@ -123,13 +123,13 @@ class JSONRPCResponseManager(object):
 
                     if isinstance(e, TypeError) and is_invalid_params(
                             method, *request.args, **request.kwargs):
-                        output = response(
+                        output = make_response(
                             error=JSONRPCInvalidParams(data=data)._data)
                     else:
-                        output = response(
+                        output = make_response(
                             error=JSONRPCServerError(data=data)._data)
                 else:
-                    output = response(result=result)
+                    output = make_response(result=result)
             finally:
                 if not request.is_notification:
                     yield output

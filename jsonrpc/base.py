@@ -51,8 +51,6 @@ class JSONRPCBaseResponse(JSONSerializable):
 
     """ Base class for JSON-RPC 1.0 and JSON-RPC 2.0 responses."""
 
-    request = None  # type: JSONRPCBaseRequest
-
     def __init__(self, **kwargs):
         self.data = dict()
 
@@ -70,6 +68,8 @@ class JSONRPCBaseResponse(JSONSerializable):
 
         if 'result' not in kwargs and 'error' not in kwargs:
             raise ValueError("Either result or error should be used")
+
+        self.request = None  # type: JSONRPCBaseRequest
 
     @property
     def data(self):
