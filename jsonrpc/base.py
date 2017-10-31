@@ -69,6 +69,8 @@ class JSONRPCBaseResponse(JSONSerializable):
         if 'result' not in kwargs and 'error' not in kwargs:
             raise ValueError("Either result or error should be used")
 
+        self.request = None  # type: JSONRPCBaseRequest
+
     @property
     def data(self):
         return self._data
