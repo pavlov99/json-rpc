@@ -48,7 +48,7 @@ Second - register as a usual view.
     from jsonrpc.backend.flask import api
 
     app = Flask(__name__)
-    app.add_url_rule('/', 'api', api.as_view())
+    app.add_url_rule('/', 'api', api.as_view(), methods=['POST'])
 
 
 Add methods to api
