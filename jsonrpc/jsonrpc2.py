@@ -253,6 +253,7 @@ class JSONRPC20BatchResponse(object):
 
     def __init__(self, *responses):
         self.responses = responses
+        self.request = None  # type: JSONRPC20BatchRequest
 
     @property
     def data(self):
