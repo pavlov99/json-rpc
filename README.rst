@@ -23,6 +23,10 @@ json-rpc
     :target: https://pypi.org/project/json-rpc/
     :alt: Supported Python versions
 
+.. image:: https://badges.gitter.im/pavlov99/json-rpc.svg
+    :target: https://gitter.im/pavlov99/json-rpc
+    :alt: Gitter
+
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation.
 Supports Python 2.6+, Python 3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
 
