@@ -1,5 +1,7 @@
 import json
 import logging
+import time
+
 from .utils import is_invalid_params
 from .exceptions import (
     JSONRPCInvalidParams,
@@ -70,10 +72,35 @@ class JSONRPCResponseManager(object):
         .. versionadded: 1.8.0
 
         """
-        rs = request if isinstance(request, JSONRPC20BatchRequest) \
-            else [request]
-        responses = [r for r in cls._get_responses(rs, dispatcher)
-                     if r is not None]
+        if isinstance(request, JSONRPC20BatchRequest):
+            rs = request
+        else:
+            rs = [request]
+
+        for r in rs:
+            r.params = r.params or {}
+            if isinstance(r.params, dict):
+                r.params.update(request=r)
+
+        responses = []
+
+        t1 = time.time()
+
+        for response in cls._get_responses(rs, dispatcher):
+            if response is not None:
+                logger.info('executed {0}({1})'.format(
+                    response.request.method,
+                    response.request.params
+                ))
+
+                responses.append(response)
+
+        t2 = time.time()
+
+        logger.info('executed {0} in {1:.1f} sec'.format(
+            ['{0}({1})'.format(r.method, r.params) for r in rs],
+            t2 - t1
+        ))
 
         # notifications
         if not responses:
