@@ -77,6 +77,11 @@ class JSONRPCResponseManager(object):
         else:
             rs = [request]
 
+        for r in rs:
+            r.params = r.params or {}
+            if isinstance(r.params, dict):
+                r.params.update(request=r)
+
         responses = []
 
         t1 = time.time()
