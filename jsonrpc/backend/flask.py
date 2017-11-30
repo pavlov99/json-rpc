@@ -51,14 +51,8 @@ class JSONRPCAPI(object):
             response = JSONRPCResponseManager.handle(
                 request_str, self.dispatcher)
         else:
-            jsonrpc_request.params = jsonrpc_request.params or {}
-            jsonrpc_request_params = copy.copy(jsonrpc_request.params)
-            t1 = time.time()
             response = JSONRPCResponseManager.handle_request(
                 jsonrpc_request, self.dispatcher)
-            t2 = time.time()
-            logger.info('{0}({1}) {2:.2f} sec'.format(
-                jsonrpc_request.method, jsonrpc_request_params, t2 - t1))
 
         if response:
             response.serialize = self._serialize
