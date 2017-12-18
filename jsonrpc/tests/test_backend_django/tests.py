@@ -70,7 +70,7 @@ class TestDjangoBackend(TestCase):
 
     def test_method_not_allowed_prefix(self):
         response = self.client.get(
-            '/prefix',
+            '/prefix/',
             content_type='application/json',
         )
         self.assertEqual(response.status_code, 405)
