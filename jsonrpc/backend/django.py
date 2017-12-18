@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from django.views.decorators.csrf import csrf_exempt
 from django.conf.urls import url
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed
 import copy
 import json
@@ -18,6 +19,11 @@ from ..dispatcher import Dispatcher
 logger = logging.getLogger(__name__)
 
 
+def response_serialize(obj):
+    """ Serializes response's data object to JSON. """
+    return json.dumps(obj, cls=DatetimeDecimalEncoder)
+
+
 class JSONRPCAPI(object):
     def __init__(self, dispatcher=None):
         self.dispatcher = dispatcher if dispatcher is not None \
@@ -26,9 +32,13 @@ class JSONRPCAPI(object):
     @property
     def urls(self):
         urls = [
-            url(r'^$', self.jsonrpc),
-            url(r'map$', self.jsonrpc_map),
+            url(r'^$', self.jsonrpc, name='endpoint'),
         ]
+
+        if getattr(settings, 'JSONRPC_MAP_VIEW_ENABLED', settings.DEBUG):
+            urls.append(
+                url(r'^map$', self.jsonrpc_map, name='map')
+            )
 
         return urls
 
@@ -58,10 +68,7 @@ class JSONRPCAPI(object):
                 jsonrpc_request.method, jsonrpc_request_params, t2 - t1))
 
         if response:
-            def serialize(s):
-                return json.dumps(s, cls=DatetimeDecimalEncoder)
-
-            response.serialize = serialize
+            response.serialize = response_serialize
             response = response.json
 
         return HttpResponse(response, content_type="application/json")
