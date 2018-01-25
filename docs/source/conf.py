@@ -30,7 +30,7 @@ from jsonrpc import version, PROJECT
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinxcontrib.napoleon',
+    'sphinx.ext.napoleon',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
 ]
