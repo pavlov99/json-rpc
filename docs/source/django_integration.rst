@@ -33,7 +33,7 @@ In your urls.py file add
 
     urlpatterns = patterns(
         ...
-        url(r'^api/jsonrpc$', include(api.urls)),
+        url(r'^api/jsonrpc/', include(api.urls)),
     )
 
 Add methods to api
