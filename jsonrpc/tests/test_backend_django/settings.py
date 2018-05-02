@@ -8,3 +8,4 @@ DATABASES = {
         'NAME': ':memory:',
     }
 }
+JSONRPC_MAP_VIEW_ENABLED = True
