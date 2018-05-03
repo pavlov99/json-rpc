@@ -27,6 +27,15 @@ json-rpc
     :target: https://gitter.im/pavlov99/json-rpc
     :alt: Gitter
 
+.. image:: https://opencollective.com/json-rpc/backers/badge.svg
+    :alt: Backers on Open Collective
+    :target: #backers
+    
+.. image:: https://opencollective.com/json-rpc/sponsors/badge.svg
+    :alt: Sponsors on Open Collective
+    :target: #sponsors
+
+
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation.
 Supports Python 2.6+, Python 3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
 
@@ -155,3 +164,37 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 Competitors
 -----------
 There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementations>`_ implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
+
+Credits
++++++++
+
+Contributors
+------------
+
+This project exists thanks to all the people who contribute! `Become a contributor`__.
+
+.. image:: https://opencollective.com/json-rpc/contributors.svg?width=890&button=false
+    :target: https://github.com/evhub/json-rpc/graphs/contributors
+
+
+Backers
+-------
+
+Thank you to all our backers! `Become a backer`__.
+
+.. image:: https://opencollective.com/json-rpc/backers.svg?width=890
+    :target: https://opencollective.com/json-rpc#backers
+
+__ Backer_
+.. _Backer: https://opencollective.com/json-rpc#backer
+
+Sponsors
+--------
+
+Support Coconut by becoming a sponsor. Your logo will show up here with a link to your website. `Become a sponsor`__.
+
+.. image:: https://opencollective.com/json-rpc/sponsor/0/avatar.svg
+    :target: https://opencollective.com/json-rpc/sponsor/0/website
+
+__ Sponsor_
+.. _Sponsor: https://opencollective.com/json-rpc#sponsor
