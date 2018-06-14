@@ -4,7 +4,6 @@ import json
 from .exceptions import JSONRPCError, JSONRPCInvalidRequestException
 from .base import JSONRPCBaseRequest, JSONRPCBaseResponse
 
-
 class JSONRPC20Request(JSONRPCBaseRequest):
 
     """ A rpc call is represented by sending a Request object to a Server.
@@ -133,7 +132,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
 
             try:
                 result.append(JSONRPC20Request(
-                    method=d["method"], params=d.get("params"),
+                    method=d["method"], params=d.get("params")[0],
                     _id=d.get("id"), is_notification="id" not in d,
                 ))
             except ValueError as e:
