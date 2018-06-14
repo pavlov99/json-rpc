@@ -93,7 +93,7 @@ class JSONRPC10Request(JSONRPCBaseRequest):
 
         if cls.REQUIRED_FIELDS <= set(data.keys()) <= cls.POSSIBLE_FIELDS:
             return cls(
-                method=data["method"], params=data["params"], _id=data["id"]
+                method=data["method"], params=data["params"][0], _id=data["id"]
             )
         else:
             extra = set(data.keys()) - cls.POSSIBLE_FIELDS
