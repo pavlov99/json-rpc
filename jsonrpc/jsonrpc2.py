@@ -1,8 +1,8 @@
 ﻿from . import six
-import json
 
 from .exceptions import JSONRPCError, JSONRPCInvalidRequestException
 from .base import JSONRPCBaseRequest, JSONRPCBaseResponse
+from .utils import JSONSerializable
 
 
 class JSONRPC20Request(JSONRPCBaseRequest):
@@ -142,7 +142,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
         return JSONRPC20BatchRequest(*result) if is_batch else result[0]
 
 
-class JSONRPC20BatchRequest(object):
+class JSONRPC20BatchRequest(JSONSerializable):
 
     """ Batch JSON-RPC 2.0 Request.
 
@@ -161,7 +161,7 @@ class JSONRPC20BatchRequest(object):
 
     @property
     def json(self):
-        return json.dumps([r.data for r in self.requests])
+        return self.serialize([r.data for r in self.requests])
 
     def __iter__(self):
         return iter(self.requests)
@@ -247,7 +247,7 @@ class JSONRPC20Response(JSONRPCBaseResponse):
         self._data["id"] = value
 
 
-class JSONRPC20BatchResponse(object):
+class JSONRPC20BatchResponse(JSONSerializable):
 
     JSONRPC_VERSION = "2.0"
 
@@ -261,7 +261,7 @@ class JSONRPC20BatchResponse(object):
 
     @property
     def json(self):
-        return json.dumps(self.data)
+        return self.serialize(self.data)
 
     def __iter__(self):
         return iter(self.responses)
