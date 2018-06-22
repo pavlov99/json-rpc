@@ -41,13 +41,19 @@ class JSONRPCResponseManager(object):
         "2.0": JSONRPC20Response,
     }
 
+    deserialize = staticmethod(json.loads)
+
+    @staticmethod
+    def validate(request_str):
+        if isinstance(request_str, bytes):
+            return request_str.decode("utf-8")
+        else:
+            return request_str
+
     @classmethod
     def handle(cls, request_str, dispatcher):
-        if isinstance(request_str, bytes):
-            request_str = request_str.decode("utf-8")
-
         try:
-            data = json.loads(request_str)
+            data = cls.deserialize(cls.validate(request_str))
         except (TypeError, ValueError):
             return JSONRPC20Response(error=JSONRPCParseError()._data)
 
