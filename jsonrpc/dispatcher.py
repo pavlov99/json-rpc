@@ -4,6 +4,7 @@ For usage examples see :meth:`Dispatcher.add_method`
 
 """
 import collections
+from functools import wraps
 
 
 class Dispatcher(collections.MutableMapping):
@@ -27,6 +28,7 @@ class Dispatcher(collections.MutableMapping):
         None
 
         """
+        self._decorators = []
         self.method_map = dict()
 
         if prototype is not None:
@@ -36,7 +38,7 @@ class Dispatcher(collections.MutableMapping):
         return self.method_map[key]
 
     def __setitem__(self, key, value):
-        self.method_map[key] = value
+        self.method_map[key] = self._wrap_method(value)
 
     def __delitem__(self, key):
         del self.method_map[key]
@@ -50,8 +52,24 @@ class Dispatcher(collections.MutableMapping):
     def __repr__(self):
         return repr(self.method_map)
 
+    def register_decorator(self, a):
+        self._decorators.extend(a if hasattr(a, '__iter__') else [a])
+
+    def _wrap_method(self, f):
+        @wraps(f)
+        def _method(*args, **kwargs):
+            nf = f
+            for deco in reversed(self._decorators):
+                nf = deco(nf)
+            return nf(*args, **kwargs)
+
+        return _method
+
     def add_class(self, cls):
-        prefix = cls.__name__.lower() + '.'
+        if hasattr(cls, 'rpc_method_prefix'):
+            prefix = cls.rpc_method_prefix + '.'
+        else:
+            prefix = cls.__name__.lower() + '.'
         self.build_method_map(cls(), prefix)
 
     def add_object(self, obj):
@@ -94,7 +112,7 @@ class Dispatcher(collections.MutableMapping):
                 print(args, kwargs)
 
         """
-        self.method_map[name or f.__name__] = f
+        self[name or f.__name__] = f
         return f
 
     def build_method_map(self, prototype, prefix=''):
@@ -112,10 +130,19 @@ class Dispatcher(collections.MutableMapping):
             Prefix of methods
 
         """
+        rpc_exports = getattr(prototype, 'rpc_exports', None)
+
+        def _should_export(method):
+            if method.startswith('_'):
+                return False
+            if rpc_exports is None:
+                return True
+            return method in rpc_exports
+
         if not isinstance(prototype, dict):
             prototype = dict((method, getattr(prototype, method))
                              for method in dir(prototype)
-                             if not method.startswith('_'))
+                             if _should_export(method))
 
         for attr, method in prototype.items():
             if callable(method):
