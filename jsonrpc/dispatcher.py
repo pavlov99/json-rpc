@@ -3,6 +3,7 @@
 For usage examples see :meth:`Dispatcher.add_method`
 
 """
+from . import six
 import collections
 from functools import wraps
 
@@ -111,7 +112,20 @@ class Dispatcher(collections.MutableMapping):
             def mymethod(*args, **kwargs):
                 print(args, kwargs)
 
+        >>> @d.add_method(name='MyMethod')
+            def mymethod(*args, **kwargs):
+                print(args, kwargs)
+
         """
+        if isinstance(f, six.string_types):
+            name, f = f, name
+
+        if f is None:
+            # Be decorator generator
+            def _add_method(f):
+                return self.add_method(f, name)
+            return _add_method
+
         self[name or f.__name__] = f
         return f
 
