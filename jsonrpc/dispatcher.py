@@ -73,6 +73,8 @@ class Dispatcher(collections.MutableMapping):
             prefix = cls.__name__.lower() + '.'
         self.build_method_map(cls(), prefix)
 
+        return cls  # for working as decorator
+
     def add_object(self, obj):
         prefix = obj.__class__.__name__.lower() + '.'
         self.build_method_map(obj, prefix)
