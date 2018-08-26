@@ -1,0 +1,4 @@
+include *.py
+include README.rst
+include LICENSE.txt
+include MANIFEST.in
