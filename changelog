@@ -1,3 +1,7 @@
+2018-08-26  Kirill Pavlov <k@p99.io>
+
+	* Add license file to the dist/
+
 2016-01-31  Kirill Pavlov <kirill.pavlov@phystech.edu>
 
 	* Drop support of python 3.2. Pip does not support it, which leads to
