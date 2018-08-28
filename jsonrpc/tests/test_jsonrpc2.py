@@ -1,7 +1,7 @@
 import json
 import sys
 
-from ..exceptions import JSONRPCInvalidRequestException
+from ..exceptions import JSONRPCInvalidRequestException, JSONRPCInvalidResponseException, JSONRPCParseError
 from ..jsonrpc2 import (
     JSONRPC20Request,
     JSONRPC20BatchRequest,
@@ -690,6 +690,96 @@ class TestJSONRPC20Response(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             response.data = None
+
+    def test_from_json_invalid_response_jsonrpc(self):
+        str_json = json.dumps({
+            "result": None,
+            "id": 0,
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC20Response.from_json(str_json)
+
+    def test_from_json_invalid_response_id(self):
+        str_json = json.dumps({
+            "result": None,
+            "jsonrpc": "2.0",
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC20Response.from_json(str_json)
+
+    def test_from_json_invalid_response_no_result_error(self):
+        str_json = json.dumps({
+            "jsonrpc": "2.0",
+            "id": 0,
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC20Response.from_json(str_json)
+
+    def test_from_json_invalid_response_result_and_error(self):
+        str_json = json.dumps({
+            "jsonrpc": "2.0",
+            "id": 0,
+            "result": None,
+            "error": {"code": 1, "message": ""}
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC20Response.from_json(str_json)
+
+    def test_from_json_invalid_response_extra_data(self):
+        str_json = json.dumps({
+            "jsonrpc": "2.0",
+            "id": 0,
+            "result": None,
+            "error": {"code": 1, "message": ""},
+            "extra-data": ""
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC20Response.from_json(str_json)
+
+    def test_from_json_response_result_null(self):
+        str_json = json.dumps({
+            "jsonrpc": "2.0",
+            "id": 0,
+            "result": None,
+        })
+
+        response = JSONRPC20Response.from_json(str_json)
+        self.assertIsInstance(response, JSONRPC20Response)
+        self.assertIsNone(response.result)
+        self.assertIsNone(response.error)
+        self.assertEqual(response._id, 0)
+
+    def test_from_json_response_result(self):
+        str_json = json.dumps({
+            "jsonrpc": "2.0",
+            "id": 0,
+            "result": [1, 2, 3],
+        })
+
+        response = JSONRPC20Response.from_json(str_json)
+        self.assertIsInstance(response, JSONRPC20Response)
+        self.assertEqual(response.result, [1, 2, 3])
+        self.assertIsNone(response.error)
+        self.assertEqual(response._id, 0)
+
+    def test_from_json_response_error(self):
+        err = JSONRPCParseError()
+        str_json = json.dumps({
+            "jsonrpc": "2.0",
+            "id": 0,
+            "error": err._data,
+        })
+
+        response = JSONRPC20Response.from_json(str_json)
+        self.assertIsInstance(response, JSONRPC20Response)
+        self.assertIsNone(response.result)
+        self.assertEqual(response.error, err._data)
+        self.assertEqual(response._id, 0)
 
 
 class TestJSONRPC20BatchResponse(unittest.TestCase):
