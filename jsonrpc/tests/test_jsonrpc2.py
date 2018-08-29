@@ -1,7 +1,7 @@
 import json
 import sys
 
-from ..exceptions import JSONRPCInvalidRequestException, JSONRPCInvalidResponseException, JSONRPCParseError
+from ..exceptions import JSONRPCInvalidRequestException, JSONRPCInvalidResponseException
 from ..jsonrpc2 import (
     JSONRPC20Request,
     JSONRPC20BatchRequest,
@@ -768,17 +768,17 @@ class TestJSONRPC20Response(unittest.TestCase):
         self.assertEqual(response._id, 0)
 
     def test_from_json_response_error(self):
-        err = JSONRPCParseError()
+        error = {'code': 1, 'message': ''}
         str_json = json.dumps({
             "jsonrpc": "2.0",
             "id": 0,
-            "error": err._data,
+            "error": error,
         })
 
         response = JSONRPC20Response.from_json(str_json)
         self.assertIsInstance(response, JSONRPC20Response)
         self.assertIsNone(response.result)
-        self.assertEqual(response.error, err._data)
+        self.assertEqual(response.error, error)
         self.assertEqual(response._id, 0)
 
 
