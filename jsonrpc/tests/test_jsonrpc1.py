@@ -1,7 +1,7 @@
 import json
 import sys
 
-from ..exceptions import JSONRPCInvalidRequestException
+from ..exceptions import JSONRPCInvalidRequestException, JSONRPCInvalidResponseException
 from ..jsonrpc1 import (
     JSONRPC10Request,
     JSONRPC10Response,
@@ -427,3 +427,85 @@ class TestJSONRPC10Response(unittest.TestCase):
     def test_validation_id(self):
         response = JSONRPC10Response(**self.response_success_params)
         self.assertEqual(response._id, self.response_success_params["_id"])
+
+    def test_from_json_invalid_response_result(self):
+        str_json = json.dumps({
+            "error": {"code": -32700, "message": "Parse error"},
+            "id": 0,
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC10Response.from_json(str_json)
+
+    def test_from_json_invalid_response_error(self):
+        str_json = json.dumps({
+            "result": "",
+            "id": 0,
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC10Response.from_json(str_json)
+
+    def test_from_json_invalid_response_id(self):
+        str_json = json.dumps({
+            "result": "",
+            "error": None,
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC10Response.from_json(str_json)
+
+    def test_from_json_invalid_response_both_result_and_error(self):
+        str_json = json.dumps({
+            "result": "",
+            "error": {"code": -32700, "message": "Parse error"},
+            "id": 0,
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC10Response.from_json(str_json)
+
+    def test_from_json_invalid_response_extra_data(self):
+        str_json = json.dumps({
+            "result": "",
+            "error": None,
+            "id": 0,
+            "is_notification": True,
+        })
+
+        with self.assertRaises(JSONRPCInvalidResponseException):
+            JSONRPC10Response.from_json(str_json)
+
+    def test_from_json_response_result(self):
+        str_json = json.dumps({
+            "result": "abc",
+            "error": None,
+            "id": 0,
+        })
+
+        response = JSONRPC10Response.from_json(str_json)
+        self.assertTrue(isinstance(response, JSONRPC10Response))
+        self.assertEqual(response.result, "abc")
+        self.assertIsNone(response.error)
+        self.assertEqual(response._id, 0)
+
+    def test_from_json_response_error(self):
+        error = {'code': 1, 'message': ''}
+        str_json = json.dumps({
+            "result": None,
+            "error": error,
+            "id": 0,
+        })
+
+        response = JSONRPC10Response.from_json(str_json)
+        self.assertTrue(isinstance(response, JSONRPC10Response))
+        self.assertIsNone(response.result)
+        self.assertEqual(response.error, error)
+        self.assertEqual(response._id, 0)
+
+    def test_from_json_string_not_dict(self):
+        with self.assertRaises(ValueError):
+            JSONRPC10Response.from_json("[]")
+
+        with self.assertRaises(ValueError):
+            JSONRPC10Response.from_json("0")

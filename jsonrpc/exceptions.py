@@ -172,6 +172,13 @@ class JSONRPCInvalidRequestException(JSONRPCException):
     pass
 
 
+class JSONRPCInvalidResponseException(JSONRPCException):
+
+    """ Response is not valid."""
+
+    pass
+
+
 class JSONRPCDispatchException(JSONRPCException):
 
     """ JSON-RPC Dispatch Exception.
