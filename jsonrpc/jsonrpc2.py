@@ -290,7 +290,7 @@ class JSONRPC20Response(JSONRPCBaseResponse):
                 missed = cls.REQUIRED_FIELDS - set(d.keys())
                 msg = "Invalid response. Extra fields: {0}, Missed fields: {1}"
                 raise JSONRPCInvalidResponseException(msg.format(extra, missed))
-            s = {'result', 'error'} & set(d.keys())
+            s = set(['result', 'error']) & set(d.keys())
             if len(s) != 1:
                 if len(s) == 2:
                     msg = "Invalid response. Either result or error may be present, not both."
