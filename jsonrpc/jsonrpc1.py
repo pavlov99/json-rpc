@@ -105,8 +105,8 @@ class JSONRPC10Request(JSONRPCBaseRequest):
 class JSONRPC10Response(JSONRPCBaseResponse):
 
     JSONRPC_VERSION = "1.0"
-    REQUIRED_FIELDS = {"id", "result", "error"}
-    POSSIBLE_FIELDS = {"id", "result", "error"}
+    REQUIRED_FIELDS = set(["id", "result", "error"])
+    POSSIBLE_FIELDS = set(["id", "result", "error"])
 
     @property
     def data(self):
