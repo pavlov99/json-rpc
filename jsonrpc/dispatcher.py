@@ -31,6 +31,7 @@ class Dispatcher(collections.MutableMapping):
         """
         self._decorators = []
         self.method_map = dict()
+        self._before_request_hooks = []
 
         if prototype is not None:
             self.build_method_map(prototype)
@@ -56,9 +57,15 @@ class Dispatcher(collections.MutableMapping):
     def register_decorator(self, a):
         self._decorators.extend(a if hasattr(a, '__iter__') else [a])
 
+    def before_request(self, hook):
+        self._before_request_hooks.append(hook)
+
     def _wrap_method(self, f):
         @wraps(f)
         def _method(*args, **kwargs):
+            for hook in self._before_request_hooks:
+                hook()
+
             nf = f
             for deco in reversed(self._decorators):
                 nf = deco(nf)
