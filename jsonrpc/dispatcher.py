@@ -32,6 +32,7 @@ class Dispatcher(collections.MutableMapping):
         self._decorators = []
         self.method_map = dict()
         self._before_request_hooks = []
+        self._error_handler_spec = {}
 
         if prototype is not None:
             self.build_method_map(prototype)
@@ -60,6 +61,12 @@ class Dispatcher(collections.MutableMapping):
     def before_request(self, hook):
         self._before_request_hooks.append(hook)
 
+    def errorhandler(self, exception):
+        def decorator(f):
+            self._error_handler_spec[exception] = f
+            return f
+        return decorator
+
     def _wrap_method(self, f):
         @wraps(f)
         def _method(*args, **kwargs):
@@ -69,7 +76,14 @@ class Dispatcher(collections.MutableMapping):
             nf = f
             for deco in reversed(self._decorators):
                 nf = deco(nf)
-            return nf(*args, **kwargs)
+
+            try:
+                return nf(*args, **kwargs)
+            except Exception as e:
+                for E, h in self._error_handler_spec.items():
+                    if isinstance(e, E):
+                        return h(e)
+                raise
 
         return _method
 
