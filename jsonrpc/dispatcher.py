@@ -70,14 +70,14 @@ class Dispatcher(collections.MutableMapping):
     def _wrap_method(self, f):
         @wraps(f)
         def _method(*args, **kwargs):
-            for hook in self._before_request_hooks:
-                hook()
-
-            nf = f
-            for deco in reversed(self._decorators):
-                nf = deco(nf)
-
             try:
+                for hook in self._before_request_hooks:
+                    hook()
+
+                nf = f
+                for deco in reversed(self._decorators):
+                    nf = deco(nf)
+
                 return nf(*args, **kwargs)
             except Exception as e:
                 for E, h in self._error_handler_spec.items():
