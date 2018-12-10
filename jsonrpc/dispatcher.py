@@ -3,7 +3,9 @@
 For usage examples see :meth:`Dispatcher.add_method`
 
 """
+from . import six
 import collections
+from functools import wraps
 
 
 class Dispatcher(collections.MutableMapping):
@@ -27,7 +29,10 @@ class Dispatcher(collections.MutableMapping):
         None
 
         """
+        self._decorators = []
         self.method_map = dict()
+        self._before_request_hooks = []
+        self._error_handler_spec = {}
 
         if prototype is not None:
             self.build_method_map(prototype)
@@ -36,7 +41,7 @@ class Dispatcher(collections.MutableMapping):
         return self.method_map[key]
 
     def __setitem__(self, key, value):
-        self.method_map[key] = value
+        self.method_map[key] = self._wrap_method(value)
 
     def __delitem__(self, key):
         del self.method_map[key]
@@ -50,9 +55,46 @@ class Dispatcher(collections.MutableMapping):
     def __repr__(self):
         return repr(self.method_map)
 
+    def register_decorator(self, a):
+        self._decorators.extend(a if hasattr(a, '__iter__') else [a])
+
+    def before_request(self, hook):
+        self._before_request_hooks.append(hook)
+
+    def errorhandler(self, exception):
+        def decorator(f):
+            self._error_handler_spec[exception] = f
+            return f
+        return decorator
+
+    def _wrap_method(self, f):
+        @wraps(f)
+        def _method(*args, **kwargs):
+            try:
+                for hook in self._before_request_hooks:
+                    hook()
+
+                nf = f
+                for deco in reversed(self._decorators):
+                    nf = deco(nf)
+
+                return nf(*args, **kwargs)
+            except Exception as e:
+                for E, h in self._error_handler_spec.items():
+                    if isinstance(e, E):
+                        return h(e)
+                raise
+
+        return _method
+
     def add_class(self, cls):
-        prefix = cls.__name__.lower() + '.'
+        if hasattr(cls, 'rpc_method_prefix'):
+            prefix = cls.rpc_method_prefix + '.'
+        else:
+            prefix = cls.__name__.lower() + '.'
         self.build_method_map(cls(), prefix)
+
+        return cls  # for working as decorator
 
     def add_object(self, obj):
         prefix = obj.__class__.__name__.lower() + '.'
@@ -93,8 +135,21 @@ class Dispatcher(collections.MutableMapping):
             def mymethod(*args, **kwargs):
                 print(args, kwargs)
 
+        >>> @d.add_method(name='MyMethod')
+            def mymethod(*args, **kwargs):
+                print(args, kwargs)
+
         """
-        self.method_map[name or f.__name__] = f
+        if isinstance(f, six.string_types):
+            name, f = f, name
+
+        if f is None:
+            # Be decorator generator
+            def _add_method(f):
+                return self.add_method(f, name)
+            return _add_method
+
+        self[name or f.__name__] = f
         return f
 
     def build_method_map(self, prototype, prefix=''):
@@ -112,10 +167,19 @@ class Dispatcher(collections.MutableMapping):
             Prefix of methods
 
         """
+        rpc_exports = getattr(prototype, 'rpc_exports', None)
+
+        def _should_export(method):
+            if method.startswith('_'):
+                return False
+            if rpc_exports is None:
+                return True
+            return method in rpc_exports
+
         if not isinstance(prototype, dict):
             prototype = dict((method, getattr(prototype, method))
                              for method in dir(prototype)
-                             if not method.startswith('_'))
+                             if _should_export(method))
 
         for attr, method in prototype.items():
             if callable(method):

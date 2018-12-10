@@ -19,7 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 class JSONRPCAPI(object):
-    def __init__(self, dispatcher=None, check_content_type=True):
+    def __init__(self, dispatcher=None, check_content_type=True,
+                 json_encoder=None):
         """
 
         :param dispatcher: methods dispatcher
@@ -31,6 +32,7 @@ class JSONRPCAPI(object):
         self.dispatcher = dispatcher if dispatcher is not None \
             else Dispatcher()
         self.check_content_type = check_content_type
+        self.json_encoder = json_encoder or DatetimeDecimalEncoder
 
     def as_blueprint(self, name=None):
         blueprint = Blueprint(name if name else str(uuid4()), __name__)
@@ -83,9 +85,9 @@ class JSONRPCAPI(object):
             return request.data
         return list(request.form.keys())[0]
 
-    @staticmethod
-    def _serialize(s):
-        return json.dumps(s, cls=DatetimeDecimalEncoder)
+    # @staticmethod
+    def _serialize(self, s):
+        return json.dumps(s, cls=self.json_encoder)
 
 
 api = JSONRPCAPI()

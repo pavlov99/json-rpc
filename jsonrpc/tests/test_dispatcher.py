@@ -90,10 +90,10 @@ class TestDispatcher(unittest.TestCase):
         d = Dispatcher()
 
         def func():
-            return ""
+            return "x"
 
         d["method"] = func
-        self.assertEqual(dict(d), {"method": func})
+        self.assertEqual(dict(d)["method"](), "x")
 
     def test_init_from_object_instance(self):
 
