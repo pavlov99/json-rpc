@@ -5,8 +5,8 @@ json-rpc
     :target: https://circleci.com/gh/pavlov99/json-rpc/tree/master
     :alt: Build Status
 
-.. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png?branch=master
-    :target: https://coveralls.io/r/pavlov99/json-rpc?branch=master
+.. image:: https://codecov.io/gh/pavlov99/json-rpc/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/pavlov99/json-rpc
     :alt: Coverage Status
 
 .. image:: https://readthedocs.org/projects/json-rpc/badge/?version=latest
