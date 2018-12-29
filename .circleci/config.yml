@@ -50,3 +50,5 @@ jobs:
     <<: *test-template
   cov:
     <<: *test-template
+    environment:
+      COVERALLS_REPO_TOKEN: 1H5cGcbtpJbkoe6SI3jwWtiqmJtlt2QAy
