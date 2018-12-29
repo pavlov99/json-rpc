@@ -11,6 +11,7 @@ def read(fname):
     except IOError:
         return ""
 
+
 setup_requires = ["pytest-runner"] \
     if {'pytest', 'test'}.intersection(sys.argv) \
     else []

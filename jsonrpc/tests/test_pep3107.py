@@ -9,7 +9,7 @@ else:
 
 
 class TestJSONRPCResponseManager(unittest.TestCase):
-    @unittest.skipIf(sys.version_info < (3, 5), "Test Python3.5+ functionality")
+    @unittest.skipIf(sys.version_info < (3, 5), "Test Py3.5+ functionality")
     def test_typeerror_with_annotations(self):
         """If a function has Python3 annotations and is called with improper
         arguments, make sure the framework doesn't fail with inspect.getargspec
