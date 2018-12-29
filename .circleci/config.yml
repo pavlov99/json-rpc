@@ -1,0 +1,27 @@
+version: 2
+workflows:
+  version: 2
+  test:
+    jobs:
+      - py36
+      - py27
+jobs:
+  py36: &test-template
+    docker:
+      - image: circleci/python:3.6-jessie
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install test dependencies
+          command: |
+            python -m venv venv || virtualenv venv
+            venv/bin/pip install tox
+      - run:
+          name: Run tests
+          command: |
+            tox -e $CIRCLE_JOB
+  py27:
+    <<: *test-template
+    docker:
+      - image: circleci/python:2.7-jessie
