@@ -61,7 +61,7 @@ This is an essential part of the library as there are a lot of edge cases in JSO
 
 Continuous integration
 ^^^^^^^^^^^^^^^^^^^^^^
-This project uses `Travis <https://travis-ci.org/>`_ for continuous integration. All of the python supported versions are managed via `tox.ini` and `.travis.yml` files. Only master and develop branches are tested. Master branch test status is displayed on the badge in the beginning of this document.
+This project uses `CircleCI <https://circleci.com/>`_ for continuous integration. All of the python supported versions are managed via `tox.ini` and `.circleci/config.yml` files. Master branch test status is displayed on the badge in the beginning of this document.
 
 Test matrix
 ^^^^^^^^^^^
