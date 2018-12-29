@@ -5,15 +5,16 @@ json-rpc
     :target: https://travis-ci.org/pavlov99/json-rpc?branch=master
     :alt: Build Status
 
+.. image:: https://circleci.com/gh/pavlov99/json-rpc/tree/master.svg?style=svg
+    :target: https://circleci.com/gh/pavlov99/json-rpc/tree/master
+    :alt: Build Status
+
 .. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png?branch=master
     :target: https://coveralls.io/r/pavlov99/json-rpc?branch=master
     :alt: Coverage Status
 
 .. image:: https://readthedocs.org/projects/json-rpc/badge/?version=latest
     :target: http://json-rpc.readthedocs.io/en/latest/?badge=latest
-
-.. image:: https://www.codacy.com/project/badge/34e0c2c696214041ae4fd5cfcb4af401
-    :target: https://www.codacy.com/app/pavlov99/json-rpc
 
 .. image:: https://img.shields.io/pypi/v/json-rpc.svg
     :target: https://pypi.org/project/json-rpc/
