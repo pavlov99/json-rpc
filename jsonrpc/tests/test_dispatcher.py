@@ -43,6 +43,17 @@ class TestDispatcher(unittest.TestCase):
         self.assertIn("add", d)
         self.assertEqual(d["add"](1, 1), 2)
 
+    def test_add_method_with_name(self):
+        d = Dispatcher()
+
+        @d.add_method(name="this.add")
+        def add(x, y):
+            return x + y
+
+        self.assertNotIn("add", d)
+        self.assertIn("this.add", d)
+        self.assertEqual(d["this.add"](1, 1), 2)
+
     def test_add_class(self):
         d = Dispatcher()
         d.add_class(Math)
