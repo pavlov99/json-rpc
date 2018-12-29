@@ -51,4 +51,4 @@ jobs:
   cov:
     <<: *test-template
     environment:
-      COVERALLS_REPO_TOKEN: 1H5cGcbtpJbkoe6SI3jwWtiqmJtlt2QAy
+      CODECOV_TOKEN: db4c9cc4-799b-49b0-ab9a-51dde80fb946
