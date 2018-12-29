@@ -3,12 +3,17 @@ workflows:
   version: 2
   test:
     jobs:
-      - py36
       - py27
+      - py34
+      - py35
+      - py36
+      - py37
+      - pycodestyle
+      - cov
 jobs:
   py36: &test-template
     docker:
-      - image: circleci/python:3.6-jessie
+      - image: circleci/python:3.6
     working_directory: ~/repo
     steps:
       - checkout
@@ -20,8 +25,28 @@ jobs:
       - run:
           name: Run tests
           command: |
-            tox -e $CIRCLE_JOB
+            venv/bin/tox -e $CIRCLE_JOB
   py27:
     <<: *test-template
     docker:
-      - image: circleci/python:2.7-jessie
+      - image: circleci/python:2.7
+  py33:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.3
+  py34:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.4
+  py35:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.5
+  py37:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.7
+  pycodestyle:
+    <<: *test-template
+  cov:
+    <<: *test-template
