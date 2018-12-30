@@ -1,7 +1,7 @@
 Integration with Django
 =======================
 
-.. note:: Django backend is optionaly supported. Library itself does not depend on Django.
+.. note:: Django backend is optionally supported. Library itself does not depend on Django.
 
 Django integration is similar project to project. Starting from version 1.8.4 json-rpc support it and provides convenient way of integration. To add json-rpc to Django project follow steps.
 
