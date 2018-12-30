@@ -103,6 +103,7 @@ class JSONRPCResponseManager(object):
                 response.request = request
                 return response
 
+            output = None
             try:
                 method = dispatcher[request.method]
             except KeyError:
