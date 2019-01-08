@@ -10,3 +10,4 @@ omit=
     jsonrpc/tests/*
 exclude_lines=
     raise NotImplementedError()
+    def is_invalid_params_py2
