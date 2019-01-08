@@ -50,3 +50,15 @@ jobs:
     <<: *test-template
   cov:
     <<: *test-template
+    steps:
+      - checkout
+      - run:
+          name: Install test dependencies
+          command: |
+            python -m venv venv || virtualenv venv
+            venv/bin/pip install tox
+      - run:
+          name: Generate coverage report
+          command: |
+            venv/bin/tox -e $CIRCLE_JOB
+            .tox/cov/bin/codecov --token db4c9cc4-799b-49b0-ab9a-51dde80fb946
