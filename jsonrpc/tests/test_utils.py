@@ -120,3 +120,11 @@ class TestUtils(unittest.TestCase):
         self.assertFalse(is_invalid_params(lambda a, b: None, 0, **{"b": 1}))
         self.assertFalse(is_invalid_params(
             lambda a, b, c=0: None, 0, **{"b": 1}))
+
+    def test_is_invalid_params_py2(self):
+        with patch('jsonrpc.utils.sys') as mock_sys:
+            mock_sys.version_info = (2, 7)
+            with patch('jsonrpc.utils.is_invalid_params_py2') as mock_func:
+                is_invalid_params(lambda a: None, 0)
+
+        assert mock_func.call_count == 1
