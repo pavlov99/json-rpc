@@ -98,18 +98,25 @@ class TestUtils(unittest.TestCase):
 
     def test_is_invalid_params_builtin(self):
         self.assertTrue(is_invalid_params(sum, 0, 0))
-        # NOTE: Function generates TypeError already
-        # self.assertFalse(is_invalid_params(sum, [0, 0]))
+        # NOTE: builtin functions could not be recognized by inspect.isfunction
+        # It would raise TypeError if parameters are incorrect already.
+        # self.assertFalse(is_invalid_params(sum, [0, 0]))  # <- fails
 
     def test_is_invalid_params_args(self):
         self.assertTrue(is_invalid_params(lambda a, b: None, 0))
         self.assertTrue(is_invalid_params(lambda a, b: None, 0, 1, 2))
 
     def test_is_invalid_params_kwargs(self):
-        self.assertTrue(is_invalid_params(lambda x: None, **{}))
-        self.assertTrue(is_invalid_params(lambda x: None, **{"x": 0, "y": 1}))
+        self.assertTrue(is_invalid_params(lambda a: None, **{}))
+        self.assertTrue(is_invalid_params(lambda a: None, **{"a": 0, "b": 1}))
 
     def test_invalid_params_correct(self):
-        # self.assertFalse(is_invalid_params(lambda: None))
+        self.assertFalse(is_invalid_params(lambda: None))
         self.assertFalse(is_invalid_params(lambda a: None, 0))
         self.assertFalse(is_invalid_params(lambda a, b=0: None, 0))
+        self.assertFalse(is_invalid_params(lambda a, b=0: None, 0, 0))
+
+    def test_is_invalid_params_mixed(self):
+        self.assertFalse(is_invalid_params(lambda a, b: None, 0, **{"b": 1}))
+        self.assertFalse(is_invalid_params(
+            lambda a, b, c=0: None, 0, **{"b": 1}))
