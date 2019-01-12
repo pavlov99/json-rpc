@@ -1,3 +1,17 @@
+2019-01-12  Kirill Pavlov <k@p99.io>
+
+	* ADD: Ability to override function name with decorator convention in
+	dispatcher
+	* REF: Improve function parameter introspection: use more stable
+	approach for python3, allow both args and kwards parameters check at
+	the same time.
+	* TST: Switch from nose and nose2 to pytest
+	* TST: Switch from Travis CI to CircleCI, test py26-py37
+	* TST: Switch from coveralls to codecov service
+	* DEL: Remove Flask logging (it broke batch requests)
+	* DEL: Clean Makefile shortcuts, remove unused ones
+	* DOC: Add opencollective badge
+
 2018-08-26  Kirill Pavlov <k@p99.io>
 
 	* Add license file to the dist/
