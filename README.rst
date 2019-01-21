@@ -24,7 +24,6 @@ json-rpc
     :target: https://gitter.im/pavlov99/json-rpc
     :alt: Gitter
 
-
 .. image:: https://opencollective.com/json-rpc/tiers/backer/badge.svg?label=backer&color=brightgreen
     :target: https://opencollective.com/json-rpc
     :alt: Bakers
@@ -161,3 +160,38 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 Competitors
 -----------
 There are `several libraries <http://en.wikipedia.org/wiki/JSON-RPC#Implementations>`_ implementing JSON-RPC protocol. List below represents python libraries, none of the supports python3. tinyrpc looks better than others.
+
+Credits
++++++++
+
+Contributors
+------------
+
+This project exists thanks to all the people who contribute! 
+
+.. image:: https://opencollective.com/json-rpc/contributors.svg?width=890&button=false
+
+Backers
+-------
+
+Thank you to all our backers! `Become a backer`__.
+
+.. image:: https://opencollective.com/json-rpc/backers.svg?width=890
+    :target: https://opencollective.com/json-rpc#backers
+
+__ Backer_
+
+.. _Backer: https://opencollective.com/json-rpc#backer
+
+Sponsors
+--------
+
+Support us by becoming a sponsor. Your logo will show up here with a link to your website. `Become a sponsor`__.
+
+.. image:: https://opencollective.com/json-rpc/sponsor/0/avatar.svg
+    :target: https://opencollective.com/json-rpc/sponsor/0/website
+
+__ Sponsor_
+.. _Sponsor: https://opencollective.com/json-rpc#sponsor
+
+
