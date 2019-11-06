@@ -4,10 +4,13 @@ For usage examples see :meth:`Dispatcher.add_method`
 
 """
 import functools
-import collections
+try:
+    from collections.abc import MutableMapping
+except ImportError:
+    from collections import MutableMapping
 
 
-class Dispatcher(collections.MutableMapping):
+class Dispatcher(MutableMapping):
 
     """ Dictionary like object which maps method_name to method."""
 
