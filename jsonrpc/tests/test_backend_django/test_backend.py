@@ -44,6 +44,26 @@ class TestDjangoBackend(TestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['result'], '')
 
+    def test_positional_args(self):
+        @api.dispatcher.add_method
+        def positional_args(request, name):
+            return name
+
+        json_data = {
+            "id": "0",
+            "jsonrpc": "2.0",
+            "method": "positional_args",
+            "params": ["echome!"],
+        }
+        response = self.client.post(
+            '',
+            json.dumps(json_data),
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['result'], json_data['params'][0])
+
     def test_method_not_allowed(self):
         response = self.client.get(
             '',
