@@ -139,7 +139,6 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 
     def main():
         url = "http://localhost:4000/jsonrpc"
-        headers = {'content-type': 'application/json'}
 
         # Example echo method
         payload = {
@@ -148,8 +147,7 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
             "jsonrpc": "2.0",
             "id": 0,
         }
-        response = requests.post(
-            url, data=json.dumps(payload), headers=headers).json()
+        response = requests.post(url, json=payload).json()
 
         assert response["result"] == "echome!"
         assert response["jsonrpc"]
