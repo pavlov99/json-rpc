@@ -59,6 +59,8 @@ class JSONRPCAPI(object):
             jsonrpc_request_params = copy.copy(jsonrpc_request.params)
             if isinstance(jsonrpc_request.params, dict):
                 jsonrpc_request.params.update(request=request)
+            if isinstance(jsonrpc_request.params, list):
+                jsonrpc_request.params.insert(0, request)
 
             t1 = time.time()
             response = JSONRPCResponseManager.handle_request(

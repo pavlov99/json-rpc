@@ -94,6 +94,7 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertIn(response.error["data"]["message"], [
             'sum() takes no keyword arguments',
             "sum() got an unexpected keyword argument 'a'",
+            'sum() takes at least 1 positional argument (0 given)',
         ])
 
     def test_invalid_params_custom_function(self):

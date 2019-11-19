@@ -1,19 +1,16 @@
 json-rpc
 ========
 
-.. image:: https://travis-ci.org/pavlov99/json-rpc.png?branch=master
-    :target: https://travis-ci.org/pavlov99/json-rpc?branch=master
+.. image:: https://circleci.com/gh/pavlov99/json-rpc/tree/master.svg?style=svg
+    :target: https://circleci.com/gh/pavlov99/json-rpc/tree/master
     :alt: Build Status
 
-.. image:: https://coveralls.io/repos/pavlov99/json-rpc/badge.png?branch=master
-    :target: https://coveralls.io/r/pavlov99/json-rpc?branch=master
+.. image:: https://codecov.io/gh/pavlov99/json-rpc/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/pavlov99/json-rpc
     :alt: Coverage Status
 
 .. image:: https://readthedocs.org/projects/json-rpc/badge/?version=latest
     :target: http://json-rpc.readthedocs.io/en/latest/?badge=latest
-
-.. image:: https://www.codacy.com/project/badge/34e0c2c696214041ae4fd5cfcb4af401
-    :target: https://www.codacy.com/app/pavlov99/json-rpc
 
 .. image:: https://img.shields.io/pypi/v/json-rpc.svg
     :target: https://pypi.org/project/json-rpc/
@@ -26,6 +23,15 @@ json-rpc
 .. image:: https://badges.gitter.im/pavlov99/json-rpc.svg
     :target: https://gitter.im/pavlov99/json-rpc
     :alt: Gitter
+
+
+.. image:: https://opencollective.com/json-rpc/tiers/backer/badge.svg?label=backer&color=brightgreen
+    :target: https://opencollective.com/json-rpc
+    :alt: Bakers
+
+.. image:: https://opencollective.com/json-rpc/tiers/backer/badge.svg?label=sponsor&color=brightgreen
+    :target: https://opencollective.com/json-rpc
+    :alt: Sponsors
 
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation.
 Supports Python 2.6+, Python 3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
@@ -64,7 +70,7 @@ This is an essential part of the library as there are a lot of edge cases in JSO
 
 Continuous integration
 ^^^^^^^^^^^^^^^^^^^^^^
-This project uses `Travis <https://travis-ci.org/>`_ for continuous integration. All of the python supported versions are managed via `tox.ini` and `.travis.yml` files. Only master and develop branches are tested. Master branch test status is displayed on the badge in the beginning of this document.
+This project uses `CircleCI <https://circleci.com/>`_ for continuous integration. All of the python supported versions are managed via `tox.ini` and `.circleci/config.yml` files. Master branch test status is displayed on the badge in the beginning of this document.
 
 Test matrix
 ^^^^^^^^^^^
@@ -72,25 +78,25 @@ json-rpc supports multiple python versions: 2.6+, 3.3+, pypy. This introduces di
 
 Below is a testing matrix:
 
-+--------+-------+-------+-----------+--------+--------+
-| Python | Tests | mock  | unittest  | Django | Flask  |
-+========+=======+=======+===========+========+========+
-| 2.6    | nose  | 2.0.0 | unittest2 | 1.6    | 0.12.2 |
-+--------+-------+-------+-----------+--------+--------+
-| 2.7    | nose2 | 2.0.0 |           | 1.11   | 0.12.2 |
-+--------+-------+-------+-----------+--------+--------+
-| 3.3    | nose2 |       |           | 1.11   | 0.12.2 |
-+--------+-------+-------+-----------+--------+--------+
-| 3.4    | nose2 |       |           | 1.11   | 0.12.2 |
-+--------+-------+-------+-----------+--------+--------+
-| 3.5    | nose2 |       |           | 1.11   | 0.12.2 |
-+--------+-------+-------+-----------+--------+--------+
-| 3.6    | nose2 |       |           | 1.11   | 0.12.2 |
-+--------+-------+-------+-----------+--------+--------+
-| pypy   | nose2 | 2.0.0 |           | 1.11   | 0.12.2 |
-+--------+-------+-------+-----------+--------+--------+
-| pypy3  | nose2 |       |           | 1.11   | 0.12.2 |
-+--------+-------+-------+-----------+--------+--------+
++--------+-------+-----------+--------+--------+
+| Python | mock  | unittest  | Django | Flask  |
++========+=======+===========+========+========+
+| 2.6    | 2.0.0 | unittest2 | 1.6    | 0.12.2 |
++--------+-------+-----------+--------+--------+
+| 2.7    | 2.0.0 |           | 1.11   | 0.12.2 |
++--------+-------+-----------+--------+--------+
+| 3.3    |       |           | 1.11   | 0.12.2 |
++--------+-------+-----------+--------+--------+
+| 3.4    |       |           | 1.11   | 0.12.2 |
++--------+-------+-----------+--------+--------+
+| 3.5    |       |           | 1.11   | 0.12.2 |
++--------+-------+-----------+--------+--------+
+| 3.6    |       |           | 1.11   | 0.12.2 |
++--------+-------+-----------+--------+--------+
+| pypy   | 2.0.0 |           | 1.11   | 0.12.2 |
++--------+-------+-----------+--------+--------+
+| pypy3  |       |           | 1.11   | 0.12.2 |
++--------+-------+-----------+--------+--------+
 
 Quickstart
 ----------
@@ -133,7 +139,6 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
 
     def main():
         url = "http://localhost:4000/jsonrpc"
-        headers = {'content-type': 'application/json'}
 
         # Example echo method
         payload = {
@@ -142,8 +147,7 @@ Client (uses `requests <http://www.python-requests.org/en/latest/>`_)
             "jsonrpc": "2.0",
             "id": 0,
         }
-        response = requests.post(
-            url, data=json.dumps(payload), headers=headers).json()
+        response = requests.post(url, json=payload).json()
 
         assert response["result"] == "echome!"
         assert response["jsonrpc"]

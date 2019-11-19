@@ -1,16 +1,8 @@
 #!/usr/bin/env python
-import os
+import os.path
+import sys
 from setuptools import setup, find_packages
 from jsonrpc import version
-#
-# Import multiprocessing to prevent test run problem. In case of nosetests
-# (not nose2) there is probles, for details see:
-# https://groups.google.com/forum/#!msg/nose-users/fnJ-kAUbYHQ/_UsLN786ygcJ
-# http://bugs.python.org/issue15881#msg170215w
-try:
-    import multiprocessing
-except ImportError:
-    pass
 
 
 def read(fname):
@@ -19,13 +11,15 @@ def read(fname):
     except IOError:
         return ""
 
+
+setup_requires = ["pytest-runner"] if sys.argv in ['pytest', 'test'] else []
+
 setup(
     name="json-rpc",
     version=version,
     packages=find_packages(),
-    # test_suite="nose2.collector.collector",
-    test_suite="nose.collector",
-    tests_require=["nose", "mock"],
+    setup_requires=setup_requires,
+    tests_require=["pytest"],
 
     # metadata for upload to PyPI
     author="Kirill Pavlov",
@@ -48,6 +42,8 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],

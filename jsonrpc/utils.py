@@ -4,6 +4,7 @@ import datetime
 import decimal
 import inspect
 import json
+import sys
 
 from . import six
 
@@ -53,7 +54,7 @@ class DatetimeDecimalEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-def is_invalid_params(func, *args, **kwargs):
+def is_invalid_params_py2(func, *args, **kwargs):
     """ Check, whether function 'func' accepts parameters 'args', 'kwargs'.
 
     NOTE: Method is called after funct(*args, **kwargs) generated TypeError,
@@ -63,26 +64,72 @@ def is_invalid_params(func, *args, **kwargs):
     .. versionadded: 1.9.0
 
     """
+    funcargs, varargs, varkwargs, defaults = inspect.getargspec(func)
+
+    unexpected = set(kwargs.keys()) - set(funcargs)
+    if len(unexpected) > 0:
+        return True
+
+    params = [funcarg for funcarg in funcargs if funcarg not in kwargs]
+    funcargs_required = funcargs[:-len(defaults)] \
+        if defaults is not None \
+        else funcargs
+    params_required = [
+        funcarg for funcarg in funcargs_required
+        if funcarg not in kwargs
+    ]
+
+    return not (len(params_required) <= len(args) <= len(params))
+
+
+def is_invalid_params_py3(func, *args, **kwargs):
+    """
+    Use inspect.signature instead of inspect.getargspec or
+    inspect.getfullargspec (based on inspect.signature itself) as it provides
+    more information about function parameters.
+
+    .. versionadded: 1.11.2
+
+    """
+    signature = inspect.signature(func)
+    parameters = signature.parameters
+
+    unexpected = set(kwargs.keys()) - set(parameters.keys())
+    if len(unexpected) > 0:
+        return True
+
+    params = [
+        parameter for name, parameter in parameters.items()
+        if name not in kwargs
+    ]
+    params_required = [
+        param for param in params
+        if param.default is param.empty
+    ]
+
+    return not (len(params_required) <= len(args) <= len(params))
+
+
+def is_invalid_params(func, *args, **kwargs):
+    """
+    Method:
+        Validate pre-defined criteria, if any is True - function is invalid
+        0. func should be callable
+        1. kwargs should not have unexpected keywords
+        2. remove kwargs.keys from func.parameters
+        3. number of args should be <= remaining func.parameters
+        4. number of args should be >= remaining func.parameters less default
+    """
     # For builtin functions inspect.getargspec(funct) return error. If builtin
     # function generates TypeError, it is because of wrong parameters.
     if not inspect.isfunction(func):
         return True
 
-    try:
-        funcargs, varargs, varkwargs, defaults = inspect.getargspec(func)
-    except ValueError:
-        argspec = inspect.getfullargspec(func)
-        funcargs, varargs, varkwargs, defaults = argspec[:4]
-
-    if defaults:
-        funcargs = funcargs[:-len(defaults)]
-
-    if args and len(args) != len(funcargs):
-            return True
-    if kwargs and set(kwargs.keys()) != set(funcargs):
-        return True
-
-    if not args and not kwargs and funcargs:
-        return True
-
-    return False
+    if sys.version_info >= (3, 3):
+        return is_invalid_params_py3(func, *args, **kwargs)
+    else:
+        # NOTE: use Python2 method for Python 3.2 as well. Starting from Python
+        # 3.3 it is recommended to use inspect.signature instead.
+        # In Python 3.0 - 3.2 inspect.getfullargspec is preferred but these
+        # versions are almost not supported. Users should consider upgrading.
+        return is_invalid_params_py2(func, *args, **kwargs)

@@ -3,10 +3,14 @@
 For usage examples see :meth:`Dispatcher.add_method`
 
 """
-import collections
+import functools
+try:
+    from collections.abc import MutableMapping
+except ImportError:
+    from collections import MutableMapping
 
 
-class Dispatcher(collections.MutableMapping):
+class Dispatcher(MutableMapping):
 
     """ Dictionary like object which maps method_name to method."""
 
@@ -63,7 +67,7 @@ class Dispatcher(collections.MutableMapping):
             prefix += '.'
         self.build_method_map(dict, prefix)
 
-    def add_method(self, f, name=None):
+    def add_method(self, f=None, name=None):
         """ Add a method to the dispatcher.
 
         Parameters
@@ -93,7 +97,16 @@ class Dispatcher(collections.MutableMapping):
             def mymethod(*args, **kwargs):
                 print(args, kwargs)
 
+        Or use as a decorator with a different function name
+        >>> d = Dispatcher()
+        >>> @d.add_method(name="my.method")
+            def mymethod(*args, **kwargs):
+                print(args, kwargs)
+
         """
+        if name and not f:
+            return functools.partial(self.add_method, name=name)
+
         self.method_map[name or f.__name__] = f
         return f
 
