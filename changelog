@@ -1,3 +1,7 @@
+2020-01-06  Kirill Pavlov <k@p99.io>
+
+	* FIX: positional arguments support for Django backend
+
 2019-10-17  Kirill Pavlov <k@p99.io>
 
 	* ADD: python3.8 support
