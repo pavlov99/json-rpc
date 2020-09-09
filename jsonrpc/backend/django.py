@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf.urls import url
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed
-import copy
 import json
 import logging
 import time
@@ -45,6 +44,14 @@ class JSONRPCAPI(object):
     @csrf_exempt
     def jsonrpc(self, request):
         """ JSON-RPC 2.0 handler."""
+
+        def inject_request(jsonrpc_request):
+            jsonrpc_request.params = jsonrpc_request.params or {}
+            if isinstance(jsonrpc_request.params, dict):
+                jsonrpc_request.params.update(request=request)
+            if isinstance(jsonrpc_request.params, list):
+                jsonrpc_request.params.insert(0, request)
+
         if request.method != "POST":
             return HttpResponseNotAllowed(["POST"])
 
@@ -55,19 +62,16 @@ class JSONRPCAPI(object):
             response = JSONRPCResponseManager.handle(
                 request_str, self.dispatcher)
         else:
-            jsonrpc_request.params = jsonrpc_request.params or {}
-            jsonrpc_request_params = copy.copy(jsonrpc_request.params)
-            if isinstance(jsonrpc_request.params, dict):
-                jsonrpc_request.params.update(request=request)
-            if isinstance(jsonrpc_request.params, list):
-                jsonrpc_request.params.insert(0, request)
+            requests = getattr(jsonrpc_request, 'requests', [jsonrpc_request])
+            for jsonrpc_req in requests:
+                inject_request(jsonrpc_req)
 
             t1 = time.time()
             response = JSONRPCResponseManager.handle_request(
                 jsonrpc_request, self.dispatcher)
             t2 = time.time()
-            logger.info('{0}({1}) {2:.2f} sec'.format(
-                jsonrpc_request.method, jsonrpc_request_params, t2 - t1))
+            logger.info('{0} {1:.2f} sec'.format(
+                [r.method for r in requests], t2 - t1))
 
         if response:
             response.serialize = response_serialize
