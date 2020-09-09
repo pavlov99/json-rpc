@@ -66,12 +66,8 @@ class JSONRPCAPI(object):
             for jsonrpc_req in requests:
                 inject_request(jsonrpc_req)
 
-            t1 = time.time()
             response = JSONRPCResponseManager.handle_request(
                 jsonrpc_request, self.dispatcher)
-            t2 = time.time()
-            logger.info('{0} {1:.2f} sec'.format(
-                [r.method for r in requests], t2 - t1))
 
         if response:
             response.serialize = response_serialize
