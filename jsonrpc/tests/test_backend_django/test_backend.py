@@ -107,3 +107,29 @@ class TestDjangoBackend(TestCase):
         custom_api = JSONRPCAPI(custom_dispatcher)
         self.assertEqual(type(custom_api.dispatcher), SubDispatcher)
         self.assertEqual(id(custom_api.dispatcher), id(custom_dispatcher))
+
+    def test_batch_request(self):
+        @api.dispatcher.add_method
+        def upper(request, name):
+            return name.upper()
+
+        json_data = [{
+            "id": "0",
+            "jsonrpc": "2.0",
+            "method": "upper",
+            "params": ["hello"],
+        }, {
+            "id": "1",
+            "jsonrpc": "2.0",
+            "method": "upper",
+            "params": ["world"],
+        }]
+        response = self.client.post(
+            '',
+            json.dumps(json_data),
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data), len(json_data))
+        self.assertEqual(data[0]['result'], json_data[0]['params'][0].upper())
