@@ -45,6 +45,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
     JSONRPC_VERSION = "2.0"
     REQUIRED_FIELDS = set(["jsonrpc", "method"])
     POSSIBLE_FIELDS = set(["jsonrpc", "method", "params", "id"])
+    CUSTOM_RPC_INTERNALS = set(["rpc.discover"])
 
     @property
     def data(self):
@@ -71,7 +72,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
         if not isinstance(value, six.string_types):
             raise ValueError("Method should be string")
 
-        if value.startswith("rpc."):
+        if value.startswith("rpc.") and value not in self.CUSTOM_RPC_INTERNALS:
             raise ValueError(
                 "Method names that begin with the word rpc followed by a " +
                 "period character (U+002E or ASCII 46) are reserved for " +
