@@ -1,5 +1,6 @@
 import sys
 
+from ..dispatcher import Dispatcher
 from ..manager import JSONRPCResponseManager
 from ..jsonrpc2 import (
     JSONRPC20BatchRequest,
@@ -27,18 +28,21 @@ class TestJSONRPCResponseManager(unittest.TestCase):
             raise e
 
         self.long_time_method = MagicMock()
-        self.dispatcher = {
-            "add": sum,
-            "multiply": lambda a, b: a * b,
-            "list_len": len,
-            "101_base": lambda **kwargs: int("101", **kwargs),
-            "error": lambda: raise_(KeyError("error_explanation")),
-            "type_error": lambda: raise_(TypeError("TypeError inside method")),
-            "long_time_method": self.long_time_method,
-            "dispatch_error": lambda x: raise_(
-                JSONRPCDispatchException(code=4000, message="error",
-                                         data={"param": 1})),
-        }
+        self.dispatcher = Dispatcher()
+        self.dispatcher["add"] = sum
+        self.dispatcher["multiply"] = lambda a, b: a * b
+        self.dispatcher["list_len"] = len
+        self.dispatcher["101_base"] = lambda **kwargs: int("101", **kwargs)
+        self.dispatcher["error"] = lambda: raise_(KeyError("error_explanation"))
+        self.dispatcher["type_error"] = lambda: raise_(TypeError("TypeError inside method"))
+        self.dispatcher["long_time_method"] = self.long_time_method
+        self.dispatcher["dispatch_error"] = lambda x: raise_(
+            JSONRPCDispatchException(code=4000, message="error",
+                                     data={"param": 1}))
+
+        @self.dispatcher.add_method(context_arg="context")
+        def return_json_rpc_id(context):
+            return context["id"]
 
     def test_dispatch_error(self):
         request = JSONRPC20Request("dispatch_error", ["test"], _id=0)
@@ -174,3 +178,8 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertTrue(isinstance(response, JSONRPC20Response))
         self.assertEqual(response.error["message"], "Invalid params")
         self.assertEqual(response.error["code"], -32602)
+
+    def test_setting_json_rpc_id_in_context(self):
+        request = JSONRPC20Request("return_json_rpc_id", _id=42)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        self.assertEqual(response.data["result"], 42)
