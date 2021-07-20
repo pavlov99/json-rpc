@@ -54,6 +54,16 @@ class TestDispatcher(unittest.TestCase):
         self.assertIn("this.add", d)
         self.assertEqual(d["this.add"](1, 1), 2)
 
+    def test_add_method_with_context(self):
+        d = Dispatcher()
+
+        @d.add_method(context_arg="context")
+        def x_plus_id(x, context):
+            return x + context["id"]
+
+        d.update_context({"id": 3})
+        self.assertEqual(d["x_plus_id"](2), 5)
+
     def test_add_class(self):
         d = Dispatcher()
         d.add_class(Math)

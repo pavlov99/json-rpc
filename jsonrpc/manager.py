@@ -105,6 +105,7 @@ class JSONRPCResponseManager(object):
 
             output = None
             try:
+                dispatcher.update_context({"id": request._id})
                 method = dispatcher[request.method]
             except KeyError:
                 output = make_response(error=JSONRPCMethodNotFound()._data)
