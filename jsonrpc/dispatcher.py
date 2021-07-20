@@ -32,18 +32,26 @@ class Dispatcher(MutableMapping):
 
         """
         self.method_map = dict()
+        self.context_arg_for_method = dict()
+        self.context = dict()
 
         if prototype is not None:
             self.build_method_map(prototype)
 
     def __getitem__(self, key):
-        return self.method_map[key]
+        method = self.method_map[key]
+        if key in self.context_arg_for_method:
+            return functools.partial(
+                method,
+                **{self.context_arg_for_method[key]: self.context})
+        return method
 
     def __setitem__(self, key, value):
         self.method_map[key] = value
 
     def __delitem__(self, key):
         del self.method_map[key]
+        self.context_arg_for_method.pop(key, None)
 
     def __len__(self):
         return len(self.method_map)
@@ -67,7 +75,7 @@ class Dispatcher(MutableMapping):
             prefix += '.'
         self.build_method_map(dict, prefix)
 
-    def add_method(self, f=None, name=None):
+    def add_method(self, f=None, name=None, context_arg=None):
         """ Add a method to the dispatcher.
 
         Parameters
@@ -76,6 +84,8 @@ class Dispatcher(MutableMapping):
             Callable to be added.
         name : str, optional
             Name to register (the default is function **f** name)
+        context_arg : str, optional
+            Name to specify the function's argument which will receive context data
 
         Notes
         -----
@@ -103,11 +113,24 @@ class Dispatcher(MutableMapping):
             def mymethod(*args, **kwargs):
                 print(args, kwargs)
 
-        """
-        if name and not f:
-            return functools.partial(self.add_method, name=name)
+        Or use as a decorator such that the dispatcher will add context to the
+        method (NOTE: JSONRPCResponseManager auto adds the JSON-RPC message id)
+        >>> d = Dispatcher()
+        >>> @d.add_method(context_arg="context")
+            def mymethod(context):
+                print(context)
+        >>> d.update_context({"id": 5})
+        >>> d["mymethod"]()
 
-        self.method_map[name or f.__name__] = f
+        """
+        if (name or context_arg) and not f:
+            return functools.partial(self.add_method, name=name,
+                                     context_arg=context_arg)
+
+        name = name or f.__name__
+        self.method_map[name] = f
+        if context_arg:
+            self.context_arg_for_method[name] = context_arg
         return f
 
     def build_method_map(self, prototype, prefix=''):
@@ -133,3 +156,17 @@ class Dispatcher(MutableMapping):
         for attr, method in prototype.items():
             if callable(method):
                 self[prefix + attr] = method
+
+    def update_context(self, new_context):
+        """ Add context data to the dispatcher.
+
+        This data will be passed to any method whose `add_method` call
+        specified a `context_arg`.
+
+        Parameters
+        ----------
+        new_context : dict
+            New context data to add to the dispatcher.
+
+        """
+        self.context.update(new_context)
