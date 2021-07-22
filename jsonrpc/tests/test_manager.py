@@ -42,7 +42,7 @@ class TestJSONRPCResponseManager(unittest.TestCase):
 
         @self.dispatcher.add_method(context_arg="context")
         def return_json_rpc_id(context):
-            return context["id"]
+            return context["request"]._id
 
     def test_dispatch_error(self):
         request = JSONRPC20Request("dispatch_error", ["test"], _id=0)
@@ -181,5 +181,6 @@ class TestJSONRPCResponseManager(unittest.TestCase):
 
     def test_setting_json_rpc_id_in_context(self):
         request = JSONRPC20Request("return_json_rpc_id", _id=42)
-        response = JSONRPCResponseManager.handle(request.json, self.dispatcher)
+        response = JSONRPCResponseManager.handle(request.json, self.dispatcher,
+                                                 context={})
         self.assertEqual(response.data["result"], 42)

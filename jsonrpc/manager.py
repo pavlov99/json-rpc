@@ -42,7 +42,7 @@ class JSONRPCResponseManager(object):
     }
 
     @classmethod
-    def handle(cls, request_str, dispatcher):
+    def handle(cls, request_str, dispatcher, context=None):
         if isinstance(request_str, bytes):
             request_str = request_str.decode("utf-8")
 
@@ -56,10 +56,10 @@ class JSONRPCResponseManager(object):
         except JSONRPCInvalidRequestException:
             return JSONRPC20Response(error=JSONRPCInvalidRequest()._data)
 
-        return cls.handle_request(request, dispatcher)
+        return cls.handle_request(request, dispatcher, context)
 
     @classmethod
-    def handle_request(cls, request, dispatcher):
+    def handle_request(cls, request, dispatcher, context=None):
         """ Handle request data.
 
         At this moment request has correct jsonrpc format.
@@ -72,7 +72,7 @@ class JSONRPCResponseManager(object):
         """
         rs = request if isinstance(request, JSONRPC20BatchRequest) \
             else [request]
-        responses = [r for r in cls._get_responses(rs, dispatcher)
+        responses = [r for r in cls._get_responses(rs, dispatcher, context)
                      if r is not None]
 
         # notifications
@@ -87,7 +87,7 @@ class JSONRPCResponseManager(object):
             return responses[0]
 
     @classmethod
-    def _get_responses(cls, requests, dispatcher):
+    def _get_responses(cls, requests, dispatcher, context=None):
         """ Response to each single JSON-RPC Request.
 
         :return iterator(JSONRPC20Response):
@@ -105,13 +105,18 @@ class JSONRPCResponseManager(object):
 
             output = None
             try:
-                dispatcher.update_context({"id": request._id})
                 method = dispatcher[request.method]
             except KeyError:
                 output = make_response(error=JSONRPCMethodNotFound()._data)
             else:
                 try:
-                    result = method(*request.args, **request.kwargs)
+                    kwargs = request.kwargs
+                    if context is not None:
+                        context_arg = dispatcher.context_arg_for_method.get(request.method)
+                        if context_arg:
+                            context["request"] = request
+                            kwargs[context_arg] = context
+                    result = method(*request.args, **kwargs)
                 except JSONRPCDispatchException as e:
                     output = make_response(error=e.error._data)
                 except Exception as e:
