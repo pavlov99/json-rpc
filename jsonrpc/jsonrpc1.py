@@ -1,7 +1,7 @@
 from . import six
 
 from .base import JSONRPCBaseRequest, JSONRPCBaseResponse
-from .exceptions import JSONRPCInvalidRequestException, JSONRPCError
+from .exceptions import JSONRPCInvalidRequestException, JSONRPCInvalidResponseException, JSONRPCError
 
 
 class JSONRPC10Request(JSONRPCBaseRequest):
@@ -105,6 +105,8 @@ class JSONRPC10Request(JSONRPCBaseRequest):
 class JSONRPC10Response(JSONRPCBaseResponse):
 
     JSONRPC_VERSION = "1.0"
+    REQUIRED_FIELDS = set(["id", "result", "error"])
+    POSSIBLE_FIELDS = set(["id", "result", "error"])
 
     @property
     def data(self):
@@ -134,11 +136,14 @@ class JSONRPC10Response(JSONRPCBaseResponse):
 
     @error.setter
     def error(self, value):
-        self._data.pop('value', None)
         if value:
-            self._data["error"] = value
+            if self.result is not None:
+                raise ValueError("Either result or error should be used")
             # Test error
             JSONRPCError(**value)
+            self._data["error"] = value
+        else:
+            self._data["error"] = None
 
     @property
     def _id(self):
@@ -149,3 +154,26 @@ class JSONRPC10Response(JSONRPCBaseResponse):
         if value is None:
             raise ValueError("id could not be null for JSON-RPC1.0 Response")
         self._data["id"] = value
+
+    @classmethod
+    def from_json(cls, json_str):
+        data = cls.deserialize(json_str)
+        return cls.from_data(data)
+
+    @classmethod
+    def from_data(cls, data):
+        if not isinstance(data, dict):
+            raise ValueError("data should be dict")
+
+        if cls.REQUIRED_FIELDS <= set(data.keys()) <= cls.POSSIBLE_FIELDS:
+            try:
+                return cls(
+                    _id=data["id"], result=data["result"], error=data["error"]
+                )
+            except ValueError as e:
+                raise JSONRPCInvalidResponseException(str(e))
+        else:
+            extra = set(data.keys()) - cls.POSSIBLE_FIELDS
+            missed = cls.REQUIRED_FIELDS - set(data.keys())
+            msg = "Invalid response. Extra fields: {0}, Missed fields: {1}"
+            raise JSONRPCInvalidResponseException(msg.format(extra, missed))

@@ -1,7 +1,7 @@
 ﻿from . import six
 import json
 
-from .exceptions import JSONRPCError, JSONRPCInvalidRequestException
+from .exceptions import JSONRPCError, JSONRPCInvalidRequestException, JSONRPCInvalidResponseException
 from .base import JSONRPCBaseRequest, JSONRPCBaseResponse
 
 
@@ -199,6 +199,8 @@ class JSONRPC20Response(JSONRPCBaseResponse):
     """
 
     JSONRPC_VERSION = "2.0"
+    REQUIRED_FIELDS = set(["jsonrpc", "id"])
+    POSSIBLE_FIELDS = set(["jsonrpc", "id", "result", "error"])
 
     @property
     def data(self):
@@ -222,17 +224,35 @@ class JSONRPC20Response(JSONRPCBaseResponse):
             raise ValueError("Either result or error should be used")
         self._data["result"] = value
 
+    @result.deleter
+    def result(self):
+        try:
+            del self._data["result"]
+        except KeyError:
+            pass
+
     @property
     def error(self):
         return self._data.get("error")
 
     @error.setter
     def error(self, value):
-        self._data.pop('value', None)
         if value:
-            self._data["error"] = value
+            if self.result is not None:
+                raise ValueError("Either result or error should be used")
+            del self.result
             # Test error
             JSONRPCError(**value)
+            self._data["error"] = value
+        else:
+            del self.error
+
+    @error.deleter
+    def error(self):
+        try:
+            del self._data["error"]
+        except KeyError:
+            pass
 
     @property
     def _id(self):
@@ -245,6 +265,47 @@ class JSONRPC20Response(JSONRPCBaseResponse):
             raise ValueError("id should be string or integer")
 
         self._data["id"] = value
+
+    @classmethod
+    def from_json(cls, json_str):
+        data = cls.deserialize(json_str)
+        return cls.from_data(data)
+
+    @classmethod
+    def from_data(cls, data):
+        is_batch = isinstance(data, list)
+        data = data if is_batch else [data]
+
+        if not data:
+            raise JSONRPCInvalidResponseException("[] value is not accepted")
+
+        if not all(isinstance(d, dict) for d in data):
+            raise JSONRPCInvalidResponseException(
+                "Each response should be an object (dict)")
+
+        result = []
+        for d in data:
+            if not cls.REQUIRED_FIELDS <= set(d.keys()) <= cls.POSSIBLE_FIELDS:
+                extra = set(d.keys()) - cls.POSSIBLE_FIELDS
+                missed = cls.REQUIRED_FIELDS - set(d.keys())
+                msg = "Invalid response. Extra fields: {0}, Missed fields: {1}"
+                raise JSONRPCInvalidResponseException(msg.format(extra, missed))
+            s = set(['result', 'error']) & set(d.keys())
+            if len(s) != 1:
+                if len(s) == 2:
+                    msg = "Invalid response. Either result or error may be present, not both."
+                else:
+                    msg = "Invalid response. Neither result nor error present."
+                raise JSONRPCInvalidResponseException(msg)
+
+            try:
+                result.append(JSONRPC20Response(
+                    _id=d.get("id"), result=d.get("result"), error=d.get("error")
+                ))
+            except ValueError as e:
+                raise JSONRPCInvalidResponseException(str(e))
+
+        return JSONRPC20BatchResponse(*result) if is_batch else result[0]
 
 
 class JSONRPC20BatchResponse(object):
