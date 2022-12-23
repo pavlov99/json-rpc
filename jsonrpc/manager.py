@@ -112,7 +112,8 @@ class JSONRPCResponseManager(object):
                 try:
                     kwargs = request.kwargs
                     if context is not None:
-                        context_arg = dispatcher.context_arg_for_method.get(request.method)
+                        context_arg = dispatcher.context_arg_for_method.get(
+                            request.method)
                         if context_arg:
                             context["request"] = request
                             kwargs[context_arg] = context

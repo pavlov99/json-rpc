@@ -33,8 +33,10 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.dispatcher["multiply"] = lambda a, b: a * b
         self.dispatcher["list_len"] = len
         self.dispatcher["101_base"] = lambda **kwargs: int("101", **kwargs)
-        self.dispatcher["error"] = lambda: raise_(KeyError("error_explanation"))
-        self.dispatcher["type_error"] = lambda: raise_(TypeError("TypeError inside method"))
+        self.dispatcher["error"] = lambda: raise_(
+            KeyError("error_explanation"))
+        self.dispatcher["type_error"] = lambda: raise_(
+            TypeError("TypeError inside method"))
         self.dispatcher["long_time_method"] = self.long_time_method
         self.dispatcher["dispatch_error"] = lambda x: raise_(
             JSONRPCDispatchException(code=4000, message="error",

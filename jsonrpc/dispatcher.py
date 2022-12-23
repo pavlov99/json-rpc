@@ -79,7 +79,8 @@ class Dispatcher(MutableMapping):
         name : str, optional
             Name to register (the default is function **f** name)
         context_arg : str, optional
-            Name to specify the function's argument which will receive context data
+            Name to specify the function's argument which will receive
+            context data
 
         Notes
         -----
