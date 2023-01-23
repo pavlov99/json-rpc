@@ -32,7 +32,7 @@ class JSONRPCResponseManager(object):
     :param str request_str: json string. Will be converted into
         JSONRPC20Request, JSONRPC20BatchRequest or JSONRPC10Request
 
-    :param dict dispather: dict<function_name:function>.
+    :param dict dispatcher: dict<function_name:function>.
 
     """
 
