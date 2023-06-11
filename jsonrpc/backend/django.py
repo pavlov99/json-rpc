@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 try:
     from django.conf.urls import url  # Django <4.0
 except ImportError:
-    from from django.urls import re_path as url  # Django >=4.0
+    from django.urls import re_path as url  # Django >=4.0
     
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed
