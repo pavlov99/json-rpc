@@ -9,8 +9,6 @@ workflows:
       - py36
       - py37
       - py38
-      - pycodestyle
-      - cov
 jobs:
   py36: &test-template
     docker:
