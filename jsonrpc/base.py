@@ -1,3 +1,4 @@
+from inspect import isawaitable
 from .utils import JSONSerializable
 
 
@@ -84,4 +85,10 @@ class JSONRPCBaseResponse(JSONSerializable):
 
     @property
     def json(self):
+        return self.serialize(self.data)
+
+    @property
+    async def async_json(self):
+        if isawaitable(self.data.get('result')):
+            self._data['result']=await self.data['result']
         return self.serialize(self.data)
