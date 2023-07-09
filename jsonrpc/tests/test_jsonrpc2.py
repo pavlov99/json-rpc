@@ -625,7 +625,17 @@ class TestJSONRPC20Response(unittest.TestCase):
             "result": "",
             "id": None,
         })
-
+    def test_async_json_result(self):
+        # Make a coroutine
+        import asyncio
+        async def test(): return ""
+        r= JSONRPC20Response(result=test())
+        r=asyncio.run(r.async_json)
+        self.assertEqual(json.loads(r), {
+            "jsonrpc": "2.0",
+            "result": "",
+            "id": None,
+            })
     def test_data_result_id_none(self):
         r = JSONRPC20Response(result="", _id=None)
         self.assertEqual(json.loads(r.json), r.data)
