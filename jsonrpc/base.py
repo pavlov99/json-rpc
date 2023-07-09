@@ -90,5 +90,5 @@ class JSONRPCBaseResponse(JSONSerializable):
     @property
     async def async_json(self):
         if isawaitable(self.data.get('result')):
-            self._data['result']=await self.data['result']
+            self._data['result'] = await self.data['result']
         return self.serialize(self.data)
