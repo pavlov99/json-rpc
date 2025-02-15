@@ -1,4 +1,5 @@
 from .manager import JSONRPCResponseManager
+from .managerasync import JSONRPCResponseManagerAsync
 from .dispatcher import Dispatcher
 
 __version = (1, 15, 0)
