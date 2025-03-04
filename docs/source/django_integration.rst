@@ -3,7 +3,7 @@ Integration with Django
 
 .. note:: Django backend is optionally supported. Library itself does not depend on Django.
 
-Django integration is similar project to project. Starting from version 1.8.4 json-rpc support it and provides convenient way of integration. To add json-rpc to Django project follow steps.
+Django integration is similar project to project. Starting from version 1.8.4 json-rpc supports it and provides convenient way of integration. To add json-rpc to Django project follow steps.
 
 Create api instance
 -------------------
@@ -15,7 +15,7 @@ If you want to use default (global) object, skip this step. In most cases it is 
    from jsonrpc.backend.django import api
 
 
-If you would like to use different api versions (not, you could name methods differently) or use cudtom dispatcher, use
+If you would like to use different api versions (not, you could name methods differently) or use custom dispatcher, use
 
 .. code-block:: python
 
@@ -50,5 +50,5 @@ Add methods to api
 Make requests to api
 --------------------
 
-To use api, send `POST` request to api address. Make sure your message has correct format.
+To use api, send `POST` request to api address. Make sure your message has the correct format.
 Also json-rpc generates method's map. It is available at `<api_url>/map` url.
