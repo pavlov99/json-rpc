@@ -1,7 +1,7 @@
 Integration with Flask
 ======================
 
-.. note:: Flask backend is optionaly supported. Library itself does not depend on Flask.
+.. note:: Flask backend is optionally supported. Library itself does not depend on Flask.
 
 Create api instance
 -------------------
@@ -25,7 +25,7 @@ Later on we assume that you use default api instance.
 Add api endpoint to the project
 -------------------------------
 
-You have to options to add new endpoint to your Flask application.
+You have two options to add new endpoint to your Flask application.
 
 First - register as a blueprint. In this case, as small bonus, you got a /map handler, which prints all registered methods.
 
