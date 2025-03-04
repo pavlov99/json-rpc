@@ -15,7 +15,7 @@ If you want to use default (global) object, skip this step. In most cases it is 
    from jsonrpc.backend.django import api
 
 
-If you would like to use different api versions (not, you could name methods differently) or use cudtom dispatcher, use
+If you would like to use different api versions (not, you could name methods differently) or use custom dispatcher, use
 
 .. code-block:: python
 
