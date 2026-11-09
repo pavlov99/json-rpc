@@ -3,8 +3,11 @@ from __future__ import absolute_import
 import os
 
 try:
-    from django.core.urlresolvers import RegexURLPattern
     from django.test import TestCase
+    try:
+        from django.urls import URLPattern as RegexURLPattern  # Django>=2.0
+    except ImportError:
+        from django.core.urlresolvers import RegexURLPattern  # Django<2.0
 except ImportError:
     import unittest
     raise unittest.SkipTest('Django not found for testing')
