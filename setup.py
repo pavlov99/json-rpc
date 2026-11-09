@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os.path
-import sys
 from setuptools import setup, find_packages
 from jsonrpc import version
 
@@ -12,14 +11,10 @@ def read(fname):
         return ""
 
 
-setup_requires = ["pytest-runner"] if sys.argv in ['pytest', 'test'] else []
-
 setup(
     name="json-rpc",
     version=version,
     packages=find_packages(),
-    setup_requires=setup_requires,
-    tests_require=["pytest"],
     python_requires=">=2.6, !=3.0.*, !=3.1.*, !=3.2.*",
 
     # metadata for upload to PyPI

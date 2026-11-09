@@ -7,7 +7,6 @@
 .env
 .env3
 .ropeproject
-.tox
 build/
 dist/
 docs/_build/

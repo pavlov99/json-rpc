@@ -59,3 +59,33 @@ jobs:
 
       - name: Run tests
         run: python -m pytest -q -rs
+
+  # Build the distributions users install, check their metadata renders on
+  # PyPI, and run the test suite against the installed wheel (not the source
+  # tree) to catch packaging mistakes such as missing modules.
+  package:
+    name: build & test wheel
+    runs-on: ubuntu-latest
+    container: python:3.14
+    env:
+      DJANGO_SETTINGS_MODULE: jsonrpc.tests.test_backend_django.settings
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_ROOT_USER_ACTION: ignore
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: python -m pip install build twine pytest django flask
+
+      - name: Build sdist and wheel
+        run: python -m build
+
+      - name: Check distributions
+        run: python -m twine check --strict dist/*
+
+      - name: Test installed wheel
+        run: |
+          python -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          python -c "import jsonrpc; print('testing', jsonrpc.__file__)"
+          python -m pytest -q -rs -p no:cacheprovider --pyargs jsonrpc

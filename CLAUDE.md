@@ -21,14 +21,15 @@ Public API that users depend on — keep it backward compatible:
 ## Commands
 
 ```bash
-# Run tests (Django tests need the settings module; tox sets it automatically)
-DJANGO_SETTINGS_MODULE=jsonrpc.tests.test_backend_django.settings pytest -q
-pip install pytest flask django   # optional backends; their tests skip if missing
-tox -e py3XX                       # tox.ini is stale (pins Django 2.2 / Flask 1.1)
+pip install pytest django flask   # optional backends; their tests skip if missing
+make test                         # = DJANGO_SETTINGS_MODULE=... python -m pytest -q
 ```
 
-The suite (224 passed, 1 skipped) runs clean on Python 3.14 with current Django and Flask.
-CircleCI config (`.circleci/config.yml`) only covers py27–py38 on deprecated images.
+No tox: the interpreter matrix (CPython 2.7, 3.6–3.14, PyPy 2.7/3.11) runs only in GitHub
+Actions (`.github/workflows/tests.yml`), each in its official Docker image with the newest
+pytest/Django/Flask that support it. A `package` job builds the sdist/wheel, runs
+`twine check`, and tests the installed wheel. Keep dev/test dependencies minimal: the
+library itself has zero runtime dependencies.
 
 ## Layout
 
@@ -77,9 +78,11 @@ Fix these with a regression test each. Spec: https://www.jsonrpc.org/specificati
     Django injects `HttpRequest` into params (forces a `request` arg on every method — the
     newer `context_arg` is the better mechanism); Flask `check_content_type` never checks
     the content type; `/map` view renders docstrings without HTML escaping; unused `time` import.
-12. `jsonrpc.py` and `jsonrpc2.py` begin with a UTF-8 BOM.
-13. Release hygiene: no `python_requires`; classifiers list 2.6–3.8; `setup.py` imports the
-    package to read the version; git tags 1.14.0 and 1.15.0 missing (#128).
+12. ~~`jsonrpc.py` and `jsonrpc2.py` begin with a UTF-8 BOM.~~ Fixed in #158.
+13. Packaging: `setup.py` imports the package to read the version; `Makefile upload` uses the
+    removed `setup.py upload` (use `python -m build` + `twine upload`). Moves to
+    `pyproject.toml` in 2.0 (#141). (Phase 0 already added `python_requires`, fixed
+    classifiers and release tags.)
 
 ## Roadmap
 
