@@ -1,4 +1,4 @@
-﻿from . import six
+from . import six
 import json
 
 from .exceptions import JSONRPCError, JSONRPCInvalidRequestException

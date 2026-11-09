@@ -1,8 +1,8 @@
 json-rpc
 ========
 
-.. image:: https://circleci.com/gh/pavlov99/json-rpc/tree/master.svg?style=svg
-    :target: https://circleci.com/gh/pavlov99/json-rpc/tree/master
+.. image:: https://github.com/pavlov99/json-rpc/actions/workflows/tests.yml/badge.svg?branch=master
+    :target: https://github.com/pavlov99/json-rpc/actions/workflows/tests.yml
     :alt: Build Status
 
 .. image:: https://codecov.io/gh/pavlov99/json-rpc/branch/master/graph/badge.svg
@@ -70,44 +70,20 @@ Tests
 
 Quickstart
 ^^^^^^^^^^
-This is an essential part of the library as there are a lot of edge cases in JSON-RPC standard. To manage a variety of supported python versions as well as optional backends json-rpc uses `tox`:
+Tests are an essential part of the library, as there are a lot of edge cases in the JSON-RPC standard. Run them with pytest; Django and Flask backend tests are skipped if those frameworks are not installed:
 
 .. code-block:: bash
 
-    tox
+    pip install pytest django flask
+    DJANGO_SETTINGS_MODULE=jsonrpc.tests.test_backend_django.settings pytest
 
-.. TIP::
-   During local development use your python version with tox runner. For example, if your are using Python 3.6 run `tox -e py36`. It is easier to develop functionality for specific version first and then expands it to all of the supported versions.
+To run against several interpreters installed locally, use `tox` (for example ``tox -e py312``).
 
 Continuous integration
 ^^^^^^^^^^^^^^^^^^^^^^
-This project uses `CircleCI <https://circleci.com/>`_ for continuous integration. All of the python supported versions are managed via `tox.ini` and `.circleci/config.yml` files. Master branch test status is displayed on the badge in the beginning of this document.
+This project uses `GitHub Actions <https://github.com/pavlov99/json-rpc/actions/workflows/tests.yml>`_ for continuous integration, configured in `.github/workflows/tests.yml`. Every push to master and every pull request is tested on CPython 2.7 and 3.6–3.14, PyPy 2.7 and PyPy 3, each in its official Docker image.
 
-Test matrix
-^^^^^^^^^^^
-json-rpc supports multiple python versions: 2.6+, 3.3+, pypy. This introduces difficulties with testing libraries and optional dependencies management. For example, python before version 3.3 does not support `mock` and there is a limited support for `unittest2`. Every dependency translates into *if-then* blocks in the source code and adds complexity to it. Hence, while cross-python support is a core feature of this library, cross-Django or cross-Flask support is limited. In general, json-rpc uses latest stable release which supports current python version. For example, python 2.6 is compatible with Django 1.6 and not compatible with any future versions.
-
-Below is a testing matrix:
-
-+--------+-------+-----------+--------+--------+
-| Python | mock  | unittest  | Django | Flask  |
-+========+=======+===========+========+========+
-| 2.6    | 2.0.0 | unittest2 | 1.6    | 0.12.2 |
-+--------+-------+-----------+--------+--------+
-| 2.7    | 2.0.0 |           | 1.11   | 0.12.2 |
-+--------+-------+-----------+--------+--------+
-| 3.3    |       |           | 1.11   | 0.12.2 |
-+--------+-------+-----------+--------+--------+
-| 3.4    |       |           | 1.11   | 0.12.2 |
-+--------+-------+-----------+--------+--------+
-| 3.5    |       |           | 1.11   | 0.12.2 |
-+--------+-------+-----------+--------+--------+
-| 3.6    |       |           | 1.11   | 0.12.2 |
-+--------+-------+-----------+--------+--------+
-| pypy   | 2.0.0 |           | 1.11   | 0.12.2 |
-+--------+-------+-----------+--------+--------+
-| pypy3  |       |           | 1.11   | 0.12.2 |
-+--------+-------+-----------+--------+--------+
+Each job installs the newest pytest, Django and Flask releases that still support that interpreter, so cross-Django and cross-Flask support follows what each Python version can run. The exact versions are printed in the "Show versions" step of every job.
 
 Quickstart
 ----------

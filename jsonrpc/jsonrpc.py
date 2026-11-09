@@ -1,4 +1,4 @@
-﻿""" JSON-RPC wrappers for version 1.0 and 2.0.
+""" JSON-RPC wrappers for version 1.0 and 2.0.
 
 Objects diring init operation try to choose JSON-RPC 2.0 and in case of error
 JSON-RPC 1.0.
