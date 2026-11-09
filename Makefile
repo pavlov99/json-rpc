@@ -3,6 +3,11 @@
 help:
 	@egrep "^# target:" [Mm]akefile
 
+.PHONY: test
+# target: test - Run tests with the current interpreter (pip install pytest django flask)
+test:
+	DJANGO_SETTINGS_MODULE=jsonrpc.tests.test_backend_django.settings python -m pytest -q
+
 .PHONY: clean
 # target: clean - Display callable targets
 clean:

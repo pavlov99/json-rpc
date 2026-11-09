@@ -75,13 +75,13 @@ Tests are an essential part of the library, as there are a lot of edge cases in 
 .. code-block:: bash
 
     pip install pytest django flask
-    DJANGO_SETTINGS_MODULE=jsonrpc.tests.test_backend_django.settings pytest
+    make test
 
-To run against several interpreters installed locally, use `tox` (for example ``tox -e py312``).
+The full matrix of Python versions runs in CI only; locally, testing with a single interpreter is enough.
 
 Continuous integration
 ^^^^^^^^^^^^^^^^^^^^^^
-This project uses `GitHub Actions <https://github.com/pavlov99/json-rpc/actions/workflows/tests.yml>`_ for continuous integration, configured in `.github/workflows/tests.yml`. Every push to master and every pull request is tested on CPython 2.7 and 3.6–3.14, PyPy 2.7 and PyPy 3, each in its official Docker image.
+This project uses `GitHub Actions <https://github.com/pavlov99/json-rpc/actions/workflows/tests.yml>`_ for continuous integration, configured in `.github/workflows/tests.yml`. Every push to master and every pull request is tested on CPython 2.7 and 3.6–3.14, PyPy 2.7 and PyPy 3, each in its official Docker image. A separate job builds the sdist and wheel, validates them with `twine check`, and runs the test suite against the installed wheel.
 
 Each job installs the newest pytest, Django and Flask releases that still support that interpreter, so cross-Django and cross-Flask support follows what each Python version can run. The exact versions are printed in the "Show versions" step of every job.
 
