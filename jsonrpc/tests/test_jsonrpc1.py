@@ -395,6 +395,22 @@ class TestJSONRPC10Response(unittest.TestCase):
         with self.assertRaises(ValueError):
             JSONRPC10Response(**wrong_params)
 
+    def test_setting_error_removes_result(self):
+        response = JSONRPC10Response(result="ok", _id=1)
+        response.error = {"code": 1, "message": "error"}
+        self.assertNotIn("result", response.data)
+        self.assertEqual(response.data["error"],
+                         {"code": 1, "message": "error"})
+
+    def test_setting_error_keeps_null_result(self):
+        response = JSONRPC10Response(**self.response_error_params)
+        self.assertIn("result", response.data)
+        self.assertIsNone(response.data["result"])
+
+    def test_setting_empty_error_keeps_result(self):
+        response = JSONRPC10Response(**self.response_success_params)
+        self.assertEqual(response.data["result"], "")
+
     def _test_validation_incorrect_result_and_error(self):
         # @todo: remove
         # It is OK because result is an mepty string, it is still result

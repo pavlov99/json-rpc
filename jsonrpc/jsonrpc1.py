@@ -134,8 +134,11 @@ class JSONRPC10Response(JSONRPCBaseResponse):
 
     @error.setter
     def error(self, value):
-        self._data.pop('value', None)
         if value:
+            # JSON-RPC 1.0 error responses carry "result": null, so only
+            # drop a non-null result.
+            if self._data.get("result") is not None:
+                self._data.pop("result")
             self._data["error"] = value
             # Test error
             JSONRPCError(**value)
