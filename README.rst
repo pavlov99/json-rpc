@@ -20,11 +20,6 @@ json-rpc
     :target: https://pypi.org/project/json-rpc/
     :alt: Supported Python versions
 
-.. image:: https://badges.gitter.im/pavlov99/json-rpc.svg
-    :target: https://gitter.im/pavlov99/json-rpc
-    :alt: Gitter
-
-
 .. image:: https://opencollective.com/json-rpc/tiers/backer/badge.svg?label=backer&color=brightgreen
     :target: https://opencollective.com/json-rpc
     :alt: Bakers
@@ -32,6 +27,22 @@ json-rpc
 .. image:: https://opencollective.com/json-rpc/tiers/backer/badge.svg?label=sponsor&color=brightgreen
     :target: https://opencollective.com/json-rpc
     :alt: Sponsors
+
+.. important::
+
+   **json-rpc 2.0 is being planned.** After more than a decade of stable releases, json-rpc is being modernized:
+
+   - **Python ≥ 3.10**, type hints, no vendored ``six``
+   - **Native asyncio** support, sharing one protocol core with the sync server
+   - **Pluggable serialization** (``json``, ``orjson``, CBOR, ...) and error hooks
+   - **Safer defaults**: responses are always valid JSON-RPC, and internal exception details are no longer sent to clients
+   - Stricter spec compliance (batches, ids, JSON-RPC 1.0 responses) and new adapters for Starlette/FastAPI and aiohttp
+
+   Existing code will keep working: ``JSONRPCResponseManager``, ``Dispatcher`` and the Django/Flask backends remain available through a compatibility layer.
+   **1.15.x** remains the release line for Python 2.7 and Python 3 < 3.10 and will receive bug fixes.
+
+   Roadmap, progress and ways to help: `#155 Roadmap: json-rpc 2.0 modernization <https://github.com/pavlov99/json-rpc/issues/155>`_.
+   Feedback is very welcome.
 
 `JSON-RPC2.0 <http://www.jsonrpc.org/specification>`_ and `JSON-RPC1.0 <http://json-rpc.org/wiki/specification>`_ transport specification implementation.
 Supports Python 2.6+, Python 3.3+, PyPy. Has optional Django and Flask support. 200+ tests.
