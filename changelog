@@ -2,6 +2,13 @@
 
 	* FIX: clear stale response result when setting an error
 
+2026-11-10  Titouhi Omar <53566932+omartitouhi@users.noreply.github.com>
+
+	* FIX: JSON-RPC 2.0 request and response ids accept fractional numbers
+	(e.g. 1.5) and reject true/false, as the specification requires. A
+	request with a boolean id now gets an Invalid Request error instead
+	of being executed.
+
 2023-06-11  Kirill Pavlov <k@p99.io>
 
 	* ADD: support for Django>=4.0 url template
