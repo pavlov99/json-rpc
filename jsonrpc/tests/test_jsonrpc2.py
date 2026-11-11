@@ -578,6 +578,20 @@ class TestJSONRPC20Response(unittest.TestCase):
         with self.assertRaises(ValueError):
             response.result = ""
 
+    def test_setting_error_removes_result(self):
+        response = JSONRPC20Response(result="ok", _id=1)
+        response.error = {"code": 1, "message": "error"}
+        self.assertNotIn("result", response.data)
+        self.assertEqual(
+            response.data["error"],
+            {"code": 1, "message": "error"},
+        )
+
+    def test_setting_empty_error_keeps_result(self):
+        response = JSONRPC20Response(result="ok", error=None, _id=1)
+        self.assertEqual(response.data["result"], "ok")
+        self.assertNotIn("error", response.data)
+
     def test_validation_error_correct(self):
         JSONRPC20Response(**self.response_error_params)
 
