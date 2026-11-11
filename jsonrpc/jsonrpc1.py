@@ -134,11 +134,14 @@ class JSONRPC10Response(JSONRPCBaseResponse):
 
     @error.setter
     def error(self, value):
-        self._data.pop('value', None)
         if value:
             self._data["error"] = value
             # Test error
             JSONRPCError(**value)
+            if "result" in self._data:
+                # JSON-RPC 1.0 error responses use result=null. Normalize an
+                # existing result member instead of keeping its success value.
+                self._data["result"] = None
 
     @property
     def _id(self):

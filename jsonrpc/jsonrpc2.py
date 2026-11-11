@@ -228,11 +228,11 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
     @error.setter
     def error(self, value):
-        self._data.pop('value', None)
         if value:
             self._data["error"] = value
             # Test error
             JSONRPCError(**value)
+            self._data.pop("result", None)
 
     @property
     def _id(self):

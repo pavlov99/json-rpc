@@ -1,3 +1,7 @@
+2026-11-11  angary-iwancanse <296895251+angary-iwancanse@users.noreply.github.com>
+
+	* FIX: clear stale response result when setting an error
+
 2023-06-11  Kirill Pavlov <k@p99.io>
 
 	* ADD: support for Django>=4.0 url template
