@@ -123,6 +123,15 @@ class TestJSONRPC20Request(unittest.TestCase):
 
     def test_id_validation_float(self):
         self.request_params.update({"_id": 0.1})
+        request = JSONRPC20Request(**self.request_params)
+        self.assertEqual(request._id, 0.1)
+
+    def test_id_validation_bool(self):
+        self.request_params.update({"_id": True})
+        with self.assertRaises(ValueError):
+            JSONRPC20Request(**self.request_params)
+
+        self.request_params.update({"_id": False})
         with self.assertRaises(ValueError):
             JSONRPC20Request(**self.request_params)
 
@@ -453,6 +462,27 @@ class TestJSONRPC20Request(unittest.TestCase):
         self.assertEqual(request._id, "id")
         self.assertFalse(request.is_notification)
 
+    def test_from_json_request_float_id(self):
+        str_json = json.dumps({
+            "method": "add",
+            "jsonrpc": "2.0",
+            "id": 1.5,
+        })
+
+        request = JSONRPC20Request.from_json(str_json)
+        self.assertEqual(request._id, 1.5)
+        self.assertFalse(request.is_notification)
+
+    def test_from_json_invalid_request_bool_id(self):
+        str_json = json.dumps({
+            "method": "add",
+            "jsonrpc": "2.0",
+            "id": True,
+        })
+
+        with self.assertRaises(JSONRPCInvalidRequestException):
+            JSONRPC20Request.from_json(str_json)
+
     def test_from_json_invalid_request_jsonrpc(self):
         str_json = json.dumps({
             "method": "add",
@@ -629,7 +659,15 @@ class TestJSONRPC20Response(unittest.TestCase):
             response._id = {}
 
         with self.assertRaises(ValueError):
-            response._id = 0.1
+            response._id = True
+
+        with self.assertRaises(ValueError):
+            response._id = False
+
+    def test_validation_id_float(self):
+        response = JSONRPC20Response(**self.response_success_params)
+        response._id = 0.1
+        self.assertEqual(response._id, 0.1)
 
     def test_data_result(self):
         r = JSONRPC20Response(result="")

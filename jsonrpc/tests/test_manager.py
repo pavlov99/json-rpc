@@ -84,6 +84,22 @@ class TestJSONRPCResponseManager(unittest.TestCase):
         self.assertEqual(response.error["message"], "Invalid Request")
         self.assertEqual(response.error["code"], -32600)
 
+    def test_float_id_is_echoed(self):
+        req = '{"jsonrpc": "2.0", "method": "add", "params": [[1, 2]], ' \
+              '"id": 1.5}'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.result, 3)
+        self.assertEqual(response._id, 1.5)
+
+    def test_bool_id_is_invalid_request(self):
+        req = '{"jsonrpc": "2.0", "method": "add", "params": [[1, 2]], ' \
+              '"id": true}'
+        response = JSONRPCResponseManager.handle(req, self.dispatcher)
+        self.assertTrue(isinstance(response, JSONRPC20Response))
+        self.assertEqual(response.error["code"], -32600)
+        self.assertEqual(response._id, None)
+
     def test_method_not_found(self):
         request = JSONRPC20Request("does_not_exist", [[]], _id=0)
         response = JSONRPCResponseManager.handle(request.json, self.dispatcher)

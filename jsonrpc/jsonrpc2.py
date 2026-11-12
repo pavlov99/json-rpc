@@ -5,6 +5,22 @@ from .exceptions import JSONRPCError, JSONRPCInvalidRequestException
 from .base import JSONRPCBaseRequest, JSONRPCBaseResponse
 
 
+def _validate_id(value):
+    """ Raise ValueError unless value is a valid JSON-RPC 2.0 id.
+
+    The specification allows a String, Number, or Null. bool is rejected
+    explicitly because it is a subclass of int in Python, while JSON true and
+    false are not Numbers.
+
+    """
+    if value is None:
+        return
+
+    if isinstance(value, bool) or not isinstance(
+            value, six.string_types + six.integer_types + (float,)):
+        raise ValueError("id should be string, number or null")
+
+
 class JSONRPC20Request(JSONRPCBaseRequest):
 
     """ A rpc call is represented by sending a Request object to a Server.
@@ -22,7 +38,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
         String, Number, or NULL value if included. If it is not included it is
         assumed to be a notification. The value SHOULD normally not be Null
         [1] and Numbers SHOULD NOT contain fractional parts [2].
-    :type _id: str or int or None
+    :type _id: str or int or float or None
 
     :param bool is_notification: Whether request is notification or not. If
         value is True, _id is not included to request. It allows to create
@@ -100,10 +116,7 @@ class JSONRPC20Request(JSONRPCBaseRequest):
 
     @_id.setter
     def _id(self, value):
-        if value is not None and \
-           not isinstance(value, six.string_types + six.integer_types):
-            raise ValueError("id should be string or integer")
-
+        _validate_id(value)
         self._data["id"] = value
 
     @classmethod
@@ -191,7 +204,7 @@ class JSONRPC20Response(JSONRPCBaseResponse):
         It MUST be the same as the value of the id member in the Request
         Object. If there was an error in detecting the id in the Request
         object (e.g. Parse error/Invalid Request), it MUST be Null.
-    :type id: str or int or None
+    :type id: str or int or float or None
 
     Either the result member or error member MUST be included, but both
     members MUST NOT be included.
@@ -240,10 +253,7 @@ class JSONRPC20Response(JSONRPCBaseResponse):
 
     @_id.setter
     def _id(self, value):
-        if value is not None and \
-           not isinstance(value, six.string_types + six.integer_types):
-            raise ValueError("id should be string or integer")
-
+        _validate_id(value)
         self._data["id"] = value
 
 
